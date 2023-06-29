@@ -1,64 +1,77 @@
-import { Weapon } from "@wdesgardin/fivem-js";
-
 export const Init = async (): Promise<void> => {};
 
-import { SendReactMessage, debugPrint } from "client/utils";
+import { SendReactMessage, debugPrint } from "client/utils/utils";
 import * as Cfx from "@wdesgardin/fivem-js";
+import ESX from "./esx";
+import { Phone, phoneData } from "./phone";
 
-function toggleNuiFrame(shouldShow) {
+const phone: Phone = new Phone();
+
+function loadPhone() {
+  (async () => {
+    ESX.TriggerServerEvent('voltic_phone:server:getPhoneData', function(phoneData: any) {
+      
+
+      phoneData.playerData = ESX.GetPlayerData();
+      phoneData.metaData = {};
+      phoneData.playerData.characterInfo = phoneData.characterInfo != null ? phoneData.characterInfo : {};
+      phoneData.playerData.identifier = phoneData.identifier != null ? phoneData.identifier : "";
+    });
+  })();
+}
+
+function togglePhone(shouldShow: boolean) {
   SetNuiFocus(shouldShow, shouldShow);
-  SendReactMessage("setVisible", shouldShow);
+  SetNuiFocusKeepInput(shouldShow);
+  SendReactMessage("setPhoneVisible", shouldShow);
 }
 
 RegisterCommand(
-  "show-nui",
+  "show-phone",
   () => {
-    toggleNuiFrame(true);
-    debugPrint("Show NUI frame");
+    openPhone();
+    togglePhone(true);
+    debugPrint("Show phone frame");
   },
   false
 );
 
 RegisterNuiCallbackType("hideFrame");
 on("__cfx_nui:hideFrame", (_, cb) => {
-  toggleNuiFrame(false);
-  debugPrint("Hide NUI frame");
+  togglePhone(false);
+  closePhone();
+  debugPrint("Hide phone frame");
   cb({});
 });
 
-RegisterNuiCallbackType("getClientData");
-on("__cfx_nui:getClientData", (data, cb) => {
+RegisterNuiCallbackType("getClientName");
+on("__cfx_nui:getClientName", (data, cb) => {
   debugPrint("Data send by React", JSON.stringify(data));
+  debugPrint("Player name", Cfx.Game.Player.Name);
 
-  let curCoords = Cfx.Game.PlayerPed.Position;
-  let retData = { x: curCoords.x, y: curCoords.y, z: curCoords.z };
-
+  let retData = { name: Cfx.Game.Player.Name };
   cb(retData);
 });
 
-RegisterCommand(
-  "fullammo",
-  () => {
-    const ped = Cfx.Game.PlayerPed;
+function openPhone() {
+  phone.doPhoneAnimation("f_cellphone_text_in");
 
-    if (ped.Weapons.Current != null) {
-      const weapon: Weapon = ped.Weapons.Current;
+  setTimeout(() => {
+    phone.createPhoneProperties();
+  }, 250);
+}
 
-      weapon.Ammo = weapon.MaxAmmo;
-    }
-  },
-  false
-);
+function closePhone() {
+  phone.doPhoneAnimation("f_cellphone_text_out");
 
-RegisterCommand(
-  "clearammo",
-  () => {
-    const ped = PlayerPedId();
-    const weaponHash = GetSelectedPedWeapon(ped);
+  setTimeout(() => {
+    StopAnimTask(Cfx.Game.PlayerPed.Handle, phoneData.animationData.library, phoneData.animationData.animation, 2.5);
+    phone.deletePhone();
+    phoneData.animationData.library = null;
+    phoneData.animationData.animation = null;
+  }, 400);
 
-    if (weaponHash !== 0) {
-      SetAmmoInClip(ped, weaponHash, 0);
-    }
-  },
-  false
-);
+  setTimeout(() => {
+    phoneData.isOpen = false;
+  }, 1000);
+}

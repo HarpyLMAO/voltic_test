@@ -2,10 +2,10 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "../node_modules/fivem-js/lib/Audio.js":
-/*!*********************************************!*\
-  !*** ../node_modules/fivem-js/lib/Audio.js ***!
-  \*********************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/Audio.js":
+/*!*********************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/Audio.js ***!
+  \*********************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13,15 +13,15 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Audio = void 0;
 class Audio {
     static playSoundAt(position, sound, set) {
-        PlaySoundFromCoord(-1, sound, position.x, position.y, position.z, set ? set : null, false, 0, false);
+        PlaySoundFromCoord(-1, sound, position.x, position.y, position.z, set !== null && set !== void 0 ? set : '', false, 0, false);
         return GetSoundId();
     }
     static playSoundFromEntity(entity, sound, set) {
-        PlaySoundFromEntity(-1, sound, entity.Handle, set ? set : null, false, 0);
+        PlaySoundFromEntity(-1, sound, entity.Handle, set !== null && set !== void 0 ? set : '', false, 0);
         return GetSoundId();
     }
     static playSoundFrontEnd(sound, set) {
-        PlaySoundFrontend(-1, sound, set ? set : null, false);
+        PlaySoundFrontend(-1, sound, set !== null && set !== void 0 ? set : '', false);
         return GetSoundId();
     }
     static stopSound(soundId) {
@@ -55,11 +55,11 @@ class Audio {
         if (musicFile === null) {
             if (this.cachedMusicFile !== null) {
                 CancelMusicEvent(this.cachedMusicFile);
-                this.cachedMusicFile = null;
+                this.cachedMusicFile = '';
             }
         }
         else {
-            CancelMusicEvent(musicFile);
+            CancelMusicEvent(musicFile !== null && musicFile !== void 0 ? musicFile : '');
         }
     }
 }
@@ -105,20 +105,23 @@ Audio.audioFlags = [
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/Blip.js":
-/*!********************************************!*\
-  !*** ../node_modules/fivem-js/lib/Blip.js ***!
-  \********************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/Blip.js":
+/*!********************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/Blip.js ***!
+  \********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Blip = void 0;
-const utils_1 = __webpack_require__(/*! ./utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const models_1 = __webpack_require__(/*! ./models */ "../node_modules/fivem-js/lib/models/index.js");
+const utils_1 = __webpack_require__(/*! ./utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const models_1 = __webpack_require__(/*! ./models */ "../node_modules/@wdesgardin/fivem-js/lib/models/index.js");
 class Blip {
     constructor(handle) {
         this.handle = handle;
+    }
+    static create(coords) {
+        return new Blip(AddBlipForCoord(coords.x, coords.y, coords.z));
     }
     get Handle() {
         return this.handle;
@@ -168,7 +171,7 @@ class Blip {
     }
     set Name(name) {
         BeginTextCommandSetBlipName('STRING');
-        AddTextComponentSubstringPlayerName(name);
+        AddTextComponentString(name);
         EndTextCommandSetBlipName(this.handle);
     }
     setNameToPlayerName(player) {
@@ -210,6 +213,12 @@ class Blip {
     removeNumberLabel() {
         HideNumberOnBlip(this.handle);
     }
+    get IsMissionCreatorBlip() {
+        return !!IsMissionCreatorBlip(this.handle);
+    }
+    set IsMissionCreatorBlip(isMissionCreator) {
+        SetBlipAsMissionCreatorBlip(this.handle, isMissionCreator);
+    }
     delete() {
         if (this.exists()) {
             RemoveBlip(this.handle);
@@ -224,17 +233,17 @@ exports.Blip = Blip;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/Camera.js":
-/*!**********************************************!*\
-  !*** ../node_modules/fivem-js/lib/Camera.js ***!
-  \**********************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/Camera.js":
+/*!**********************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/Camera.js ***!
+  \**********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Camera = void 0;
-const models_1 = __webpack_require__(/*! ./models */ "../node_modules/fivem-js/lib/models/index.js");
-const utils_1 = __webpack_require__(/*! ./utils */ "../node_modules/fivem-js/lib/utils/index.js");
+const models_1 = __webpack_require__(/*! ./models */ "../node_modules/@wdesgardin/fivem-js/lib/models/index.js");
+const utils_1 = __webpack_require__(/*! ./utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
 class Camera {
     constructor(handle) {
         this.shakeNames = [
@@ -251,6 +260,9 @@ class Camera {
             'DEATH_FAIL_IN_EFFECT_SHAKE',
         ];
         this.handle = handle;
+    }
+    get Handle() {
+        return this.handle;
     }
     get IsActive() {
         return !!IsCamActive(this.handle);
@@ -391,17 +403,23 @@ exports.Camera = Camera;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/Checkpoint.js":
-/*!**************************************************!*\
-  !*** ../node_modules/fivem-js/lib/Checkpoint.js ***!
-  \**************************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/Checkpoint.js":
+/*!**************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/Checkpoint.js ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Checkpoint = void 0;
+const enums_1 = __webpack_require__(/*! ./enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const utils_1 = __webpack_require__(/*! ./utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
 class Checkpoint {
     constructor(handle) {
+        this.position = new utils_1.Vector3(0, 0, 0);
+        this.targetPosition = new utils_1.Vector3(0, 0, 0);
+        this.icon = enums_1.CheckpointIcon.Empty;
+        this.radius = 0;
         this.handle = handle;
     }
     get Position() {
@@ -441,18 +459,18 @@ exports.Checkpoint = Checkpoint;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/Game.js":
-/*!********************************************!*\
-  !*** ../node_modules/fivem-js/lib/Game.js ***!
-  \********************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/Game.js":
+/*!********************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/Game.js ***!
+  \********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Game = void 0;
-const Audio_1 = __webpack_require__(/*! ./Audio */ "../node_modules/fivem-js/lib/Audio.js");
-const enums_1 = __webpack_require__(/*! ./enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const models_1 = __webpack_require__(/*! ./models */ "../node_modules/fivem-js/lib/models/index.js");
+const Audio_1 = __webpack_require__(/*! ./Audio */ "../node_modules/@wdesgardin/fivem-js/lib/Audio.js");
+const enums_1 = __webpack_require__(/*! ./enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const models_1 = __webpack_require__(/*! ./models */ "../node_modules/@wdesgardin/fivem-js/lib/models/index.js");
 class Game {
     /**
      * Calculate the Jenkins One At A Time (joaat) has from the given string.
@@ -463,7 +481,12 @@ class Game {
         if (typeof input === 'undefined') {
             return 0;
         }
-        return GetHashKey(input);
+        const _hash = this.hashCache.get(input);
+        if (_hash)
+            return _hash;
+        const hash = GetHashKey(input);
+        this.hashCache.set(input, hash);
+        return hash;
     }
     /**
      * Gets the game language
@@ -603,10 +626,10 @@ class Game {
         SetMissionFlag(toggle);
     }
     static get IsRandomEventActive() {
-        return GetRandomEventFlag() === 1;
+        return GetRandomEventFlag();
     }
     static set IsRandomEventActive(toggle) {
-        SetRandomEventFlag(toggle ? 1 : 0);
+        SetRandomEventFlag(toggle);
     }
     static get IsCutsceneActive() {
         return !!IsCutsceneActive();
@@ -649,8 +672,7 @@ class Game {
      */
     static get RadioStation() {
         const stationName = GetPlayerRadioStationName();
-        const keys = Object.keys(enums_1.RadioStation).filter(x => enums_1.RadioStation[x] === stationName);
-        return keys.length > 0 ? enums_1.RadioStation[keys[0]] : enums_1.RadioStation.RadioOff;
+        return enums_1.RadioStation[stationName];
     }
     /**
      * Sets the player's radio station.
@@ -658,8 +680,7 @@ class Game {
      * @param station A radio station.
      */
     static set RadioStation(station) {
-        const stationName = enums_1.RadioStation[station];
-        SetRadioToStationName(stationName);
+        SetRadioToStationName(station);
     }
     /**
      * Check whether a control is currently pressed.
@@ -827,22 +848,69 @@ class Game {
     static stopMusic(musicFile) {
         Audio_1.Audio.stopMusic(musicFile);
     }
+    /**
+     * Determines the game language files contain a entry for the specified GXT key
+     *
+     * @param entry - The GXT key.
+     * @returns true if GXT entry exists; otherwise, false
+     * @constructor
+     */
+    static doesGXTEntryExist(entry) {
+        if (typeof entry === 'number') {
+            return !!DoesTextLabelExist(entry.toString());
+        }
+        else {
+            return !!DoesTextLabelExist(entry);
+        }
+    }
+    /**
+     * Returns a localised string from the games language files with a specified GXT key
+     *
+     * @param entry - The GXT key.
+     * @returns The localised string if the key exists; otherwise, empty string
+     */
+    static getGXTEntry(entry) {
+        return Game.doesGXTEntryExist(entry) ? GetLabelText(entry.toString()) : '';
+    }
+    /**
+     * Creates an input box for enabling a user to input text using the keyboard
+     * @param maxLength The maximum length allowed for the input string
+     * @param windowTitle The input box title
+     * @param defaultText The initial text within the input, will be truncated if longer than maxLength
+     * @returns User's input
+     */
+    static getUserInput(maxLength, windowTitle = 'Enter message', defaultText = '') {
+        return new Promise(resolve => {
+            if (defaultText.length > maxLength)
+                defaultText = defaultText.substr(0, maxLength);
+            AddTextEntry('NET_STABLE_RENAME_MOUNT_PROMPT', windowTitle);
+            DisplayOnscreenKeyboard(1, 'NET_STABLE_RENAME_MOUNT_PROMPT', '', defaultText, '', '', '', maxLength);
+            const tick = setTick(() => {
+                if (UpdateOnscreenKeyboard() != 0) {
+                    clearTick(tick);
+                    resolve(GetOnscreenKeyboardResult());
+                }
+            });
+        });
+    }
 }
 exports.Game = Game;
+// A map containing generated hashes.
+Game.hashCache = new Map();
 
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/GameplayCamera.js":
-/*!******************************************************!*\
-  !*** ../node_modules/fivem-js/lib/GameplayCamera.js ***!
-  \******************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/GameplayCamera.js":
+/*!******************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/GameplayCamera.js ***!
+  \******************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.GameplayCamera = void 0;
-const utils_1 = __webpack_require__(/*! ./utils */ "../node_modules/fivem-js/lib/utils/index.js");
+const utils_1 = __webpack_require__(/*! ./utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
 /**
  * The current rendering gameplay camera
  */
@@ -899,18 +967,67 @@ exports.GameplayCamera = GameplayCamera;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/Model.js":
-/*!*********************************************!*\
-  !*** ../node_modules/fivem-js/lib/Model.js ***!
-  \*********************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/GamerTag.js":
+/*!************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/GamerTag.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GamerTag = void 0;
+class GamerTag {
+    constructor(handle) {
+        this.handle = handle;
+    }
+    get Handle() {
+        return this.handle;
+    }
+    get IsActive() {
+        return !!IsMpGamerTagActive(this.handle);
+    }
+    get IsFree() {
+        return !!IsMpGamerTagFree(this.handle);
+    }
+    set Name(value) {
+        SetMpGamerTagName(this.handle, value);
+    }
+    set WantedLevel(level) {
+        SetMpGamerTagWantedLevel(this.handle, level);
+    }
+    setHealthBarColour(color) {
+        SetMpGamerTagHealthBarColour(this.handle, color);
+    }
+    setComponentAlpha(component, alpha) {
+        SetMpGamerTagAlpha(this.handle, component, alpha);
+    }
+    setComponentColour(component, hudColorIndex) {
+        SetMpGamerTagColour(this.handle, component, hudColorIndex);
+    }
+    setComponentVisibility(component, visible) {
+        SetMpGamerTagVisibility(this.handle, component, visible);
+    }
+    delete() {
+        RemoveMpGamerTag(this.handle);
+    }
+}
+exports.GamerTag = GamerTag;
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/Model.js":
+/*!*********************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/Model.js ***!
+  \*********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Model = void 0;
-const Game_1 = __webpack_require__(/*! ./Game */ "../node_modules/fivem-js/lib/Game.js");
-const hashes_1 = __webpack_require__(/*! ./hashes */ "../node_modules/fivem-js/lib/hashes/index.js");
-const utils_1 = __webpack_require__(/*! ./utils */ "../node_modules/fivem-js/lib/utils/index.js");
+const Game_1 = __webpack_require__(/*! ./Game */ "../node_modules/@wdesgardin/fivem-js/lib/Game.js");
+const hashes_1 = __webpack_require__(/*! ./hashes */ "../node_modules/@wdesgardin/fivem-js/lib/hashes/index.js");
+const utils_1 = __webpack_require__(/*! ./utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
 /**
  * Class to create and manage entity models.
  */
@@ -1079,11 +1196,11 @@ class Model {
         return utils_1.Vector3.subtract(left, right);
     }
     /**
-     * Request and load the model with a specified timeout. Advised timeout - 1000.
+     * Request and load the model with a specified timeout. Default timeout is 1000 (recommended).
      *
      * @param timeout Maximum allowed time for model to load.
      */
-    request(timeout) {
+    request(timeout = 1000) {
         return new Promise(resolve => {
             if (!this.IsInCdImage && !this.IsValid && !IsWeaponValid(this.hash)) {
                 resolve(false);
@@ -1111,15 +1228,17 @@ exports.Model = Model;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ParticleEffect.js":
-/*!******************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ParticleEffect.js ***!
-  \******************************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ParticleEffect.js":
+/*!******************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ParticleEffect.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ParticleEffect = void 0;
+const enums_1 = __webpack_require__(/*! ./enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const utils_1 = __webpack_require__(/*! ./utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
 // TODO: Lots of Matrix stuff through memory access
 /**
  * UNFINISHED! Class to manage particle effects.
@@ -1132,6 +1251,12 @@ class ParticleEffect {
      * @param effectName Name of effect.
      */
     constructor(asset, effectName) {
+        this.offset = new utils_1.Vector3(0, 0, 0);
+        this.rotation = new utils_1.Vector3(0, 0, 0);
+        this.color = utils_1.Color.empty;
+        this.scale = 1.0;
+        this.range = 1.0;
+        this.invertAxis = { flags: enums_1.InvertAxisFlags.None };
         this.handle = -1;
         this.asset = asset;
         this.effectName = effectName;
@@ -1237,17 +1362,17 @@ exports.ParticleEffect = ParticleEffect;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ParticleEffectAsset.js":
-/*!***********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ParticleEffectAsset.js ***!
-  \***********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ParticleEffectAsset.js":
+/*!***********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ParticleEffectAsset.js ***!
+  \***********************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ParticleEffectAsset = void 0;
-const enums_1 = __webpack_require__(/*! ./enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const utils_1 = __webpack_require__(/*! ./utils */ "../node_modules/fivem-js/lib/utils/index.js");
+const enums_1 = __webpack_require__(/*! ./enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const utils_1 = __webpack_require__(/*! ./utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
 /**
  * UNFINISHED! Class that represents a particle effect asset.
  */
@@ -1356,17 +1481,50 @@ exports.ParticleEffectAsset = ParticleEffectAsset;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/Raycast.js":
-/*!***********************************************!*\
-  !*** ../node_modules/fivem-js/lib/Raycast.js ***!
-  \***********************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/Pickup.js":
+/*!**********************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/Pickup.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Pickup = void 0;
+const utils_1 = __webpack_require__(/*! ./utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+class Pickup {
+    constructor(handle) {
+        this.handle = handle;
+    }
+    get Position() {
+        const coords = GetPickupCoords(this.handle);
+        return new utils_1.Vector3(coords[0], coords[1], coords[2]);
+    }
+    get IsCollected() {
+        return !!HasPickupBeenCollected(this.handle);
+    }
+    delete() {
+        RemovePickup(this.handle);
+    }
+    exists() {
+        return !!DoesPickupExist(this.handle);
+    }
+}
+exports.Pickup = Pickup;
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/Raycast.js":
+/*!***********************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/Raycast.js ***!
+  \***********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RaycastResult = void 0;
-const Game_1 = __webpack_require__(/*! ./Game */ "../node_modules/fivem-js/lib/Game.js");
-const utils_1 = __webpack_require__(/*! ./utils */ "../node_modules/fivem-js/lib/utils/index.js");
+const Game_1 = __webpack_require__(/*! ./Game */ "../node_modules/@wdesgardin/fivem-js/lib/Game.js");
+const utils_1 = __webpack_require__(/*! ./utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
 /**
  * Class that represents the result of a raycast.
  */
@@ -1419,7 +1577,8 @@ class RaycastResult {
      * Whether the entity hit exists.
      */
     get DidHitEntity() {
-        return this.entityHandleArg.Handle !== 0;
+        var _a;
+        return ((_a = this.entityHandleArg) === null || _a === void 0 ? void 0 : _a.Handle) !== 0;
     }
     /**
      * Material type that was hit.
@@ -1439,10 +1598,10 @@ exports.RaycastResult = RaycastResult;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/RelationshipGroup.js":
-/*!*********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/RelationshipGroup.js ***!
-  \*********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/RelationshipGroup.js":
+/*!*********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/RelationshipGroup.js ***!
+  \*********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -1517,10 +1676,328 @@ exports.RelationshipGroup = RelationshipGroup;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/World.js":
-/*!*********************************************!*\
-  !*** ../node_modules/fivem-js/lib/World.js ***!
-  \*********************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/TaskSequence.js":
+/*!****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/TaskSequence.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TaskSequence = void 0;
+const Ped_1 = __webpack_require__(/*! ./models/Ped */ "../node_modules/@wdesgardin/fivem-js/lib/models/Ped.js");
+class TaskSequence {
+    constructor(handle) {
+        this.handle = 0;
+        handle === undefined ? this.create() : (this.handle = handle);
+        if (TaskSequence.nullPed === null) {
+            TaskSequence.nullPed = new Ped_1.Ped(0);
+        }
+        this.isClosed = false;
+        this.count = 0;
+    }
+    create() {
+        OpenSequenceTask(0);
+    }
+    dispose() {
+        ClearSequenceTask(this.handle);
+        this.handle = 0;
+    }
+    close(repeat = false) {
+        if (this.isClosed)
+            return;
+        SetSequenceToRepeat(this.handle, repeat);
+        CloseSequenceTask(this.handle);
+        this.isClosed = true;
+    }
+    get Handle() {
+        return this.handle;
+    }
+    get AddTask() {
+        var _a;
+        if (this.isClosed) {
+            throw new Error("You can't add tasks to a closed sequence!");
+        }
+        this.count += 1;
+        return (_a = TaskSequence.nullPed) === null || _a === void 0 ? void 0 : _a.Task;
+    }
+    get IsClosed() {
+        return this.isClosed;
+    }
+    get Count() {
+        return this.count;
+    }
+}
+exports.TaskSequence = TaskSequence;
+TaskSequence.nullPed = null;
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/Tasks.js":
+/*!*********************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/Tasks.js ***!
+  \*********************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Tasks = void 0;
+const enums_1 = __webpack_require__(/*! ./enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const models_1 = __webpack_require__(/*! ./models */ "../node_modules/@wdesgardin/fivem-js/lib/models/index.js");
+const utils_1 = __webpack_require__(/*! ./utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+class Tasks {
+    constructor(ped) {
+        this.ped = ped;
+    }
+    achieveHeading(heading, timeout = 0) {
+        TaskAchieveHeading(this.ped.Handle, heading, timeout);
+    }
+    aimAt(target, duration) {
+        if (target instanceof models_1.Entity)
+            TaskAimGunAtEntity(this.ped.Handle, target.Handle, duration, false);
+        else
+            TaskAimGunAtCoord(this.ped.Handle, target.x, target.y, target.z, duration, false, false);
+    }
+    arrest(ped) {
+        TaskArrestPed(this.ped.Handle, ped.Handle);
+    }
+    chatTo(ped) {
+        TaskChatToPed(this.ped.Handle, ped.Handle, 16, 0, 0, 0, 0, 0);
+    }
+    jump() {
+        TaskJump(this.ped.Handle, true);
+    }
+    climb() {
+        TaskClimb(this.ped.Handle, true);
+    }
+    climbLadder() {
+        TaskClimbLadder(this.ped.Handle, 1);
+    }
+    cower(duration) {
+        TaskCower(this.ped.Handle, duration);
+    }
+    chaseWithGroundVehicle(target) {
+        TaskVehicleChase(this.ped.Handle, target.Handle);
+    }
+    chaseWithHelicopter(target, offset) {
+        TaskHeliChase(this.ped.Handle, target.Handle, offset.x, offset.y, offset.z);
+    }
+    chaseWithPlane(target, offset) {
+        TaskPlaneChase(this.ped.Handle, target.Handle, offset.x, offset.y, offset.z);
+    }
+    cruiseWithVehicle(vehicle, speed, drivingstyle = enums_1.DrivingStyle.None) {
+        TaskVehicleDriveWander(this.ped.Handle, vehicle.Handle, speed, drivingstyle);
+    }
+    driveTo(vehicle, target, radius, speed, drivingstyle = enums_1.DrivingStyle.None) {
+        TaskVehicleDriveToCoordLongrange(this.ped.Handle, vehicle.Handle, target.x, target.y, target.z, speed, drivingstyle, radius);
+    }
+    enterAnyVehicle(seat = enums_1.VehicleSeat.Any, timeout = -1, speed = 0, flag = 0) {
+        TaskEnterVehicle(this.ped.Handle, 0, timeout, seat, speed, flag, 0);
+    }
+    static everyoneLeaveVehicle(vehicle) {
+        TaskEveryoneLeaveVehicle(vehicle.Handle);
+    }
+    fightAgainst(target, duration) {
+        if (duration) {
+            TaskCombatPedTimed(this.ped.Handle, target.Handle, duration, 0);
+        }
+        else {
+            TaskCombatPed(this.ped.Handle, target.Handle, 0, 16);
+        }
+    }
+    fightAgainstHatedTargets(radius, duration) {
+        if (duration) {
+            TaskCombatHatedTargetsAroundPedTimed(this.ped.Handle, radius, duration, 0);
+        }
+        else {
+            TaskCombatHatedTargetsAroundPed(this.ped.Handle, radius, 0);
+        }
+    }
+    fleeFrom(pedOrPosition, duration = -1) {
+        if (pedOrPosition instanceof models_1.Ped) {
+            TaskSmartFleePed(this.ped.Handle, pedOrPosition.Handle, 100, duration, false, false);
+        }
+        else {
+            TaskSmartFleeCoord(this.ped.Handle, pedOrPosition.x, pedOrPosition.y, pedOrPosition.z, 100, duration, false, false);
+        }
+    }
+    followPointRoute(points) {
+        TaskFlushRoute();
+        points.forEach(point => TaskExtendRoute(point.x, point.y, point.z));
+        TaskFollowPointRoute(this.ped.Handle, 1, 0);
+    }
+    followToOffsetFromEntity(target, offset, timeout, stoppingRange, movementSpeed = 1, persistFollowing = true) {
+        TaskFollowToOffsetOfEntity(this.ped.Handle, target.Handle, offset.x, offset.y, offset.z, movementSpeed, timeout, stoppingRange, persistFollowing);
+    }
+    goTo(position, ignorePaths = false, timeout = -1, speed = 1) {
+        if (ignorePaths) {
+            TaskGoStraightToCoord(this.ped.Handle, position.x, position.y, position.z, speed, timeout, 0, 0);
+        }
+        else {
+            TaskFollowNavMeshToCoord(this.ped.Handle, position.x, position.y, position.z, speed, timeout, 0, false, 0);
+        }
+    }
+    goToEntity(target, offset = null, timeout = -1) {
+        if (offset === null) {
+            offset = new utils_1.Vector3(0, 0, 0);
+        }
+        TaskGotoEntityOffsetXy(this.ped.Handle, target.Handle, timeout, offset.x, offset.y, offset.z, 1, true);
+    }
+    guardCurrentPosition() {
+        TaskGuardCurrentPosition(this.ped.Handle, 15, 10, true);
+    }
+    handsUp(duration) {
+        TaskHandsUp(this.ped.Handle, duration, 0, -1, false);
+    }
+    landPlane(startPosition, touchdownPosition, plane = null) {
+        if (plane === null) {
+            plane = this.ped.CurrentVehicle;
+        }
+        if (plane === null || !plane.exists() || plane.isDead()) {
+            TaskPlaneLand(this.ped.Handle, 0, startPosition.x, startPosition.y, startPosition.z, touchdownPosition.x, touchdownPosition.y, touchdownPosition.z);
+        }
+        else {
+            TaskPlaneLand(this.ped.Handle, plane.Handle, startPosition.x, startPosition.y, startPosition.z, touchdownPosition.x, touchdownPosition.y, touchdownPosition.z);
+        }
+    }
+    lookAt(targetOrPosition, duration = -1) {
+        if (targetOrPosition instanceof models_1.Entity)
+            TaskLookAtEntity(this.ped.Handle, targetOrPosition.Handle, duration, 0, 2);
+        else
+            TaskLookAtCoord(this.ped.Handle, targetOrPosition.x, targetOrPosition.y, targetOrPosition.z, duration, 0, 2);
+    }
+    parachuteTo(position) {
+        TaskParachuteToTarget(this.ped.Handle, position.x, position.y, position.z);
+    }
+    parkVehicle(vehicle, position, heading, radius = 20, keepEngineOn = false) {
+        TaskVehiclePark(this.ped.Handle, vehicle.Handle, position.x, position.y, position.z, heading, 1, radius, keepEngineOn);
+    }
+    performSequence(sequence) {
+        if (!sequence.IsClosed) {
+            sequence.close();
+        }
+        this.clearAll();
+        this.ped.BlockPermanentEvents = true;
+        TaskPerformSequence(this.ped.Handle, sequence.Handle);
+    }
+    playAnimation(animDict, animName, blendInSpeed, blendOutSpeed, duration, playbackRate, flags) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!HasAnimDictLoaded(animDict)) {
+                RequestAnimDict(animDict);
+            }
+            const start = GetGameTimer();
+            while (!HasAnimDictLoaded(animDict)) {
+                if (GetGameTimer() - start >= 1000)
+                    return;
+                yield (0, utils_1.Wait)(10);
+            }
+            TaskPlayAnim(this.ped.Handle, animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, playbackRate, false, false, false);
+        });
+    }
+    reactAndFlee(ped) {
+        TaskReactAndFleePed(this.ped.Handle, ped.Handle);
+    }
+    reloadWeapon() {
+        TaskReloadWeapon(this.ped.Handle, true);
+    }
+    shootAt(targetOrPosition, duration = -1, pattern = enums_1.FiringPattern.Default) {
+        if (targetOrPosition instanceof models_1.Ped)
+            TaskShootAtEntity(this.ped.Handle, targetOrPosition.Handle, duration, pattern);
+        else
+            TaskShootAtCoord(this.ped.Handle, targetOrPosition.x, targetOrPosition.y, targetOrPosition.z, duration, pattern);
+    }
+    shuffleToNextVehicleSeat(vehicle) {
+        TaskShuffleToNextVehicleSeat(this.ped.Handle, vehicle.Handle);
+    }
+    skyDive() {
+        TaskSkyDive(this.ped.Handle);
+    }
+    slideTo(position, heading, duration = 0.7) {
+        TaskPedSlideToCoord(this.ped.Handle, position.x, position.y, position.z, heading, duration);
+    }
+    standStill(duration) {
+        TaskStandStill(this.ped.Handle, duration);
+    }
+    startScenario(name, position, heading = 0, duration = 0, sittingScenario = false, teleport = true) {
+        TaskStartScenarioAtPosition(this.ped.Handle, name, position.x, position.y, position.z, heading, duration, sittingScenario, teleport);
+    }
+    swapWeapon() {
+        TaskSwapWeapon(this.ped.Handle, false);
+    }
+    turnTo(targetOrPosition, duration = -1) {
+        if (targetOrPosition instanceof models_1.Entity)
+            TaskTurnPedToFaceEntity(this.ped.Handle, targetOrPosition.Handle, duration);
+        else
+            TaskTurnPedToFaceCoord(this.ped.Handle, targetOrPosition.x, targetOrPosition.y, targetOrPosition.z, duration);
+    }
+    useParachute() {
+        TaskParachute(this.ped.Handle, true);
+    }
+    useMobilePhone(duration = 1) {
+        TaskUseMobilePhone(this.ped.Handle, duration);
+    }
+    putAwayParachute() {
+        TaskParachute(this.ped.Handle, false);
+    }
+    putAwayMobilePhone() {
+        TaskUseMobilePhone(this.ped.Handle, 0);
+    }
+    vehicleChase(target) {
+        TaskVehicleChase(this.ped.Handle, target.Handle);
+    }
+    vehicleShootAtPed(target) {
+        TaskVehicleShootAtPed(this.ped.Handle, target.Handle, 20);
+    }
+    wait(duration) {
+        TaskPause(this.ped.Handle, duration);
+    }
+    wanderAround(position, radius) {
+        if (position && radius)
+            TaskWanderInArea(this.ped.Handle, position.x, position.y, position.z, radius, 0, 0);
+        else
+            TaskWanderStandard(this.ped.Handle, 0, 0);
+    }
+    warpIntoVehicle(vehicle, seat) {
+        TaskWarpPedIntoVehicle(this.ped.Handle, vehicle.Handle, seat);
+    }
+    warpOutOfVehicle(vehicle, flags) {
+        TaskLeaveVehicle(this.ped.Handle, vehicle.Handle, flags);
+    }
+    clearAll() {
+        ClearPedTasks(this.ped.Handle);
+    }
+    clearAllImmediately() {
+        ClearPedTasksImmediately(this.ped.Handle);
+    }
+    clearLookAt() {
+        TaskClearLookAt(this.ped.Handle);
+    }
+    clearSecondary() {
+        ClearPedSecondaryTask(this.ped.Handle);
+    }
+    clearAnimation(animDict, animName) {
+        StopAnimTask(this.ped.Handle, animDict, animName, -4);
+    }
+}
+exports.Tasks = Tasks;
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/World.js":
+/*!*********************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/World.js ***!
+  \*********************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1535,14 +2012,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.World = void 0;
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/index.js");
-const Blip_1 = __webpack_require__(/*! ./Blip */ "../node_modules/fivem-js/lib/Blip.js");
-const Camera_1 = __webpack_require__(/*! ./Camera */ "../node_modules/fivem-js/lib/Camera.js");
-const enums_1 = __webpack_require__(/*! ./enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const hashes_1 = __webpack_require__(/*! ./hashes */ "../node_modules/fivem-js/lib/hashes/index.js");
-const models_1 = __webpack_require__(/*! ./models */ "../node_modules/fivem-js/lib/models/index.js");
-const Raycast_1 = __webpack_require__(/*! ./Raycast */ "../node_modules/fivem-js/lib/Raycast.js");
-const utils_1 = __webpack_require__(/*! ./utils */ "../node_modules/fivem-js/lib/utils/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/index.js");
+const Blip_1 = __webpack_require__(/*! ./Blip */ "../node_modules/@wdesgardin/fivem-js/lib/Blip.js");
+const Camera_1 = __webpack_require__(/*! ./Camera */ "../node_modules/@wdesgardin/fivem-js/lib/Camera.js");
+const enums_1 = __webpack_require__(/*! ./enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const PedType_1 = __webpack_require__(/*! ./enums/PedType */ "../node_modules/@wdesgardin/fivem-js/lib/enums/PedType.js");
+const Game_1 = __webpack_require__(/*! ./Game */ "../node_modules/@wdesgardin/fivem-js/lib/Game.js");
+const hashes_1 = __webpack_require__(/*! ./hashes */ "../node_modules/@wdesgardin/fivem-js/lib/hashes/index.js");
+const models_1 = __webpack_require__(/*! ./models */ "../node_modules/@wdesgardin/fivem-js/lib/models/index.js");
+const Pickup_1 = __webpack_require__(/*! ./Pickup */ "../node_modules/@wdesgardin/fivem-js/lib/Pickup.js");
+const Raycast_1 = __webpack_require__(/*! ./Raycast */ "../node_modules/@wdesgardin/fivem-js/lib/Raycast.js");
+const utils_1 = __webpack_require__(/*! ./utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
 /**
  * Class with common world manipulations.
  *
@@ -1627,15 +2107,14 @@ class World {
      * @param value The type of cloud hat.
      */
     static set CloudHat(value) {
+        var _a;
         this.currentCloudHat = value;
         if (this.currentCloudHat === enums_1.CloudHat.Unknown) {
             this.currentCloudHat = enums_1.CloudHat.Clear;
             ClearCloudHat();
             return;
         }
-        SetCloudHatTransition(this.cloudHatDict.has(this.currentCloudHat)
-            ? this.cloudHatDict.get(this.currentCloudHat)
-            : '', 3);
+        SetCloudHatTransition((_a = this.cloudHatDict.get(this.currentCloudHat)) !== null && _a !== void 0 ? _a : '', 3);
     }
     /**
      * Get the opacity of current cloud hat. Value is between 0-1.
@@ -1651,7 +2130,7 @@ class World {
      * @param value Opacity between 0.0 and 1.0
      */
     static set CloudHatOpacity(value) {
-        SetCloudHatOpacity(utils_1.clamp(value, 0, 1));
+        SetCloudHatOpacity(utils_1.Maths.clamp(value, 0, 1));
     }
     /**
      * Get the current weather type.
@@ -1835,15 +2314,28 @@ class World {
      * @param model Ped model to be spawned.
      * @param position World position (coordinates) of Ped spawn.
      * @param heading Heading of Ped when spawning.
+     * @param isNetwork
      * @returns Ped object.
      */
-    static createPed(model, position, heading = 0) {
+    static createPed(model, position, heading = 0, isNetwork = true) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!model.IsPed || !(yield model.request(1000))) {
                 return null;
             }
-            return new models_1.Ped(CreatePed(26, model.Hash, position.x, position.y, position.z, heading, true, false));
+            return new models_1.Ped(CreatePed(26, model.Hash, position.x, position.y, position.z, heading, isNetwork, false));
         });
+    }
+    /**
+     * Gets the closest [[`Ped`]] to a given position.
+     * @param position Position to get closest ped to
+     * @param radius Max radius to search for ped
+     * @param type The [[`PedType`]] to search for
+     * @param onlyWalkings Only search for walkings ped
+     * @returns Closest ped if found, otherwise null
+     */
+    static getClosestPed(position, radius, type = PedType_1.PedType.Anyped, onlyWalkings = false) {
+        const [found, ped] = GetClosestPed(position.x, position.y, position.z, radius, onlyWalkings, false, false, false, type);
+        return found ? new models_1.Ped(ped) : null;
     }
     /**
      * Creates a [[`Ped`]] with a random model.
@@ -1871,14 +2363,15 @@ class World {
      * @param model Vehicle model to be spawned.
      * @param position World position (coordinates) of Vehicle spawn.
      * @param heading Heading of Vehicle when spawning.
+     * @param isNetwork
      * @returns Vehicle object.
      */
-    static createVehicle(model, position, heading = 0) {
+    static createVehicle(model, position, heading = 0, isNetwork = true) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!model.IsVehicle || !(yield model.request(1000))) {
                 return null;
             }
-            return new models_1.Vehicle(CreateVehicle(model.Hash, position.x, position.y, position.z, heading, true, false));
+            return new models_1.Vehicle(CreateVehicle(model.Hash, position.x, position.y, position.z, heading, isNetwork, false));
         });
     }
     /**
@@ -1891,20 +2384,37 @@ class World {
      *
      * @param position World position (coordinates) of Vehicle spawn.
      * @param heading Heading of Vehicle when spawning.
+     * @param isNetwork
      * @returns Vehicle object.
      */
-    static createRandomVehicle(position, heading = 0) {
+    static createRandomVehicle(position, heading = 0, isNetwork = true) {
         return __awaiter(this, void 0, void 0, function* () {
             const vehicleCount = Object.keys(hashes_1.VehicleHash).length / 2; // check
-            const randomIndex = utils_1.getRandomInt(0, vehicleCount);
+            const randomIndex = utils_1.Maths.getRandomInt(0, vehicleCount);
             const randomVehicleName = hashes_1.VehicleHash[randomIndex];
             const modelHash = GetHashKey(randomVehicleName);
             const model = new _1.Model(modelHash);
             if (!model.IsVehicle || !(yield model.request(1000))) {
                 return null;
             }
-            return new models_1.Vehicle(CreateVehicle(model.Hash, position.x, position.y, position.z, heading, true, false));
+            return new models_1.Vehicle(CreateVehicle(model.Hash, position.x, position.y, position.z, heading, isNetwork, false));
         });
+    }
+    /**
+     * Gest the closest [[`Vehicle`]] to a given position.
+     *
+     * Only returns non police cars and motorbikes with the flag set to 70.
+     * See: pastebin.com/kghNFkRi
+     *
+     * @param position Position to get closest vehicle to
+     * @param radius Max radius to search for vehicle
+     * @param model Limit to vehicles with this [[`Model`]]
+     * @param flags The bitwise flags altering the function's behaviour
+     * @returns The closest vehicle to the position if found, otherwise null
+     */
+    static getClosestVehicle(position, radius, model = null, flags = 70) {
+        const vehicle = GetClosestVehicle(position.x, position.y, position.z, radius, (model === null || model === void 0 ? void 0 : model.Hash) || 0, flags);
+        return vehicle != 0 ? new models_1.Vehicle(vehicle) : null;
     }
     /**
      * Spawns a [[`Prop`]] at the given position.
@@ -1919,17 +2429,78 @@ class World {
      * @param position Location of Prop
      * @param dynamic If set to true, the Prop will have physics otherwise it's static.
      * @param placeOnGround If set to true, sets the Prop on the ground nearest to position.
+     * @param isNetwork
+     * @returns Prop object.
      */
-    static createProp(model, position, dynamic, placeOnGround) {
+    static createProp(model, position, dynamic, placeOnGround, isNetwork = true) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!model.IsProp || !(yield model.request(1000))) {
                 return null;
             }
-            const prop = new _1.Prop(CreateObject(model.Hash, position.x, position.y, position.z, true, true, dynamic));
+            const prop = new _1.Prop(CreateObject(model.Hash, position.x, position.y, position.z, isNetwork, true, dynamic));
             if (placeOnGround) {
                 prop.placeOnGround();
             }
             return prop;
+        });
+    }
+    /**
+     * Gets the closest [[`Prop`]] to a given position.
+     * @param position The position to get the closest prop to
+     * @param radius Max raidus to search for props
+     * @param model The [[`Model`]] of the prop to search for
+     * @param excludePersistents If set to true, will exclude [[`Props`]] with the persistent (mission entity) flag set
+     * @returns The props if found, otherwise null
+     */
+    static getClosestProp(position, radius, model, excludePersistents = false) {
+        const prop = GetClosestObjectOfType(position.x, position.y, position.z, radius, model.Hash, excludePersistents, false, false);
+        return prop != 0 ? new _1.Prop(prop) : null;
+    }
+    /**
+     * Create a pickup in a specific position in the world with a specified type and value.
+     *
+     * @param type The [[`PickupType`]] of pickup.
+     * @param position The position in the world it should be spawned.
+     * @param model The model of the spawned pickup.
+     * @param value Give a value for the pickup when picked up.
+     * @param rotation If set, create a rotating pickup with this rotation.
+     * @returns Pickup object.
+     */
+    static CreatePickup(type, position, model, value, rotation) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!(yield model.request(1000))) {
+                return null;
+            }
+            let handle = 0;
+            if (rotation !== undefined)
+                handle = CreatePickupRotate(type, position.x, position.y, position.z, rotation.x, rotation.y, rotation.z, 0, value, 2, true, model.Hash);
+            else
+                handle = CreatePickup(type, position.x, position.y, position.z, 0, value, true, model.Hash);
+            if (handle === 0) {
+                return null;
+            }
+            return new Pickup_1.Pickup(handle);
+        });
+    }
+    /**
+     * Creates an ambient pickup.
+     *
+     * @param type The [[`PickupType`]] of the pickup.
+     * @param position The position where it should be spawned.
+     * @param model The model.
+     * @param value The value tied to the pickup.
+     * @returns The pickup in form of a Prop.
+     */
+    static CreateAmbientPickup(type, position, model, value) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!(yield model.request(1000))) {
+                return null;
+            }
+            const handle = CreateAmbientPickup(type, position.x, position.y, position.z, 0, value, model.Hash, false, true);
+            if (handle === 0) {
+                return null;
+            }
+            return new _1.Prop(handle);
         });
     }
     /**
@@ -2039,18 +2610,20 @@ class World {
     /**
      * Get all [[`Prop`]] entities in your own scope.
      *
+     * We recommend using [[getAllPropsInGamePool]] instead.
+     *
      * @returns Array of Props.
      */
     static getAllProps() {
         const props = [];
-        const [handle, entityHandle] = FindFirstObject(null);
+        const [handle, entityHandle] = FindFirstObject(0);
         let prop = _1.Entity.fromHandle(entityHandle);
         if (prop !== undefined && prop !== null && prop.exists()) {
             props.push(prop);
         }
-        let findResult = [false, null];
+        let findResult = [false, 0];
         do {
-            findResult = FindNextObject(handle, null);
+            findResult = FindNextObject(handle, 0);
             if (findResult[0]) {
                 prop = _1.Entity.fromHandle(findResult[1]);
                 if (prop !== undefined && prop !== null && prop.exists()) {
@@ -2062,20 +2635,32 @@ class World {
         return props;
     }
     /**
+     * Get all [[`Prop`]] entities using the GetGamePool.
+     * @returns Array of Props.
+     */
+    static getAllPropsInGamePool() {
+        const handles = GetGamePool('CObject');
+        const props = [];
+        handles.forEach(handle => props.push(new _1.Prop(handle)));
+        return props;
+    }
+    /**
      * Get all [[`Ped`]] entities in your own scope.
+     *
+     * We recommend using [[getAllPedsInGamePool]] instead.
      *
      * @returns Array of Peds.
      */
     static getAllPeds() {
         const peds = [];
-        const [handle, entityHandle] = FindFirstPed(null);
+        const [handle, entityHandle] = FindFirstPed(0);
         let ped = _1.Entity.fromHandle(entityHandle);
         if (ped !== undefined && ped !== null && ped.exists()) {
             peds.push(ped);
         }
-        let findResult = [false, null];
+        let findResult = [false, 0];
         do {
-            findResult = FindNextPed(handle, null);
+            findResult = FindNextPed(handle, 0);
             if (findResult[0]) {
                 ped = _1.Entity.fromHandle(findResult[1]);
                 if (ped !== undefined && ped !== null && ped.exists()) {
@@ -2087,20 +2672,32 @@ class World {
         return peds;
     }
     /**
+     * Get all [[`Ped`]] entities using the GetGamePool.
+     * @returns Array of Peds.
+     */
+    static getAllPedsInGamePool() {
+        const handles = GetGamePool('CPed');
+        const peds = [];
+        handles.forEach(handle => peds.push(new models_1.Ped(handle)));
+        return peds;
+    }
+    /**
      * Get all [[`Vehicle`]] entities in your own scope.
+     *
+     * We recommend using [[getAllVehiclesInGamePool]] instead.
      *
      * @returns Array of Vehicles.
      */
     static getAllVehicles() {
         const vehicles = [];
-        const [handle, entityHandle] = FindFirstVehicle(null);
+        const [handle, entityHandle] = FindFirstVehicle(0);
         let vehicle = _1.Entity.fromHandle(entityHandle);
         if (vehicle !== undefined && vehicle !== null && vehicle.exists()) {
             vehicles.push(vehicle);
         }
-        let findResult = [false, null];
+        let findResult = [false, 0];
         do {
-            findResult = FindNextVehicle(handle, null);
+            findResult = FindNextVehicle(handle, 0);
             if (findResult[0]) {
                 vehicle = _1.Entity.fromHandle(findResult[1]);
                 if (vehicle !== undefined && vehicle !== null && vehicle.exists()) {
@@ -2110,6 +2707,81 @@ class World {
         } while (findResult[0]);
         EndFindVehicle(handle);
         return vehicles;
+    }
+    /**
+     * Get all [[`Vehicle`]] entities using the GetGamePool.
+     * @returns Array of Vehicles.
+     */
+    static getAllVehiclesInGamePool() {
+        const handles = GetGamePool('CVehicle');
+        const vehicles = [];
+        handles.forEach(handle => vehicles.push(new models_1.Vehicle(handle)));
+        return vehicles;
+    }
+    /**
+     * Get all [[`Pickup`]] entities in your own scope.
+     *
+     * We recommend using [[getAllPickupsInGamePool]] instead.
+     *
+     * @returns Array of Pickups.
+     */
+    static getAllPickups() {
+        const pickups = [];
+        const [handle, entityHandle] = FindFirstPickup(0);
+        let pickup = new Pickup_1.Pickup(entityHandle);
+        if (pickup !== undefined && pickup !== null && pickup.exists()) {
+            pickups.push(pickup);
+        }
+        let findResult = [false, 0];
+        do {
+            findResult = FindNextPickup(handle, 0);
+            if (findResult[0]) {
+                pickup = new Pickup_1.Pickup(findResult[1]);
+                if (pickup !== undefined && pickup !== null && pickup.exists()) {
+                    pickups.push(pickup);
+                }
+            }
+        } while (findResult[0]);
+        EndFindPickup(handle);
+        return pickups;
+    }
+    /**
+     * Get all [[`Pickup`]] entities using the GetGamePool.
+     * @returns Array of Pickups.
+     */
+    static getAllPickupsInGamePool() {
+        const handles = GetGamePool('CPickup');
+        const pickups = [];
+        handles.forEach(handle => pickups.push(new Pickup_1.Pickup(handle)));
+        return pickups;
+    }
+    static getWaypointBlip() {
+        if (!Game_1.Game.IsWaypointActive)
+            return null;
+        for (let handle = GetBlipInfoIdIterator(), blip = GetFirstBlipInfoId(handle); DoesBlipExist(handle); blip = GetNextBlipInfoId(handle)) {
+            if (GetBlipInfoIdType(blip) === 4)
+                return new Blip_1.Blip(blip);
+        }
+        return null;
+    }
+    static removeWaypoint() {
+        SetWaypointOff();
+    }
+    static get WaypointPosition() {
+        const waypointBlip = this.getWaypointBlip();
+        if (waypointBlip == null) {
+            return utils_1.Vector3.Zero;
+        }
+        const position = waypointBlip.Position;
+        position.z = this.getGroundHeight(position);
+        return position;
+    }
+    static set WaypointPosition(position) {
+        SetNewWaypoint(position.x, position.y);
+    }
+    static getGroundHeight(position) {
+        RequestCollisionAtCoord(position.x, position.z, 1000.0);
+        return GetGroundZFor_3dCoord(position.x, position.y, 1000.0, false)[1];
     }
 }
 exports.World = World;
@@ -2157,10 +2829,10 @@ World.weatherDict = [
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/Alignment.js":
-/*!*******************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/Alignment.js ***!
-  \*******************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/Alignment.js":
+/*!*******************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/Alignment.js ***!
+  \*******************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2176,10 +2848,33 @@ var Alignment;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/AudioFlag.js":
-/*!*******************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/AudioFlag.js ***!
-  \*******************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/AnimationFlags.js":
+/*!************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/AnimationFlags.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AnimationFlags = void 0;
+var AnimationFlags;
+(function (AnimationFlags) {
+    AnimationFlags[AnimationFlags["None"] = 0] = "None";
+    AnimationFlags[AnimationFlags["Loop"] = 1] = "Loop";
+    AnimationFlags[AnimationFlags["StayInEndFrame"] = 2] = "StayInEndFrame";
+    AnimationFlags[AnimationFlags["UpperBodyOnly"] = 16] = "UpperBodyOnly";
+    AnimationFlags[AnimationFlags["AllowRotation"] = 32] = "AllowRotation";
+    AnimationFlags[AnimationFlags["CancelableWithMovement"] = 128] = "CancelableWithMovement";
+    AnimationFlags[AnimationFlags["RagdollOnCollision"] = 4194304] = "RagdollOnCollision";
+})(AnimationFlags = exports.AnimationFlags || (exports.AnimationFlags = {}));
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/AudioFlag.js":
+/*!*******************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/AudioFlag.js ***!
+  \*******************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2227,10 +2922,10 @@ var AudioFlag;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/BadgeStyle.js":
-/*!********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/BadgeStyle.js ***!
-  \********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/BadgeStyle.js":
+/*!********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/BadgeStyle.js ***!
+  \********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2423,21 +3118,58 @@ var BadgeStyle;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/Blip.js":
-/*!**************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/Blip.js ***!
-  \**************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/Blip.js":
+/*!**************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/Blip.js ***!
+  \**************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.BlipSprite = exports.BlipColor = void 0;
+exports.BlipDisplay = exports.BlipSprite = exports.BlipColor = void 0;
 var BlipColor;
 (function (BlipColor) {
     BlipColor[BlipColor["White"] = 0] = "White";
     BlipColor[BlipColor["Red"] = 1] = "Red";
     BlipColor[BlipColor["Green"] = 2] = "Green";
     BlipColor[BlipColor["Blue"] = 3] = "Blue";
+    BlipColor[BlipColor["White2"] = 4] = "White2";
+    BlipColor[BlipColor["TaxiYellow"] = 5] = "TaxiYellow";
+    BlipColor[BlipColor["LightRed"] = 6] = "LightRed";
+    BlipColor[BlipColor["Violet"] = 7] = "Violet";
+    BlipColor[BlipColor["Pink"] = 8] = "Pink";
+    BlipColor[BlipColor["LightOrange"] = 9] = "LightOrange";
+    BlipColor[BlipColor["LightBrown"] = 10] = "LightBrown";
+    BlipColor[BlipColor["LightGreen"] = 11] = "LightGreen";
+    BlipColor[BlipColor["LightBlue"] = 12] = "LightBlue";
+    BlipColor[BlipColor["VeryLightPurple"] = 13] = "VeryLightPurple";
+    BlipColor[BlipColor["DarkPurple"] = 14] = "DarkPurple";
+    BlipColor[BlipColor["Cyan"] = 15] = "Cyan";
+    BlipColor[BlipColor["LightYellow"] = 16] = "LightYellow";
+    BlipColor[BlipColor["Orange"] = 17] = "Orange";
+    BlipColor[BlipColor["LightBlue2"] = 18] = "LightBlue2";
+    BlipColor[BlipColor["DarkPink"] = 19] = "DarkPink";
+    BlipColor[BlipColor["DarkYellow"] = 20] = "DarkYellow";
+    BlipColor[BlipColor["DarkOrange"] = 21] = "DarkOrange";
+    BlipColor[BlipColor["LightGray"] = 22] = "LightGray";
+    BlipColor[BlipColor["LightPink"] = 23] = "LightPink";
+    BlipColor[BlipColor["LemonGreen"] = 24] = "LemonGreen";
+    BlipColor[BlipColor["ForestGreen"] = 25] = "ForestGreen";
+    BlipColor[BlipColor["ElectricBlue"] = 26] = "ElectricBlue";
+    BlipColor[BlipColor["BrightPurple"] = 27] = "BrightPurple";
+    BlipColor[BlipColor["DarkTaxiYellow"] = 28] = "DarkTaxiYellow";
+    BlipColor[BlipColor["DarkBlue"] = 29] = "DarkBlue";
+    BlipColor[BlipColor["DarkCyan"] = 30] = "DarkCyan";
+    BlipColor[BlipColor["LightBrown2"] = 31] = "LightBrown2";
+    BlipColor[BlipColor["VeryLightBlue"] = 32] = "VeryLightBlue";
+    BlipColor[BlipColor["LightYellow2"] = 33] = "LightYellow2";
+    BlipColor[BlipColor["LightPink2"] = 34] = "LightPink2";
+    BlipColor[BlipColor["LightRed2"] = 35] = "LightRed2";
+    BlipColor[BlipColor["LightYellow3"] = 36] = "LightYellow3";
+    BlipColor[BlipColor["White3"] = 37] = "White3";
+    BlipColor[BlipColor["Blue2"] = 38] = "Blue2";
+    BlipColor[BlipColor["LightGray2"] = 39] = "LightGray2";
+    BlipColor[BlipColor["DarkGray"] = 40] = "DarkGray";
     BlipColor[BlipColor["MichaelBlue"] = 42] = "MichaelBlue";
     BlipColor[BlipColor["FranklinGreen"] = 43] = "FranklinGreen";
     BlipColor[BlipColor["TrevorOrange"] = 44] = "TrevorOrange";
@@ -2657,14 +3389,23 @@ var BlipSprite;
     BlipSprite[BlipSprite["Crosshair2"] = 432] = "Crosshair2";
     BlipSprite[BlipSprite["DollarSignSquared"] = 434] = "DollarSignSquared";
 })(BlipSprite = exports.BlipSprite || (exports.BlipSprite = {}));
+var BlipDisplay;
+(function (BlipDisplay) {
+    BlipDisplay[BlipDisplay["Hidden"] = 0] = "Hidden";
+    BlipDisplay[BlipDisplay["BothMapSelectable"] = 2] = "BothMapSelectable";
+    BlipDisplay[BlipDisplay["MainMapSelectable"] = 3] = "MainMapSelectable";
+    BlipDisplay[BlipDisplay["MainMap"] = 4] = "MainMap";
+    BlipDisplay[BlipDisplay["MiniMap"] = 5] = "MiniMap";
+    BlipDisplay[BlipDisplay["BothMapNotSelectable"] = 8] = "BothMapNotSelectable";
+})(BlipDisplay = exports.BlipDisplay || (exports.BlipDisplay = {}));
 
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/Bone.js":
-/*!**************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/Bone.js ***!
-  \**************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/Bone.js":
+/*!**************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/Bone.js ***!
+  \**************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2776,10 +3517,10 @@ var Bone;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/CameraShake.js":
-/*!*********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/CameraShake.js ***!
-  \*********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/CameraShake.js":
+/*!*********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/CameraShake.js ***!
+  \*********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2803,10 +3544,10 @@ var CameraShake;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/CheckboxStyle.js":
-/*!***********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/CheckboxStyle.js ***!
-  \***********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/CheckboxStyle.js":
+/*!***********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/CheckboxStyle.js ***!
+  \***********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2821,10 +3562,10 @@ var CheckboxStyle;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/Checkpoint.js":
-/*!********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/Checkpoint.js ***!
-  \********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/Checkpoint.js":
+/*!********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/Checkpoint.js ***!
+  \********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2901,10 +3642,10 @@ var CheckpointCustomIconStyle;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/CloudHat.js":
-/*!******************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/CloudHat.js ***!
-  \******************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/CloudHat.js":
+/*!******************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/CloudHat.js ***!
+  \******************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2941,10 +3682,10 @@ var CloudHat;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/Control.js":
-/*!*****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/Control.js ***!
-  \*****************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/Control.js":
+/*!*****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/Control.js ***!
+  \*****************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3315,10 +4056,10 @@ var Control;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/CursorSprite.js":
-/*!**********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/CursorSprite.js ***!
-  \**********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/CursorSprite.js":
+/*!**********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/CursorSprite.js ***!
+  \**********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3343,10 +4084,31 @@ var CursorSprite;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/Driving.js":
-/*!*****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/Driving.js ***!
-  \*****************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/DecorTypes.js":
+/*!********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/DecorTypes.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DecorTypes = void 0;
+var DecorTypes;
+(function (DecorTypes) {
+    DecorTypes[DecorTypes["Float"] = 1] = "Float";
+    DecorTypes[DecorTypes["Bool"] = 2] = "Bool";
+    DecorTypes[DecorTypes["Int"] = 3] = "Int";
+    DecorTypes[DecorTypes["Unk"] = 4] = "Unk";
+    DecorTypes[DecorTypes["Time"] = 5] = "Time";
+})(DecorTypes = exports.DecorTypes || (exports.DecorTypes = {}));
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/Driving.js":
+/*!*****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/Driving.js ***!
+  \*****************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3390,10 +4152,10 @@ var VehicleDrivingFlags;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/ExplosionType.js":
-/*!***********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/ExplosionType.js ***!
-  \***********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/ExplosionType.js":
+/*!***********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/ExplosionType.js ***!
+  \***********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3448,10 +4210,43 @@ var ExplosionType;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/Font.js":
-/*!**************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/Font.js ***!
-  \**************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/FiringPattern.js":
+/*!***********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/FiringPattern.js ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FiringPattern = void 0;
+var FiringPattern;
+(function (FiringPattern) {
+    FiringPattern[FiringPattern["Default"] = 0] = "Default";
+    FiringPattern[FiringPattern["FullAuto"] = 3337513804] = "FullAuto";
+    FiringPattern[FiringPattern["BurstFire"] = 3607063905] = "BurstFire";
+    FiringPattern[FiringPattern["BurstInCover"] = 40051185] = "BurstInCover";
+    FiringPattern[FiringPattern["BurstFireDriveby"] = 3541198322] = "BurstFireDriveby";
+    FiringPattern[FiringPattern["FromGround"] = 577037782] = "FromGround";
+    FiringPattern[FiringPattern["DelayFireByOneSec"] = 2055493265] = "DelayFireByOneSec";
+    FiringPattern[FiringPattern["SingleShot"] = 1566631136] = "SingleShot";
+    FiringPattern[FiringPattern["BurstFirePistol"] = 2685983626] = "BurstFirePistol";
+    FiringPattern[FiringPattern["BurstFireSMG"] = 3507334638] = "BurstFireSMG";
+    FiringPattern[FiringPattern["BurstFireRifle"] = 2624893958] = "BurstFireRifle";
+    FiringPattern[FiringPattern["BurstFireMG"] = 3044263348] = "BurstFireMG";
+    FiringPattern[FiringPattern["BurstFirePumpShotGun"] = 12239771] = "BurstFirePumpShotGun";
+    FiringPattern[FiringPattern["BurstFireHeli"] = 2437838959] = "BurstFireHeli";
+    FiringPattern[FiringPattern["BurstFireMicro"] = 1122960381] = "BurstFireMicro";
+    FiringPattern[FiringPattern["BurstFireBursts"] = 1122960381] = "BurstFireBursts";
+    FiringPattern[FiringPattern["BurstFireTank"] = 3804904049] = "BurstFireTank";
+})(FiringPattern = exports.FiringPattern || (exports.FiringPattern = {}));
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/Font.js":
+/*!**************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/Font.js ***!
+  \**************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3469,10 +4264,10 @@ var Font;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/ForceType.js":
-/*!*******************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/ForceType.js ***!
-  \*******************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/ForceType.js":
+/*!*******************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/ForceType.js ***!
+  \*******************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3491,10 +4286,56 @@ var ForceType;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/Gender.js":
-/*!****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/Gender.js ***!
-  \****************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/GamerTagComponent.js":
+/*!***************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/GamerTagComponent.js ***!
+  \***************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GamerTagComponent = void 0;
+var GamerTagComponent;
+(function (GamerTagComponent) {
+    GamerTagComponent[GamerTagComponent["GamerName"] = 0] = "GamerName";
+    GamerTagComponent[GamerTagComponent["CrewTag"] = 1] = "CrewTag";
+    GamerTagComponent[GamerTagComponent["HealthArmour"] = 2] = "HealthArmour";
+    GamerTagComponent[GamerTagComponent["BigText"] = 3] = "BigText";
+    GamerTagComponent[GamerTagComponent["AudioIcon"] = 4] = "AudioIcon";
+    GamerTagComponent[GamerTagComponent["UsingMenu"] = 5] = "UsingMenu";
+    GamerTagComponent[GamerTagComponent["PassiveMode"] = 6] = "PassiveMode";
+    GamerTagComponent[GamerTagComponent["WantedStars"] = 7] = "WantedStars";
+    GamerTagComponent[GamerTagComponent["Diver"] = 8] = "Diver";
+    GamerTagComponent[GamerTagComponent["CoDriver"] = 9] = "CoDriver";
+    GamerTagComponent[GamerTagComponent["Tagged"] = 10] = "Tagged";
+    GamerTagComponent[GamerTagComponent["GameNameNarby"] = 11] = "GameNameNarby";
+    GamerTagComponent[GamerTagComponent["Arrow"] = 12] = "Arrow";
+    GamerTagComponent[GamerTagComponent["Packages"] = 13] = "Packages";
+    GamerTagComponent[GamerTagComponent["InvIfPedFollowing"] = 14] = "InvIfPedFollowing";
+    GamerTagComponent[GamerTagComponent["RankText"] = 15] = "RankText";
+    GamerTagComponent[GamerTagComponent["Typing"] = 16] = "Typing";
+    GamerTagComponent[GamerTagComponent["BagLarge"] = 17] = "BagLarge";
+    GamerTagComponent[GamerTagComponent["Arrow2"] = 18] = "Arrow2";
+    GamerTagComponent[GamerTagComponent["GangCeo"] = 19] = "GangCeo";
+    GamerTagComponent[GamerTagComponent["GangBiker"] = 20] = "GangBiker";
+    GamerTagComponent[GamerTagComponent["BikerArrow"] = 21] = "BikerArrow";
+    GamerTagComponent[GamerTagComponent["McRolePresident"] = 22] = "McRolePresident";
+    GamerTagComponent[GamerTagComponent["McRoleVicePresident"] = 23] = "McRoleVicePresident";
+    GamerTagComponent[GamerTagComponent["McRoleRoadCaptain"] = 24] = "McRoleRoadCaptain";
+    GamerTagComponent[GamerTagComponent["McRoleRoadSergent"] = 25] = "McRoleRoadSergent";
+    GamerTagComponent[GamerTagComponent["McRoleRoadEnforcer"] = 26] = "McRoleRoadEnforcer";
+    GamerTagComponent[GamerTagComponent["McRoleRoadProspect"] = 27] = "McRoleRoadProspect";
+    GamerTagComponent[GamerTagComponent["Transmitter"] = 28] = "Transmitter";
+    GamerTagComponent[GamerTagComponent["Bomb"] = 29] = "Bomb";
+})(GamerTagComponent = exports.GamerTagComponent || (exports.GamerTagComponent = {}));
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/Gender.js":
+/*!****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/Gender.js ***!
+  \****************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3509,10 +4350,10 @@ var Gender;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/HelmetType.js":
-/*!********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/HelmetType.js ***!
-  \********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/HelmetType.js":
+/*!********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/HelmetType.js ***!
+  \********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3528,10 +4369,10 @@ var HelmetType;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/HudColor.js":
-/*!******************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/HudColor.js ***!
-  \******************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/HudColor.js":
+/*!******************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/HudColor.js ***!
+  \******************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3725,10 +4566,10 @@ var HudColor;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/HudComponent.js":
-/*!**********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/HudComponent.js ***!
-  \**********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/HudComponent.js":
+/*!**********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/HudComponent.js ***!
+  \**********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3792,10 +4633,10 @@ var HudComponent;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/InputMode.js":
-/*!*******************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/InputMode.js ***!
-  \*******************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/InputMode.js":
+/*!*******************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/InputMode.js ***!
+  \*******************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3810,10 +4651,10 @@ var InputMode;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/IntersectOptions.js":
-/*!**************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/IntersectOptions.js ***!
-  \**************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/IntersectOptions.js":
+/*!**************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/IntersectOptions.js ***!
+  \**************************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3839,10 +4680,10 @@ var IntersectOptions;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/InvertAxis.js":
-/*!********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/InvertAxis.js ***!
-  \********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/InvertAxis.js":
+/*!********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/InvertAxis.js ***!
+  \********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3859,10 +4700,10 @@ var InvertAxisFlags;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/Language.js":
-/*!******************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/Language.js ***!
-  \******************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/Language.js":
+/*!******************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/Language.js ***!
+  \******************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3887,10 +4728,34 @@ var Language;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/LoadingSpinnerType.js":
-/*!****************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/LoadingSpinnerType.js ***!
-  \****************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/LeaveVehicleFlags.js":
+/*!***************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/LeaveVehicleFlags.js ***!
+  \***************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.LeaveVehicleFlags = void 0;
+var LeaveVehicleFlags;
+(function (LeaveVehicleFlags) {
+    LeaveVehicleFlags[LeaveVehicleFlags["None"] = 0] = "None";
+    LeaveVehicleFlags[LeaveVehicleFlags["Normal"] = 1] = "Normal";
+    LeaveVehicleFlags[LeaveVehicleFlags["WarpOut"] = 16] = "WarpOut";
+    LeaveVehicleFlags[LeaveVehicleFlags["SlowerNone"] = 64] = "SlowerNone";
+    LeaveVehicleFlags[LeaveVehicleFlags["LeaveDoorOpen"] = 256] = "LeaveDoorOpen";
+    LeaveVehicleFlags[LeaveVehicleFlags["BailOut"] = 4096] = "BailOut";
+    LeaveVehicleFlags[LeaveVehicleFlags["BailOut2"] = 4160] = "BailOut2";
+    LeaveVehicleFlags[LeaveVehicleFlags["PassengerSeatNormal"] = 262144] = "PassengerSeatNormal";
+})(LeaveVehicleFlags = exports.LeaveVehicleFlags || (exports.LeaveVehicleFlags = {}));
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/LoadingSpinnerType.js":
+/*!****************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/LoadingSpinnerType.js ***!
+  \****************************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3908,10 +4773,10 @@ var LoadingSpinnerType;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/MarkerType.js":
-/*!********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/MarkerType.js ***!
-  \********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/MarkerType.js":
+/*!********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/MarkerType.js ***!
+  \********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3971,10 +4836,28 @@ var MarkerType;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/NotificationType.js":
-/*!**************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/NotificationType.js ***!
-  \**************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/MenuAlignment.js":
+/*!***********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/MenuAlignment.js ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MenuAlignment = void 0;
+var MenuAlignment;
+(function (MenuAlignment) {
+    MenuAlignment[MenuAlignment["Left"] = 76] = "Left";
+    MenuAlignment[MenuAlignment["Right"] = 82] = "Right";
+})(MenuAlignment = exports.MenuAlignment || (exports.MenuAlignment = {}));
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/NotificationType.js":
+/*!**************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/NotificationType.js ***!
+  \**************************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3995,10 +4878,10 @@ var NotificationType;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/Parachute.js":
-/*!*******************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/Parachute.js ***!
-  \*******************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/Parachute.js":
+/*!*******************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/Parachute.js ***!
+  \*******************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -4023,10 +4906,35 @@ var ParachuteState;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/RadioStation.js":
-/*!**********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/RadioStation.js ***!
-  \**********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/PedType.js":
+/*!*****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/PedType.js ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PedType = void 0;
+var PedType;
+(function (PedType) {
+    PedType[PedType["Anyped"] = -1] = "Anyped";
+    PedType[PedType["Player"] = 1] = "Player";
+    PedType[PedType["Male"] = 4] = "Male";
+    PedType[PedType["Female"] = 5] = "Female";
+    PedType[PedType["Cop"] = 6] = "Cop";
+    PedType[PedType["Human"] = 26] = "Human";
+    PedType[PedType["SWAT"] = 27] = "SWAT";
+    PedType[PedType["Animal"] = 28] = "Animal";
+    PedType[PedType["Army"] = 29] = "Army";
+})(PedType = exports.PedType || (exports.PedType = {}));
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/RadioStation.js":
+/*!**********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/RadioStation.js ***!
+  \**********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -4061,10 +4969,10 @@ var RadioStation;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/RagdollType.js":
-/*!*********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/RagdollType.js ***!
-  \*********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/RagdollType.js":
+/*!*********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/RagdollType.js ***!
+  \*********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -4081,10 +4989,10 @@ var RagdollType;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/Relationship.js":
-/*!**********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/Relationship.js ***!
-  \**********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/Relationship.js":
+/*!**********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/Relationship.js ***!
+  \**********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -4104,10 +5012,10 @@ var Relationship;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/RopeType.js":
-/*!******************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/RopeType.js ***!
-  \******************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/RopeType.js":
+/*!******************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/RopeType.js ***!
+  \******************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -4122,10 +5030,10 @@ var RopeType;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/ScreenEffect.js":
-/*!**********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/ScreenEffect.js ***!
-  \**********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/ScreenEffect.js":
+/*!**********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/ScreenEffect.js ***!
+  \**********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -4219,10 +5127,10 @@ var ScreenEffect;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/SpeechModifier.js":
-/*!************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/SpeechModifier.js ***!
-  \************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/SpeechModifier.js":
+/*!************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/SpeechModifier.js ***!
+  \************************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -4272,10 +5180,10 @@ var SpeechModifier;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/Vehicle.js":
-/*!*****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/Vehicle.js ***!
-  \*****************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/Vehicle.js":
+/*!*****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/Vehicle.js ***!
+  \*****************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -4661,10 +5569,29 @@ var VehicleWheelIndex;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/Weather.js":
-/*!*****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/Weather.js ***!
-  \*****************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/WeaponTypeFlags.js":
+/*!*************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/WeaponTypeFlags.js ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WeaponTypeFlags = void 0;
+var WeaponTypeFlags;
+(function (WeaponTypeFlags) {
+    WeaponTypeFlags[WeaponTypeFlags["Melee"] = 1] = "Melee";
+    WeaponTypeFlags[WeaponTypeFlags["Explosive"] = 2] = "Explosive";
+    WeaponTypeFlags[WeaponTypeFlags["Other"] = 4] = "Other";
+})(WeaponTypeFlags = exports.WeaponTypeFlags || (exports.WeaponTypeFlags = {}));
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/Weather.js":
+/*!*****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/Weather.js ***!
+  \*****************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -4696,10 +5623,10 @@ var Weather;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/ZoneID.js":
-/*!****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/ZoneID.js ***!
-  \****************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/ZoneID.js":
+/*!****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/ZoneID.js ***!
+  \****************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -4804,114 +5731,128 @@ var ZoneID;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/enums/index.js":
-/*!***************************************************!*\
-  !*** ../node_modules/fivem-js/lib/enums/index.js ***!
-  \***************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js":
+/*!***************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/enums/index.js ***!
+  \***************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.VehicleDoorIndex = exports.VehiclePaintType = exports.VehicleToggleModType = exports.VehicleModType = exports.VehicleWindowIndex = exports.VehicleWindowTint = exports.VehicleSeat = exports.VehicleRoofState = exports.VehicleNeonLight = exports.VehicleLockStatus = exports.VehicleLandingGearState = exports.VehicleColor = exports.VehicleClass = exports.SpeechModifier = exports.ScreenEffect = exports.RopeType = exports.Relationship = exports.RagdollType = exports.RadioStation = exports.ParachuteState = exports.ParachuteLandingType = exports.NotificationType = exports.MarkerType = exports.LoadingSpinnerType = exports.Language = exports.InvertAxisFlags = exports.IntersectOptions = exports.InputMode = exports.HudComponent = exports.HudColor = exports.HelmetType = exports.Gender = exports.ForceType = exports.Font = exports.ExplosionType = exports.VehicleDrivingFlags = exports.DrivingStyle = exports.CursorSprite = exports.Control = exports.CloudHat = exports.CheckpointIcon = exports.CheckpointCustomIconStyle = exports.CheckboxStyle = exports.CameraShake = exports.Bone = exports.BlipSprite = exports.BlipColor = exports.BadgeStyle = exports.AudioFlag = exports.Alignment = void 0;
-exports.ZoneID = exports.Weather = exports.VehicleWheelIndex = exports.VehicleWheelType = void 0;
-var Alignment_1 = __webpack_require__(/*! ./Alignment */ "../node_modules/fivem-js/lib/enums/Alignment.js");
+exports.VehicleNeonLight = exports.VehicleModType = exports.VehicleLockStatus = exports.VehicleLandingGearState = exports.VehicleDoorIndex = exports.VehicleColor = exports.VehicleClass = exports.SpeechModifier = exports.ScreenEffect = exports.RopeType = exports.Relationship = exports.RagdollType = exports.RadioStation = exports.ParachuteState = exports.ParachuteLandingType = exports.NotificationType = exports.MenuAlignment = exports.MarkerType = exports.LoadingSpinnerType = exports.LeaveVehicleFlags = exports.Language = exports.InvertAxisFlags = exports.IntersectOptions = exports.InputMode = exports.HudComponent = exports.HudColor = exports.HelmetType = exports.Gender = exports.GamerTagComponent = exports.ForceType = exports.Font = exports.FiringPattern = exports.ExplosionType = exports.VehicleDrivingFlags = exports.DrivingStyle = exports.DecorTypes = exports.CursorSprite = exports.Control = exports.CloudHat = exports.CheckpointIcon = exports.CheckpointCustomIconStyle = exports.CheckboxStyle = exports.CameraShake = exports.Bone = exports.BlipSprite = exports.BlipColor = exports.BadgeStyle = exports.AudioFlag = exports.AnimationFlags = exports.Alignment = void 0;
+exports.ZoneID = exports.Weather = exports.WeaponTypeFlags = exports.VehicleWindowTint = exports.VehicleWindowIndex = exports.VehicleWheelType = exports.VehicleWheelIndex = exports.VehicleToggleModType = exports.VehicleSeat = exports.VehicleRoofState = exports.VehiclePaintType = void 0;
+var Alignment_1 = __webpack_require__(/*! ./Alignment */ "../node_modules/@wdesgardin/fivem-js/lib/enums/Alignment.js");
 Object.defineProperty(exports, "Alignment", ({ enumerable: true, get: function () { return Alignment_1.Alignment; } }));
-var AudioFlag_1 = __webpack_require__(/*! ./AudioFlag */ "../node_modules/fivem-js/lib/enums/AudioFlag.js");
+var AnimationFlags_1 = __webpack_require__(/*! ./AnimationFlags */ "../node_modules/@wdesgardin/fivem-js/lib/enums/AnimationFlags.js");
+Object.defineProperty(exports, "AnimationFlags", ({ enumerable: true, get: function () { return AnimationFlags_1.AnimationFlags; } }));
+var AudioFlag_1 = __webpack_require__(/*! ./AudioFlag */ "../node_modules/@wdesgardin/fivem-js/lib/enums/AudioFlag.js");
 Object.defineProperty(exports, "AudioFlag", ({ enumerable: true, get: function () { return AudioFlag_1.AudioFlag; } }));
-var BadgeStyle_1 = __webpack_require__(/*! ./BadgeStyle */ "../node_modules/fivem-js/lib/enums/BadgeStyle.js");
+var BadgeStyle_1 = __webpack_require__(/*! ./BadgeStyle */ "../node_modules/@wdesgardin/fivem-js/lib/enums/BadgeStyle.js");
 Object.defineProperty(exports, "BadgeStyle", ({ enumerable: true, get: function () { return BadgeStyle_1.BadgeStyle; } }));
-var Blip_1 = __webpack_require__(/*! ./Blip */ "../node_modules/fivem-js/lib/enums/Blip.js");
+var Blip_1 = __webpack_require__(/*! ./Blip */ "../node_modules/@wdesgardin/fivem-js/lib/enums/Blip.js");
 Object.defineProperty(exports, "BlipColor", ({ enumerable: true, get: function () { return Blip_1.BlipColor; } }));
 Object.defineProperty(exports, "BlipSprite", ({ enumerable: true, get: function () { return Blip_1.BlipSprite; } }));
-var Bone_1 = __webpack_require__(/*! ./Bone */ "../node_modules/fivem-js/lib/enums/Bone.js");
+var Bone_1 = __webpack_require__(/*! ./Bone */ "../node_modules/@wdesgardin/fivem-js/lib/enums/Bone.js");
 Object.defineProperty(exports, "Bone", ({ enumerable: true, get: function () { return Bone_1.Bone; } }));
-var CameraShake_1 = __webpack_require__(/*! ./CameraShake */ "../node_modules/fivem-js/lib/enums/CameraShake.js");
+var CameraShake_1 = __webpack_require__(/*! ./CameraShake */ "../node_modules/@wdesgardin/fivem-js/lib/enums/CameraShake.js");
 Object.defineProperty(exports, "CameraShake", ({ enumerable: true, get: function () { return CameraShake_1.CameraShake; } }));
-var CheckboxStyle_1 = __webpack_require__(/*! ./CheckboxStyle */ "../node_modules/fivem-js/lib/enums/CheckboxStyle.js");
+var CheckboxStyle_1 = __webpack_require__(/*! ./CheckboxStyle */ "../node_modules/@wdesgardin/fivem-js/lib/enums/CheckboxStyle.js");
 Object.defineProperty(exports, "CheckboxStyle", ({ enumerable: true, get: function () { return CheckboxStyle_1.CheckboxStyle; } }));
-var Checkpoint_1 = __webpack_require__(/*! ./Checkpoint */ "../node_modules/fivem-js/lib/enums/Checkpoint.js");
+var Checkpoint_1 = __webpack_require__(/*! ./Checkpoint */ "../node_modules/@wdesgardin/fivem-js/lib/enums/Checkpoint.js");
 Object.defineProperty(exports, "CheckpointCustomIconStyle", ({ enumerable: true, get: function () { return Checkpoint_1.CheckpointCustomIconStyle; } }));
 Object.defineProperty(exports, "CheckpointIcon", ({ enumerable: true, get: function () { return Checkpoint_1.CheckpointIcon; } }));
-var CloudHat_1 = __webpack_require__(/*! ./CloudHat */ "../node_modules/fivem-js/lib/enums/CloudHat.js");
+var CloudHat_1 = __webpack_require__(/*! ./CloudHat */ "../node_modules/@wdesgardin/fivem-js/lib/enums/CloudHat.js");
 Object.defineProperty(exports, "CloudHat", ({ enumerable: true, get: function () { return CloudHat_1.CloudHat; } }));
-var Control_1 = __webpack_require__(/*! ./Control */ "../node_modules/fivem-js/lib/enums/Control.js");
+var Control_1 = __webpack_require__(/*! ./Control */ "../node_modules/@wdesgardin/fivem-js/lib/enums/Control.js");
 Object.defineProperty(exports, "Control", ({ enumerable: true, get: function () { return Control_1.Control; } }));
-var CursorSprite_1 = __webpack_require__(/*! ./CursorSprite */ "../node_modules/fivem-js/lib/enums/CursorSprite.js");
+var CursorSprite_1 = __webpack_require__(/*! ./CursorSprite */ "../node_modules/@wdesgardin/fivem-js/lib/enums/CursorSprite.js");
 Object.defineProperty(exports, "CursorSprite", ({ enumerable: true, get: function () { return CursorSprite_1.CursorSprite; } }));
-var Driving_1 = __webpack_require__(/*! ./Driving */ "../node_modules/fivem-js/lib/enums/Driving.js");
+var DecorTypes_1 = __webpack_require__(/*! ./DecorTypes */ "../node_modules/@wdesgardin/fivem-js/lib/enums/DecorTypes.js");
+Object.defineProperty(exports, "DecorTypes", ({ enumerable: true, get: function () { return DecorTypes_1.DecorTypes; } }));
+var Driving_1 = __webpack_require__(/*! ./Driving */ "../node_modules/@wdesgardin/fivem-js/lib/enums/Driving.js");
 Object.defineProperty(exports, "DrivingStyle", ({ enumerable: true, get: function () { return Driving_1.DrivingStyle; } }));
 Object.defineProperty(exports, "VehicleDrivingFlags", ({ enumerable: true, get: function () { return Driving_1.VehicleDrivingFlags; } }));
-var ExplosionType_1 = __webpack_require__(/*! ./ExplosionType */ "../node_modules/fivem-js/lib/enums/ExplosionType.js");
+var ExplosionType_1 = __webpack_require__(/*! ./ExplosionType */ "../node_modules/@wdesgardin/fivem-js/lib/enums/ExplosionType.js");
 Object.defineProperty(exports, "ExplosionType", ({ enumerable: true, get: function () { return ExplosionType_1.ExplosionType; } }));
-var Font_1 = __webpack_require__(/*! ./Font */ "../node_modules/fivem-js/lib/enums/Font.js");
+var FiringPattern_1 = __webpack_require__(/*! ./FiringPattern */ "../node_modules/@wdesgardin/fivem-js/lib/enums/FiringPattern.js");
+Object.defineProperty(exports, "FiringPattern", ({ enumerable: true, get: function () { return FiringPattern_1.FiringPattern; } }));
+var Font_1 = __webpack_require__(/*! ./Font */ "../node_modules/@wdesgardin/fivem-js/lib/enums/Font.js");
 Object.defineProperty(exports, "Font", ({ enumerable: true, get: function () { return Font_1.Font; } }));
-var ForceType_1 = __webpack_require__(/*! ./ForceType */ "../node_modules/fivem-js/lib/enums/ForceType.js");
+var ForceType_1 = __webpack_require__(/*! ./ForceType */ "../node_modules/@wdesgardin/fivem-js/lib/enums/ForceType.js");
 Object.defineProperty(exports, "ForceType", ({ enumerable: true, get: function () { return ForceType_1.ForceType; } }));
-var Gender_1 = __webpack_require__(/*! ./Gender */ "../node_modules/fivem-js/lib/enums/Gender.js");
+var GamerTagComponent_1 = __webpack_require__(/*! ./GamerTagComponent */ "../node_modules/@wdesgardin/fivem-js/lib/enums/GamerTagComponent.js");
+Object.defineProperty(exports, "GamerTagComponent", ({ enumerable: true, get: function () { return GamerTagComponent_1.GamerTagComponent; } }));
+var Gender_1 = __webpack_require__(/*! ./Gender */ "../node_modules/@wdesgardin/fivem-js/lib/enums/Gender.js");
 Object.defineProperty(exports, "Gender", ({ enumerable: true, get: function () { return Gender_1.Gender; } }));
-var HelmetType_1 = __webpack_require__(/*! ./HelmetType */ "../node_modules/fivem-js/lib/enums/HelmetType.js");
+var HelmetType_1 = __webpack_require__(/*! ./HelmetType */ "../node_modules/@wdesgardin/fivem-js/lib/enums/HelmetType.js");
 Object.defineProperty(exports, "HelmetType", ({ enumerable: true, get: function () { return HelmetType_1.HelmetType; } }));
-var HudColor_1 = __webpack_require__(/*! ./HudColor */ "../node_modules/fivem-js/lib/enums/HudColor.js");
+var HudColor_1 = __webpack_require__(/*! ./HudColor */ "../node_modules/@wdesgardin/fivem-js/lib/enums/HudColor.js");
 Object.defineProperty(exports, "HudColor", ({ enumerable: true, get: function () { return HudColor_1.HudColor; } }));
-var HudComponent_1 = __webpack_require__(/*! ./HudComponent */ "../node_modules/fivem-js/lib/enums/HudComponent.js");
+var HudComponent_1 = __webpack_require__(/*! ./HudComponent */ "../node_modules/@wdesgardin/fivem-js/lib/enums/HudComponent.js");
 Object.defineProperty(exports, "HudComponent", ({ enumerable: true, get: function () { return HudComponent_1.HudComponent; } }));
-var InputMode_1 = __webpack_require__(/*! ./InputMode */ "../node_modules/fivem-js/lib/enums/InputMode.js");
+var InputMode_1 = __webpack_require__(/*! ./InputMode */ "../node_modules/@wdesgardin/fivem-js/lib/enums/InputMode.js");
 Object.defineProperty(exports, "InputMode", ({ enumerable: true, get: function () { return InputMode_1.InputMode; } }));
-var IntersectOptions_1 = __webpack_require__(/*! ./IntersectOptions */ "../node_modules/fivem-js/lib/enums/IntersectOptions.js");
+var IntersectOptions_1 = __webpack_require__(/*! ./IntersectOptions */ "../node_modules/@wdesgardin/fivem-js/lib/enums/IntersectOptions.js");
 Object.defineProperty(exports, "IntersectOptions", ({ enumerable: true, get: function () { return IntersectOptions_1.IntersectOptions; } }));
-var InvertAxis_1 = __webpack_require__(/*! ./InvertAxis */ "../node_modules/fivem-js/lib/enums/InvertAxis.js");
+var InvertAxis_1 = __webpack_require__(/*! ./InvertAxis */ "../node_modules/@wdesgardin/fivem-js/lib/enums/InvertAxis.js");
 Object.defineProperty(exports, "InvertAxisFlags", ({ enumerable: true, get: function () { return InvertAxis_1.InvertAxisFlags; } }));
-var Language_1 = __webpack_require__(/*! ./Language */ "../node_modules/fivem-js/lib/enums/Language.js");
+var Language_1 = __webpack_require__(/*! ./Language */ "../node_modules/@wdesgardin/fivem-js/lib/enums/Language.js");
 Object.defineProperty(exports, "Language", ({ enumerable: true, get: function () { return Language_1.Language; } }));
-var LoadingSpinnerType_1 = __webpack_require__(/*! ./LoadingSpinnerType */ "../node_modules/fivem-js/lib/enums/LoadingSpinnerType.js");
+var LeaveVehicleFlags_1 = __webpack_require__(/*! ./LeaveVehicleFlags */ "../node_modules/@wdesgardin/fivem-js/lib/enums/LeaveVehicleFlags.js");
+Object.defineProperty(exports, "LeaveVehicleFlags", ({ enumerable: true, get: function () { return LeaveVehicleFlags_1.LeaveVehicleFlags; } }));
+var LoadingSpinnerType_1 = __webpack_require__(/*! ./LoadingSpinnerType */ "../node_modules/@wdesgardin/fivem-js/lib/enums/LoadingSpinnerType.js");
 Object.defineProperty(exports, "LoadingSpinnerType", ({ enumerable: true, get: function () { return LoadingSpinnerType_1.LoadingSpinnerType; } }));
-var MarkerType_1 = __webpack_require__(/*! ./MarkerType */ "../node_modules/fivem-js/lib/enums/MarkerType.js");
+var MarkerType_1 = __webpack_require__(/*! ./MarkerType */ "../node_modules/@wdesgardin/fivem-js/lib/enums/MarkerType.js");
 Object.defineProperty(exports, "MarkerType", ({ enumerable: true, get: function () { return MarkerType_1.MarkerType; } }));
-var NotificationType_1 = __webpack_require__(/*! ./NotificationType */ "../node_modules/fivem-js/lib/enums/NotificationType.js");
+var MenuAlignment_1 = __webpack_require__(/*! ./MenuAlignment */ "../node_modules/@wdesgardin/fivem-js/lib/enums/MenuAlignment.js");
+Object.defineProperty(exports, "MenuAlignment", ({ enumerable: true, get: function () { return MenuAlignment_1.MenuAlignment; } }));
+var NotificationType_1 = __webpack_require__(/*! ./NotificationType */ "../node_modules/@wdesgardin/fivem-js/lib/enums/NotificationType.js");
 Object.defineProperty(exports, "NotificationType", ({ enumerable: true, get: function () { return NotificationType_1.NotificationType; } }));
-var Parachute_1 = __webpack_require__(/*! ./Parachute */ "../node_modules/fivem-js/lib/enums/Parachute.js");
+var Parachute_1 = __webpack_require__(/*! ./Parachute */ "../node_modules/@wdesgardin/fivem-js/lib/enums/Parachute.js");
 Object.defineProperty(exports, "ParachuteLandingType", ({ enumerable: true, get: function () { return Parachute_1.ParachuteLandingType; } }));
 Object.defineProperty(exports, "ParachuteState", ({ enumerable: true, get: function () { return Parachute_1.ParachuteState; } }));
-var RadioStation_1 = __webpack_require__(/*! ./RadioStation */ "../node_modules/fivem-js/lib/enums/RadioStation.js");
+var RadioStation_1 = __webpack_require__(/*! ./RadioStation */ "../node_modules/@wdesgardin/fivem-js/lib/enums/RadioStation.js");
 Object.defineProperty(exports, "RadioStation", ({ enumerable: true, get: function () { return RadioStation_1.RadioStation; } }));
-var RagdollType_1 = __webpack_require__(/*! ./RagdollType */ "../node_modules/fivem-js/lib/enums/RagdollType.js");
+var RagdollType_1 = __webpack_require__(/*! ./RagdollType */ "../node_modules/@wdesgardin/fivem-js/lib/enums/RagdollType.js");
 Object.defineProperty(exports, "RagdollType", ({ enumerable: true, get: function () { return RagdollType_1.RagdollType; } }));
-var Relationship_1 = __webpack_require__(/*! ./Relationship */ "../node_modules/fivem-js/lib/enums/Relationship.js");
+var Relationship_1 = __webpack_require__(/*! ./Relationship */ "../node_modules/@wdesgardin/fivem-js/lib/enums/Relationship.js");
 Object.defineProperty(exports, "Relationship", ({ enumerable: true, get: function () { return Relationship_1.Relationship; } }));
-var RopeType_1 = __webpack_require__(/*! ./RopeType */ "../node_modules/fivem-js/lib/enums/RopeType.js");
+var RopeType_1 = __webpack_require__(/*! ./RopeType */ "../node_modules/@wdesgardin/fivem-js/lib/enums/RopeType.js");
 Object.defineProperty(exports, "RopeType", ({ enumerable: true, get: function () { return RopeType_1.RopeType; } }));
-var ScreenEffect_1 = __webpack_require__(/*! ./ScreenEffect */ "../node_modules/fivem-js/lib/enums/ScreenEffect.js");
+var ScreenEffect_1 = __webpack_require__(/*! ./ScreenEffect */ "../node_modules/@wdesgardin/fivem-js/lib/enums/ScreenEffect.js");
 Object.defineProperty(exports, "ScreenEffect", ({ enumerable: true, get: function () { return ScreenEffect_1.ScreenEffect; } }));
-var SpeechModifier_1 = __webpack_require__(/*! ./SpeechModifier */ "../node_modules/fivem-js/lib/enums/SpeechModifier.js");
+var SpeechModifier_1 = __webpack_require__(/*! ./SpeechModifier */ "../node_modules/@wdesgardin/fivem-js/lib/enums/SpeechModifier.js");
 Object.defineProperty(exports, "SpeechModifier", ({ enumerable: true, get: function () { return SpeechModifier_1.SpeechModifier; } }));
-var Vehicle_1 = __webpack_require__(/*! ./Vehicle */ "../node_modules/fivem-js/lib/enums/Vehicle.js");
+var Vehicle_1 = __webpack_require__(/*! ./Vehicle */ "../node_modules/@wdesgardin/fivem-js/lib/enums/Vehicle.js");
 Object.defineProperty(exports, "VehicleClass", ({ enumerable: true, get: function () { return Vehicle_1.VehicleClass; } }));
 Object.defineProperty(exports, "VehicleColor", ({ enumerable: true, get: function () { return Vehicle_1.VehicleColor; } }));
+Object.defineProperty(exports, "VehicleDoorIndex", ({ enumerable: true, get: function () { return Vehicle_1.VehicleDoorIndex; } }));
 Object.defineProperty(exports, "VehicleLandingGearState", ({ enumerable: true, get: function () { return Vehicle_1.VehicleLandingGearState; } }));
 Object.defineProperty(exports, "VehicleLockStatus", ({ enumerable: true, get: function () { return Vehicle_1.VehicleLockStatus; } }));
+Object.defineProperty(exports, "VehicleModType", ({ enumerable: true, get: function () { return Vehicle_1.VehicleModType; } }));
 Object.defineProperty(exports, "VehicleNeonLight", ({ enumerable: true, get: function () { return Vehicle_1.VehicleNeonLight; } }));
+Object.defineProperty(exports, "VehiclePaintType", ({ enumerable: true, get: function () { return Vehicle_1.VehiclePaintType; } }));
 Object.defineProperty(exports, "VehicleRoofState", ({ enumerable: true, get: function () { return Vehicle_1.VehicleRoofState; } }));
 Object.defineProperty(exports, "VehicleSeat", ({ enumerable: true, get: function () { return Vehicle_1.VehicleSeat; } }));
-Object.defineProperty(exports, "VehicleWindowTint", ({ enumerable: true, get: function () { return Vehicle_1.VehicleWindowTint; } }));
-Object.defineProperty(exports, "VehicleWindowIndex", ({ enumerable: true, get: function () { return Vehicle_1.VehicleWindowIndex; } }));
-Object.defineProperty(exports, "VehicleModType", ({ enumerable: true, get: function () { return Vehicle_1.VehicleModType; } }));
 Object.defineProperty(exports, "VehicleToggleModType", ({ enumerable: true, get: function () { return Vehicle_1.VehicleToggleModType; } }));
-Object.defineProperty(exports, "VehiclePaintType", ({ enumerable: true, get: function () { return Vehicle_1.VehiclePaintType; } }));
-Object.defineProperty(exports, "VehicleDoorIndex", ({ enumerable: true, get: function () { return Vehicle_1.VehicleDoorIndex; } }));
-Object.defineProperty(exports, "VehicleWheelType", ({ enumerable: true, get: function () { return Vehicle_1.VehicleWheelType; } }));
 Object.defineProperty(exports, "VehicleWheelIndex", ({ enumerable: true, get: function () { return Vehicle_1.VehicleWheelIndex; } }));
-var Weather_1 = __webpack_require__(/*! ./Weather */ "../node_modules/fivem-js/lib/enums/Weather.js");
+Object.defineProperty(exports, "VehicleWheelType", ({ enumerable: true, get: function () { return Vehicle_1.VehicleWheelType; } }));
+Object.defineProperty(exports, "VehicleWindowIndex", ({ enumerable: true, get: function () { return Vehicle_1.VehicleWindowIndex; } }));
+Object.defineProperty(exports, "VehicleWindowTint", ({ enumerable: true, get: function () { return Vehicle_1.VehicleWindowTint; } }));
+var WeaponTypeFlags_1 = __webpack_require__(/*! ./WeaponTypeFlags */ "../node_modules/@wdesgardin/fivem-js/lib/enums/WeaponTypeFlags.js");
+Object.defineProperty(exports, "WeaponTypeFlags", ({ enumerable: true, get: function () { return WeaponTypeFlags_1.WeaponTypeFlags; } }));
+var Weather_1 = __webpack_require__(/*! ./Weather */ "../node_modules/@wdesgardin/fivem-js/lib/enums/Weather.js");
 Object.defineProperty(exports, "Weather", ({ enumerable: true, get: function () { return Weather_1.Weather; } }));
-var ZoneID_1 = __webpack_require__(/*! ./ZoneID */ "../node_modules/fivem-js/lib/enums/ZoneID.js");
+var ZoneID_1 = __webpack_require__(/*! ./ZoneID */ "../node_modules/@wdesgardin/fivem-js/lib/enums/ZoneID.js");
 Object.defineProperty(exports, "ZoneID", ({ enumerable: true, get: function () { return ZoneID_1.ZoneID; } }));
 
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/hashes/MaterialHash.js":
-/*!***********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/hashes/MaterialHash.js ***!
-  \***********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/hashes/MaterialHash.js":
+/*!***********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/hashes/MaterialHash.js ***!
+  \***********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -5138,10 +6079,10 @@ var MaterialHash;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/hashes/PedHash.js":
-/*!******************************************************!*\
-  !*** ../node_modules/fivem-js/lib/hashes/PedHash.js ***!
-  \******************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/hashes/PedHash.js":
+/*!******************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/hashes/PedHash.js ***!
+  \******************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -5876,10 +6817,10 @@ var PedHash;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/hashes/VehicleHash.js":
-/*!**********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/hashes/VehicleHash.js ***!
-  \**********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/hashes/VehicleHash.js":
+/*!**********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/hashes/VehicleHash.js ***!
+  \**********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -6412,10 +7353,10 @@ var VehicleHash;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/hashes/WeaponHash.js":
-/*!*********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/hashes/WeaponHash.js ***!
-  \*********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/hashes/WeaponHash.js":
+/*!*********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/hashes/WeaponHash.js ***!
+  \*********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -6423,88 +7364,114 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AmmoType = exports.VehicleWeaponHash = exports.WeaponHash = void 0;
 var WeaponHash;
 (function (WeaponHash) {
-    WeaponHash[WeaponHash["Knife"] = 2578778090] = "Knife";
-    WeaponHash[WeaponHash["Nightstick"] = 1737195953] = "Nightstick";
-    WeaponHash[WeaponHash["Hammer"] = 1317494643] = "Hammer";
+    // melee
+    WeaponHash[WeaponHash["Dagger"] = 2460120199] = "Dagger";
     WeaponHash[WeaponHash["Bat"] = 2508868239] = "Bat";
-    WeaponHash[WeaponHash["GolfClub"] = 1141786504] = "GolfClub";
-    WeaponHash[WeaponHash["Crowbar"] = 2227010557] = "Crowbar";
     WeaponHash[WeaponHash["Bottle"] = 4192643659] = "Bottle";
+    WeaponHash[WeaponHash["Crowbar"] = 2227010557] = "Crowbar";
+    WeaponHash[WeaponHash["Unarmed"] = 2725352035] = "Unarmed";
+    WeaponHash[WeaponHash["Flashlight"] = 2343591895] = "Flashlight";
+    WeaponHash[WeaponHash["GolfClub"] = 1141786504] = "GolfClub";
+    WeaponHash[WeaponHash["Hammer"] = 1317494643] = "Hammer";
+    WeaponHash[WeaponHash["Hatchet"] = 4191993645] = "Hatchet";
+    WeaponHash[WeaponHash["KnuckleDuster"] = 3638508604] = "KnuckleDuster";
+    WeaponHash[WeaponHash["Knife"] = 2578778090] = "Knife";
+    WeaponHash[WeaponHash["Machete"] = 3713923289] = "Machete";
     WeaponHash[WeaponHash["SwitchBlade"] = 3756226112] = "SwitchBlade";
+    WeaponHash[WeaponHash["Nightstick"] = 1737195953] = "Nightstick";
+    WeaponHash[WeaponHash["Wrench"] = 419712736] = "Wrench";
+    WeaponHash[WeaponHash["BattleAxe"] = 3441901897] = "BattleAxe";
+    WeaponHash[WeaponHash["PoolCue"] = 2484171525] = "PoolCue";
+    WeaponHash[WeaponHash["StoneHatchet"] = 940833800] = "StoneHatchet";
+    // handguns
     WeaponHash[WeaponHash["Pistol"] = 453432689] = "Pistol";
+    WeaponHash[WeaponHash["PistolMk2"] = 3219281620] = "PistolMk2";
     WeaponHash[WeaponHash["CombatPistol"] = 1593441988] = "CombatPistol";
     WeaponHash[WeaponHash["APPistol"] = 584646201] = "APPistol";
+    WeaponHash[WeaponHash["StunGun"] = 911657153] = "StunGun";
     WeaponHash[WeaponHash["Pistol50"] = 2578377531] = "Pistol50";
+    WeaponHash[WeaponHash["SNSPistol"] = 3218215474] = "SNSPistol";
+    WeaponHash[WeaponHash["SNSPistolMk2"] = 2285322324] = "SNSPistolMk2";
+    WeaponHash[WeaponHash["HeavyPistol"] = 3523564046] = "HeavyPistol";
+    WeaponHash[WeaponHash["VintagePistol"] = 137902532] = "VintagePistol";
     WeaponHash[WeaponHash["FlareGun"] = 1198879012] = "FlareGun";
     WeaponHash[WeaponHash["MarksmanPistol"] = 3696079510] = "MarksmanPistol";
     WeaponHash[WeaponHash["Revolver"] = 3249783761] = "Revolver";
+    WeaponHash[WeaponHash["RevolverMk2"] = 3415619887] = "RevolverMk2";
+    WeaponHash[WeaponHash["DoubleAction"] = 2548703416] = "DoubleAction";
+    WeaponHash[WeaponHash["RayPistol"] = 2939590305] = "RayPistol";
+    WeaponHash[WeaponHash["CeramicPistol"] = 727643628] = "CeramicPistol";
+    WeaponHash[WeaponHash["NavyRevolver"] = 2441047180] = "NavyRevolver";
+    WeaponHash[WeaponHash["GadgetPistol"] = 1470379660] = "GadgetPistol";
+    // sub-machine guns
     WeaponHash[WeaponHash["MicroSMG"] = 324215364] = "MicroSMG";
     WeaponHash[WeaponHash["SMG"] = 736523883] = "SMG";
+    WeaponHash[WeaponHash["SMGMk2"] = 2024373456] = "SMGMk2";
     WeaponHash[WeaponHash["AssaultSMG"] = 4024951519] = "AssaultSMG";
     WeaponHash[WeaponHash["CombatPDW"] = 171789620] = "CombatPDW";
-    WeaponHash[WeaponHash["AssaultRifle"] = 3220176749] = "AssaultRifle";
-    WeaponHash[WeaponHash["CarbineRifle"] = 2210333304] = "CarbineRifle";
-    WeaponHash[WeaponHash["AdvancedRifle"] = 2937143193] = "AdvancedRifle";
-    WeaponHash[WeaponHash["CompactRifle"] = 1649403952] = "CompactRifle";
-    WeaponHash[WeaponHash["MG"] = 2634544996] = "MG";
-    WeaponHash[WeaponHash["CombatMG"] = 2144741730] = "CombatMG";
+    WeaponHash[WeaponHash["MachinePistol"] = 3675956304] = "MachinePistol";
+    WeaponHash[WeaponHash["MiniSMG"] = 3173288789] = "MiniSMG";
+    WeaponHash[WeaponHash["RayCarbine"] = 1198256469] = "RayCarbine";
+    // shotguns
     WeaponHash[WeaponHash["PumpShotgun"] = 487013001] = "PumpShotgun";
+    WeaponHash[WeaponHash["PumpShotgunMk2"] = 1432025498] = "PumpShotgunMk2";
     WeaponHash[WeaponHash["SawnOffShotgun"] = 2017895192] = "SawnOffShotgun";
     WeaponHash[WeaponHash["AssaultShotgun"] = 3800352039] = "AssaultShotgun";
     WeaponHash[WeaponHash["BullpupShotgun"] = 2640438543] = "BullpupShotgun";
+    WeaponHash[WeaponHash["Musket"] = 2828843422] = "Musket";
+    WeaponHash[WeaponHash["HeavyShotgun"] = 984333226] = "HeavyShotgun";
     WeaponHash[WeaponHash["DoubleBarrelShotgun"] = 4019527611] = "DoubleBarrelShotgun";
-    WeaponHash[WeaponHash["StunGun"] = 911657153] = "StunGun";
+    WeaponHash[WeaponHash["SweeperShotgun"] = 317205821] = "SweeperShotgun";
+    WeaponHash[WeaponHash["CombatShotgun"] = 94989220] = "CombatShotgun";
+    // Assault Rifles
+    WeaponHash[WeaponHash["AssaultRifle"] = 3220176749] = "AssaultRifle";
+    WeaponHash[WeaponHash["AssaultRifleMk2"] = 961495388] = "AssaultRifleMk2";
+    WeaponHash[WeaponHash["CarbineRifle"] = 2210333304] = "CarbineRifle";
+    WeaponHash[WeaponHash["CarbineRifleMk2"] = 4208062921] = "CarbineRifleMk2";
+    WeaponHash[WeaponHash["AdvancedRifle"] = 2937143193] = "AdvancedRifle";
+    WeaponHash[WeaponHash["SpecialCarbine"] = 3231910285] = "SpecialCarbine";
+    WeaponHash[WeaponHash["SpecialCarbineMk2"] = 2526821735] = "SpecialCarbineMk2";
+    WeaponHash[WeaponHash["BullpupRifle"] = 2132975508] = "BullpupRifle";
+    WeaponHash[WeaponHash["BullpupRifleMk2"] = 2228681469] = "BullpupRifleMk2";
+    WeaponHash[WeaponHash["CompactRifle"] = 1649403952] = "CompactRifle";
+    WeaponHash[WeaponHash["MilitaryRifle"] = 2636060646] = "MilitaryRifle";
+    // Light Machine Guns
+    WeaponHash[WeaponHash["MG"] = 2634544996] = "MG";
+    WeaponHash[WeaponHash["CombatMG"] = 2144741730] = "CombatMG";
+    WeaponHash[WeaponHash["CombatMGMk2"] = 3686625920] = "CombatMGMk2";
+    WeaponHash[WeaponHash["Gusenberg"] = 1627465347] = "Gusenberg";
+    // Sniper Rifles
     WeaponHash[WeaponHash["SniperRifle"] = 100416529] = "SniperRifle";
     WeaponHash[WeaponHash["HeavySniper"] = 205991906] = "HeavySniper";
+    WeaponHash[WeaponHash["HeavySniperMk2"] = 177293209] = "HeavySniperMk2";
+    WeaponHash[WeaponHash["MarksmanRifle"] = 3342088282] = "MarksmanRifle";
+    WeaponHash[WeaponHash["MarksmanRifleMk2"] = 1785463520] = "MarksmanRifleMk2";
+    // Heavy Weapons
+    WeaponHash[WeaponHash["RPG"] = 2982836145] = "RPG";
     WeaponHash[WeaponHash["GrenadeLauncher"] = 2726580491] = "GrenadeLauncher";
     WeaponHash[WeaponHash["GrenadeLauncherSmoke"] = 1305664598] = "GrenadeLauncherSmoke";
-    WeaponHash[WeaponHash["RPG"] = 2982836145] = "RPG";
     WeaponHash[WeaponHash["Minigun"] = 1119849093] = "Minigun";
+    WeaponHash[WeaponHash["Firework"] = 2138347493] = "Firework";
+    WeaponHash[WeaponHash["Railgun"] = 1834241177] = "Railgun";
+    WeaponHash[WeaponHash["HomingLauncher"] = 1672152130] = "HomingLauncher";
+    WeaponHash[WeaponHash["CompactGrenadeLauncher"] = 125959754] = "CompactGrenadeLauncher";
+    WeaponHash[WeaponHash["RayMinigun"] = 3056410471] = "RayMinigun";
+    // Throwables
     WeaponHash[WeaponHash["Grenade"] = 2481070269] = "Grenade";
-    WeaponHash[WeaponHash["StickyBomb"] = 741814745] = "StickyBomb";
-    WeaponHash[WeaponHash["SmokeGrenade"] = 4256991824] = "SmokeGrenade";
     WeaponHash[WeaponHash["BZGas"] = 2694266206] = "BZGas";
     WeaponHash[WeaponHash["Molotov"] = 615608432] = "Molotov";
-    WeaponHash[WeaponHash["FireExtinguisher"] = 101631238] = "FireExtinguisher";
-    WeaponHash[WeaponHash["PetrolCan"] = 883325847] = "PetrolCan";
-    WeaponHash[WeaponHash["SNSPistol"] = 3218215474] = "SNSPistol";
-    WeaponHash[WeaponHash["SpecialCarbine"] = 3231910285] = "SpecialCarbine";
-    WeaponHash[WeaponHash["HeavyPistol"] = 3523564046] = "HeavyPistol";
-    WeaponHash[WeaponHash["BullpupRifle"] = 2132975508] = "BullpupRifle";
-    WeaponHash[WeaponHash["HomingLauncher"] = 1672152130] = "HomingLauncher";
+    WeaponHash[WeaponHash["StickyBomb"] = 741814745] = "StickyBomb";
     WeaponHash[WeaponHash["ProximityMine"] = 2874559379] = "ProximityMine";
     WeaponHash[WeaponHash["Snowball"] = 126349499] = "Snowball";
-    WeaponHash[WeaponHash["VintagePistol"] = 137902532] = "VintagePistol";
-    WeaponHash[WeaponHash["Dagger"] = 2460120199] = "Dagger";
-    WeaponHash[WeaponHash["Firework"] = 2138347493] = "Firework";
-    WeaponHash[WeaponHash["Musket"] = 2828843422] = "Musket";
-    WeaponHash[WeaponHash["MarksmanRifle"] = 3342088282] = "MarksmanRifle";
-    WeaponHash[WeaponHash["HeavyShotgun"] = 984333226] = "HeavyShotgun";
-    WeaponHash[WeaponHash["Gusenberg"] = 1627465347] = "Gusenberg";
-    WeaponHash[WeaponHash["Hatchet"] = 4191993645] = "Hatchet";
-    WeaponHash[WeaponHash["Railgun"] = 1834241177] = "Railgun";
-    WeaponHash[WeaponHash["Unarmed"] = 2725352035] = "Unarmed";
-    WeaponHash[WeaponHash["KnuckleDuster"] = 3638508604] = "KnuckleDuster";
-    WeaponHash[WeaponHash["Machete"] = 3713923289] = "Machete";
-    WeaponHash[WeaponHash["MachinePistol"] = 3675956304] = "MachinePistol";
-    WeaponHash[WeaponHash["Flashlight"] = 2343591895] = "Flashlight";
-    WeaponHash[WeaponHash["Ball"] = 600439132] = "Ball";
-    WeaponHash[WeaponHash["Flare"] = 1233104067] = "Flare";
-    WeaponHash[WeaponHash["NightVision"] = 2803906140] = "NightVision";
-    WeaponHash[WeaponHash["Parachute"] = 4222310262] = "Parachute";
-    WeaponHash[WeaponHash["SweeperShotgun"] = 317205821] = "SweeperShotgun";
-    WeaponHash[WeaponHash["BattleAxe"] = 3441901897] = "BattleAxe";
-    WeaponHash[WeaponHash["CompactGrenadeLauncher"] = 125959754] = "CompactGrenadeLauncher";
-    WeaponHash[WeaponHash["MiniSMG"] = 3173288789] = "MiniSMG";
     WeaponHash[WeaponHash["PipeBomb"] = 3125143736] = "PipeBomb";
-    WeaponHash[WeaponHash["PoolCue"] = 2484171525] = "PoolCue";
-    WeaponHash[WeaponHash["Wrench"] = 419712736] = "Wrench";
-    WeaponHash[WeaponHash["PistolMk2"] = 3219281620] = "PistolMk2";
-    WeaponHash[WeaponHash["AssaultRifleMk2"] = 961495388] = "AssaultRifleMk2";
-    WeaponHash[WeaponHash["CarbineRifleMk2"] = 4208062921] = "CarbineRifleMk2";
-    WeaponHash[WeaponHash["CombatMGMk2"] = 3686625920] = "CombatMGMk2";
-    WeaponHash[WeaponHash["HeavySniperMk2"] = 177293209] = "HeavySniperMk2";
-    WeaponHash[WeaponHash["SMGMk2"] = 2024373456] = "SMGMk2";
+    WeaponHash[WeaponHash["Ball"] = 600439132] = "Ball";
+    WeaponHash[WeaponHash["SmokeGrenade"] = 4256991824] = "SmokeGrenade";
+    WeaponHash[WeaponHash["Flare"] = 1233104067] = "Flare";
+    // Miscellaneous
+    WeaponHash[WeaponHash["PetrolCan"] = 883325847] = "PetrolCan";
+    WeaponHash[WeaponHash["Parachute"] = 4222310262] = "Parachute";
+    WeaponHash[WeaponHash["FireExtinguisher"] = 101631238] = "FireExtinguisher";
+    WeaponHash[WeaponHash["HazardCan"] = 3126027122] = "HazardCan";
 })(WeaponHash = exports.WeaponHash || (exports.WeaponHash = {}));
 var VehicleWeaponHash;
 (function (VehicleWeaponHash) {
@@ -6555,10 +7522,10 @@ var AmmoType;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/hashes/WeatherTypeHash.js":
-/*!**************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/hashes/WeatherTypeHash.js ***!
-  \**************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/hashes/WeatherTypeHash.js":
+/*!**************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/hashes/WeatherTypeHash.js ***!
+  \**************************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -6590,35 +7557,35 @@ var WeatherTypeHash;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/hashes/index.js":
-/*!****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/hashes/index.js ***!
-  \****************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/hashes/index.js":
+/*!****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/hashes/index.js ***!
+  \****************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.WeatherTypeHash = exports.VehicleWeaponHash = exports.WeaponHash = exports.AmmoType = exports.VehicleHash = exports.PedHash = exports.MaterialHash = void 0;
-var MaterialHash_1 = __webpack_require__(/*! ./MaterialHash */ "../node_modules/fivem-js/lib/hashes/MaterialHash.js");
+var MaterialHash_1 = __webpack_require__(/*! ./MaterialHash */ "../node_modules/@wdesgardin/fivem-js/lib/hashes/MaterialHash.js");
 Object.defineProperty(exports, "MaterialHash", ({ enumerable: true, get: function () { return MaterialHash_1.MaterialHash; } }));
-var PedHash_1 = __webpack_require__(/*! ./PedHash */ "../node_modules/fivem-js/lib/hashes/PedHash.js");
+var PedHash_1 = __webpack_require__(/*! ./PedHash */ "../node_modules/@wdesgardin/fivem-js/lib/hashes/PedHash.js");
 Object.defineProperty(exports, "PedHash", ({ enumerable: true, get: function () { return PedHash_1.PedHash; } }));
-var VehicleHash_1 = __webpack_require__(/*! ./VehicleHash */ "../node_modules/fivem-js/lib/hashes/VehicleHash.js");
+var VehicleHash_1 = __webpack_require__(/*! ./VehicleHash */ "../node_modules/@wdesgardin/fivem-js/lib/hashes/VehicleHash.js");
 Object.defineProperty(exports, "VehicleHash", ({ enumerable: true, get: function () { return VehicleHash_1.VehicleHash; } }));
-var WeaponHash_1 = __webpack_require__(/*! ./WeaponHash */ "../node_modules/fivem-js/lib/hashes/WeaponHash.js");
+var WeaponHash_1 = __webpack_require__(/*! ./WeaponHash */ "../node_modules/@wdesgardin/fivem-js/lib/hashes/WeaponHash.js");
 Object.defineProperty(exports, "AmmoType", ({ enumerable: true, get: function () { return WeaponHash_1.AmmoType; } }));
 Object.defineProperty(exports, "WeaponHash", ({ enumerable: true, get: function () { return WeaponHash_1.WeaponHash; } }));
 Object.defineProperty(exports, "VehicleWeaponHash", ({ enumerable: true, get: function () { return WeaponHash_1.VehicleWeaponHash; } }));
-var WeatherTypeHash_1 = __webpack_require__(/*! ./WeatherTypeHash */ "../node_modules/fivem-js/lib/hashes/WeatherTypeHash.js");
+var WeatherTypeHash_1 = __webpack_require__(/*! ./WeatherTypeHash */ "../node_modules/@wdesgardin/fivem-js/lib/hashes/WeatherTypeHash.js");
 Object.defineProperty(exports, "WeatherTypeHash", ({ enumerable: true, get: function () { return WeatherTypeHash_1.WeatherTypeHash; } }));
 
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/index.js":
-/*!*********************************************!*\
-  !*** ../node_modules/fivem-js/lib/index.js ***!
-  \*********************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/index.js":
+/*!*********************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/index.js ***!
+  \*********************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -6633,56 +7600,67 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.RelationshipGroup = exports.RaycastResult = exports.ParticleEffectAsset = exports.ParticleEffect = exports.GameplayCamera = exports.Checkpoint = exports.Camera = exports.Blip = exports.Audio = exports.Model = exports.World = exports.Game = void 0;
-var Game_1 = __webpack_require__(/*! ./Game */ "../node_modules/fivem-js/lib/Game.js");
+exports.TaskSequence = exports.Tasks = exports.RelationshipGroup = exports.RaycastResult = exports.Pickup = exports.ParticleEffectAsset = exports.ParticleEffect = exports.GamerTag = exports.GameplayCamera = exports.Checkpoint = exports.Camera = exports.Blip = exports.Audio = exports.Model = exports.World = exports.Game = void 0;
+var Game_1 = __webpack_require__(/*! ./Game */ "../node_modules/@wdesgardin/fivem-js/lib/Game.js");
 Object.defineProperty(exports, "Game", ({ enumerable: true, get: function () { return Game_1.Game; } }));
-var World_1 = __webpack_require__(/*! ./World */ "../node_modules/fivem-js/lib/World.js");
+var World_1 = __webpack_require__(/*! ./World */ "../node_modules/@wdesgardin/fivem-js/lib/World.js");
 Object.defineProperty(exports, "World", ({ enumerable: true, get: function () { return World_1.World; } }));
-var Model_1 = __webpack_require__(/*! ./Model */ "../node_modules/fivem-js/lib/Model.js");
+var Model_1 = __webpack_require__(/*! ./Model */ "../node_modules/@wdesgardin/fivem-js/lib/Model.js");
 Object.defineProperty(exports, "Model", ({ enumerable: true, get: function () { return Model_1.Model; } }));
-var Audio_1 = __webpack_require__(/*! ./Audio */ "../node_modules/fivem-js/lib/Audio.js");
+var Audio_1 = __webpack_require__(/*! ./Audio */ "../node_modules/@wdesgardin/fivem-js/lib/Audio.js");
 Object.defineProperty(exports, "Audio", ({ enumerable: true, get: function () { return Audio_1.Audio; } }));
-var Blip_1 = __webpack_require__(/*! ./Blip */ "../node_modules/fivem-js/lib/Blip.js");
+var Blip_1 = __webpack_require__(/*! ./Blip */ "../node_modules/@wdesgardin/fivem-js/lib/Blip.js");
 Object.defineProperty(exports, "Blip", ({ enumerable: true, get: function () { return Blip_1.Blip; } }));
-var Camera_1 = __webpack_require__(/*! ./Camera */ "../node_modules/fivem-js/lib/Camera.js");
+var Camera_1 = __webpack_require__(/*! ./Camera */ "../node_modules/@wdesgardin/fivem-js/lib/Camera.js");
 Object.defineProperty(exports, "Camera", ({ enumerable: true, get: function () { return Camera_1.Camera; } }));
-var Checkpoint_1 = __webpack_require__(/*! ./Checkpoint */ "../node_modules/fivem-js/lib/Checkpoint.js");
+var Checkpoint_1 = __webpack_require__(/*! ./Checkpoint */ "../node_modules/@wdesgardin/fivem-js/lib/Checkpoint.js");
 Object.defineProperty(exports, "Checkpoint", ({ enumerable: true, get: function () { return Checkpoint_1.Checkpoint; } }));
-var GameplayCamera_1 = __webpack_require__(/*! ./GameplayCamera */ "../node_modules/fivem-js/lib/GameplayCamera.js");
+var GameplayCamera_1 = __webpack_require__(/*! ./GameplayCamera */ "../node_modules/@wdesgardin/fivem-js/lib/GameplayCamera.js");
 Object.defineProperty(exports, "GameplayCamera", ({ enumerable: true, get: function () { return GameplayCamera_1.GameplayCamera; } }));
-var ParticleEffect_1 = __webpack_require__(/*! ./ParticleEffect */ "../node_modules/fivem-js/lib/ParticleEffect.js");
+var GamerTag_1 = __webpack_require__(/*! ./GamerTag */ "../node_modules/@wdesgardin/fivem-js/lib/GamerTag.js");
+Object.defineProperty(exports, "GamerTag", ({ enumerable: true, get: function () { return GamerTag_1.GamerTag; } }));
+var ParticleEffect_1 = __webpack_require__(/*! ./ParticleEffect */ "../node_modules/@wdesgardin/fivem-js/lib/ParticleEffect.js");
 Object.defineProperty(exports, "ParticleEffect", ({ enumerable: true, get: function () { return ParticleEffect_1.ParticleEffect; } }));
-var ParticleEffectAsset_1 = __webpack_require__(/*! ./ParticleEffectAsset */ "../node_modules/fivem-js/lib/ParticleEffectAsset.js");
+var ParticleEffectAsset_1 = __webpack_require__(/*! ./ParticleEffectAsset */ "../node_modules/@wdesgardin/fivem-js/lib/ParticleEffectAsset.js");
 Object.defineProperty(exports, "ParticleEffectAsset", ({ enumerable: true, get: function () { return ParticleEffectAsset_1.ParticleEffectAsset; } }));
-var Raycast_1 = __webpack_require__(/*! ./Raycast */ "../node_modules/fivem-js/lib/Raycast.js");
+var Pickup_1 = __webpack_require__(/*! ./Pickup */ "../node_modules/@wdesgardin/fivem-js/lib/Pickup.js");
+Object.defineProperty(exports, "Pickup", ({ enumerable: true, get: function () { return Pickup_1.Pickup; } }));
+var Raycast_1 = __webpack_require__(/*! ./Raycast */ "../node_modules/@wdesgardin/fivem-js/lib/Raycast.js");
 Object.defineProperty(exports, "RaycastResult", ({ enumerable: true, get: function () { return Raycast_1.RaycastResult; } }));
-var RelationshipGroup_1 = __webpack_require__(/*! ./RelationshipGroup */ "../node_modules/fivem-js/lib/RelationshipGroup.js");
+var RelationshipGroup_1 = __webpack_require__(/*! ./RelationshipGroup */ "../node_modules/@wdesgardin/fivem-js/lib/RelationshipGroup.js");
 Object.defineProperty(exports, "RelationshipGroup", ({ enumerable: true, get: function () { return RelationshipGroup_1.RelationshipGroup; } }));
+var Tasks_1 = __webpack_require__(/*! ./Tasks */ "../node_modules/@wdesgardin/fivem-js/lib/Tasks.js");
+Object.defineProperty(exports, "Tasks", ({ enumerable: true, get: function () { return Tasks_1.Tasks; } }));
+var TaskSequence_1 = __webpack_require__(/*! ./TaskSequence */ "../node_modules/@wdesgardin/fivem-js/lib/TaskSequence.js");
+Object.defineProperty(exports, "TaskSequence", ({ enumerable: true, get: function () { return TaskSequence_1.TaskSequence; } }));
 // Lets export all from folders
-__exportStar(__webpack_require__(/*! ./models */ "../node_modules/fivem-js/lib/models/index.js"), exports);
-__exportStar(__webpack_require__(/*! ./utils */ "../node_modules/fivem-js/lib/utils/index.js"), exports);
-__exportStar(__webpack_require__(/*! ./enums */ "../node_modules/fivem-js/lib/enums/index.js"), exports);
-__exportStar(__webpack_require__(/*! ./hashes */ "../node_modules/fivem-js/lib/hashes/index.js"), exports);
-__exportStar(__webpack_require__(/*! ./ui */ "../node_modules/fivem-js/lib/ui/index.js"), exports);
+__exportStar(__webpack_require__(/*! ./models */ "../node_modules/@wdesgardin/fivem-js/lib/models/index.js"), exports);
+__exportStar(__webpack_require__(/*! ./utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js"), exports);
+__exportStar(__webpack_require__(/*! ./enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js"), exports);
+__exportStar(__webpack_require__(/*! ./hashes */ "../node_modules/@wdesgardin/fivem-js/lib/hashes/index.js"), exports);
+__exportStar(__webpack_require__(/*! ./ui */ "../node_modules/@wdesgardin/fivem-js/lib/ui/index.js"), exports);
+__exportStar(__webpack_require__(/*! ./weapon */ "../node_modules/@wdesgardin/fivem-js/lib/weapon/index.js"), exports);
+__exportStar(__webpack_require__(/*! ./weaponComponent */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/index.js"), exports);
 
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/Entity.js":
-/*!*****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/Entity.js ***!
-  \*****************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/Entity.js":
+/*!*****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/Entity.js ***!
+  \*****************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Entity = void 0;
-const Blip_1 = __webpack_require__(/*! ../Blip */ "../node_modules/fivem-js/lib/Blip.js");
-const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const Game_1 = __webpack_require__(/*! ../Game */ "../node_modules/fivem-js/lib/Game.js");
-const Model_1 = __webpack_require__(/*! ../Model */ "../node_modules/fivem-js/lib/Model.js");
-const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/models/index.js");
+const Blip_1 = __webpack_require__(/*! ../Blip */ "../node_modules/@wdesgardin/fivem-js/lib/Blip.js");
+const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const DecorTypes_1 = __webpack_require__(/*! ../enums/DecorTypes */ "../node_modules/@wdesgardin/fivem-js/lib/enums/DecorTypes.js");
+const Game_1 = __webpack_require__(/*! ../Game */ "../node_modules/@wdesgardin/fivem-js/lib/Game.js");
+const Model_1 = __webpack_require__(/*! ../Model */ "../node_modules/@wdesgardin/fivem-js/lib/Model.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/models/index.js");
 class Entity {
     constructor(handle) {
         this.handle = handle;
@@ -6706,6 +7684,18 @@ class Entity {
     }
     get NetworkId() {
         return NetworkGetNetworkIdFromEntity(this.handle);
+    }
+    get IsNetworkConcealed() {
+        return !!NetworkIsEntityConcealed(this.handle);
+    }
+    set IsNetworkConcealed(concealed) {
+        NetworkConcealEntity(this.handle, concealed);
+    }
+    get HasNetworkControl() {
+        return NetworkHasControlOfEntity(this.handle);
+    }
+    get IsNetworked() {
+        return NetworkGetEntityIsNetworked(this.handle);
     }
     get Health() {
         return GetEntityHealth(this.handle);
@@ -6757,6 +7747,9 @@ class Entity {
     }
     set Heading(heading) {
         SetEntityHeading(this.handle, heading);
+    }
+    get ForwardVector() {
+        return utils_1.Vector3.fromArray(GetEntityForwardVector(this.handle));
     }
     set IsPositionFrozen(value) {
         FreezeEntityPosition(this.handle, value);
@@ -6838,13 +7831,16 @@ class Entity {
         return GetEntityAlpha(this.handle);
     }
     set Opacity(value) {
-        SetEntityAlpha(this.handle, value, 0);
+        SetEntityAlpha(this.handle, value, false);
     }
     resetOpacity() {
         ResetEntityAlpha(this.handle);
     }
     get HasCollided() {
         return !!HasEntityCollidedWithAnything(this.handle);
+    }
+    get MaterialCollidingWith() {
+        return GetLastMaterialHitByEntity(this.handle);
     }
     get IsCollisionEnabled() {
         return !GetEntityCollisonDisabled(this.handle);
@@ -6922,11 +7918,11 @@ class Entity {
         const o = GetOffsetFromEntityGivenWorldCoords(this.handle, worldCoords.x, worldCoords.y, worldCoords.z);
         return new utils_1.Vector3(o[0], o[1], o[2]);
     }
-    attachTo(entity, position, rotation) {
-        AttachEntityToEntity(this.handle, entity.Handle, -1, position.x, position.y, position.z, rotation.x, rotation.y, rotation.z, false, false, false, false, 2, true);
+    attachTo(entity, position, rotation, collisions = false) {
+        AttachEntityToEntity(this.handle, entity.Handle, -1, position.x, position.y, position.z, rotation.x, rotation.y, rotation.z, false, false, collisions, false, 2, true);
     }
-    attachToBone(entityBone, position, rotation) {
-        AttachEntityToEntity(this.handle, entityBone.Owner.Handle, -1, position.x, position.y, position.z, rotation.x, rotation.y, rotation.z, false, false, false, false, 2, true);
+    attachToBone(entityBone, position, rotation, collisions = false) {
+        AttachEntityToEntity(this.handle, entityBone.Owner.Handle, -1, position.x, position.y, position.z, rotation.x, rotation.y, rotation.z, false, false, collisions, false, 2, true);
     }
     detach() {
         DetachEntity(this.handle, true, true);
@@ -6962,26 +7958,88 @@ class Entity {
         SetEntityAsMissionEntity(this.Handle, false, true);
         SetEntityAsNoLongerNeeded(this.Handle);
     }
+    requestNetworkControl(timeout = 1000) {
+        return new Promise(resolve => {
+            if (NetworkHasControlOfEntity(this.Handle))
+                resolve(true);
+            NetworkRequestControlOfEntity(this.Handle);
+            const start = GetGameTimer();
+            const interval = setInterval(() => {
+                const hasControl = NetworkHasControlOfEntity(this.Handle);
+                if (hasControl || GetGameTimer() - start > timeout) {
+                    clearInterval(interval);
+                    resolve(hasControl);
+                }
+            }, 100);
+        });
+    }
+    hasDecor(propertyName) {
+        return DecorExistOn(this.Handle, propertyName);
+    }
+    hasDecorOfType(propertyName, type) {
+        return this.hasDecor(propertyName) && DecorIsRegisteredAsType(propertyName, type);
+    }
+    getBoolDecor(propertyName) {
+        return this.hasDecorOfType(propertyName, DecorTypes_1.DecorTypes.Bool)
+            ? DecorGetBool(this.Handle, propertyName)
+            : null;
+    }
+    setBoolDecor(propertyName, value) {
+        if (!this.hasDecorOfType(propertyName, DecorTypes_1.DecorTypes.Bool)) {
+            DecorRegister(propertyName, DecorTypes_1.DecorTypes.Bool);
+            DecorRegisterLock();
+        }
+        DecorSetBool(this.Handle, propertyName, value);
+    }
+    getFloatDecor(proertyName) {
+        return this.hasDecorOfType(proertyName, DecorTypes_1.DecorTypes.Float)
+            ? DecorGetFloat(this.Handle, proertyName)
+            : null;
+    }
+    setFloatDecor(propertyName, value) {
+        if (!this.hasDecorOfType(propertyName, DecorTypes_1.DecorTypes.Float)) {
+            DecorRegister(propertyName, DecorTypes_1.DecorTypes.Float);
+            DecorRegisterLock();
+        }
+        DecorSetFloat(this.Handle, propertyName, value);
+    }
+    getIntDecor(propertyName) {
+        return this.hasDecorOfType(propertyName, DecorTypes_1.DecorTypes.Int)
+            ? DecorGetInt(this.Handle, propertyName)
+            : null;
+    }
+    setIntDecor(propertyName, value) {
+        if (!this.hasDecorOfType(propertyName, DecorTypes_1.DecorTypes.Int)) {
+            DecorRegister(propertyName, DecorTypes_1.DecorTypes.Int);
+            DecorRegisterLock();
+        }
+        DecorSetInt(this.Handle, propertyName, value);
+    }
+    removeDecor(propertyName) {
+        DecorRemove(this.Handle, propertyName);
+    }
 }
 exports.Entity = Entity;
 
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/EntityBone.js":
-/*!*********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/EntityBone.js ***!
-  \*********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/EntityBone.js":
+/*!*********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/EntityBone.js ***!
+  \*********************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.EntityBone = void 0;
-const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/fivem-js/lib/utils/index.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
 class EntityBone {
     constructor(owner, boneIndex, boneName) {
         this.owner = owner;
-        this.index = boneIndex ? boneIndex : GetEntityBoneIndexByName(this.owner.Handle, boneName);
+        this.index = boneIndex
+            ? boneIndex
+            : GetEntityBoneIndexByName(this.owner.Handle, boneName !== null && boneName !== void 0 ? boneName : '');
     }
     get Index() {
         return this.index;
@@ -7002,16 +8060,16 @@ exports.EntityBone = EntityBone;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/EntityBoneCollection.js":
-/*!*******************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/EntityBoneCollection.js ***!
-  \*******************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/EntityBoneCollection.js":
+/*!*******************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/EntityBoneCollection.js ***!
+  \*******************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.EntityBoneCollection = void 0;
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/models/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/models/index.js");
 class EntityBoneCollection {
     constructor(owner) {
         this._currentIndex = -1;
@@ -7029,18 +8087,20 @@ exports.EntityBoneCollection = EntityBoneCollection;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/Ped.js":
-/*!**************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/Ped.js ***!
-  \**************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/Ped.js":
+/*!**************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/Ped.js ***!
+  \**************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Ped = void 0;
-const __1 = __webpack_require__(/*! ../ */ "../node_modules/fivem-js/lib/index.js");
-const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/models/index.js");
+const __1 = __webpack_require__(/*! ../ */ "../node_modules/@wdesgardin/fivem-js/lib/index.js");
+const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const Tasks_1 = __webpack_require__(/*! ../Tasks */ "../node_modules/@wdesgardin/fivem-js/lib/Tasks.js");
+const WeaponCollection_1 = __webpack_require__(/*! ../weapon/WeaponCollection */ "../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponCollection.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/models/index.js");
 class Ped extends _1.Entity {
     constructor(handle) {
         super(handle);
@@ -7087,6 +8147,40 @@ class Ped extends _1.Entity {
     static exists(ped) {
         return typeof ped !== 'undefined' && ped.exists();
     }
+    static fromHandle(handle) {
+        if (GetEntityType(handle) == 1) {
+            return new Ped(handle);
+        }
+        return null;
+    }
+    static fromNetworkId(networkId) {
+        return this.fromHandle(NetworkGetEntityFromNetworkId(networkId));
+    }
+    get Money() {
+        return GetPedMoney(this.handle);
+    }
+    set Money(amount) {
+        SetPedMoney(this.handle, amount);
+    }
+    get Gender() {
+        return IsPedMale(this.handle) ? enums_1.Gender.Male : enums_1.Gender.Female;
+    }
+    get Armor() {
+        return GetPedArmour(this.handle);
+    }
+    set Armor(amount) {
+        if (amount > 100)
+            amount = 100;
+        SetPedArmour(this.handle, amount);
+    }
+    get Accuracy() {
+        return GetPedAccuracy(this.handle);
+    }
+    set Accuracy(accuracy) {
+        if (accuracy > 100)
+            accuracy = 100;
+        SetPedAccuracy(this.handle, accuracy);
+    }
     get Health() {
         return super.Health - 100;
     }
@@ -7098,6 +8192,42 @@ class Ped extends _1.Entity {
     }
     set MaxHealth(amount) {
         super.MaxHealth = amount + 100;
+    }
+    set Sweat(value) {
+        SetPedSweat(this.handle, value);
+    }
+    set WetnessHeight(value) {
+        if (value === 0) {
+            ClearPedWetness(this.Handle);
+        }
+        else {
+            SetPedWetnessHeight(this.handle, value);
+        }
+    }
+    set Voice(value) {
+        SetAmbientVoiceName(this.handle, value);
+    }
+    set ShootRate(value) {
+        if (value > 1000)
+            value = 1000;
+        SetPedShootRate(this.handle, value);
+    }
+    get WasKilledByStealth() {
+        return !!WasPedKilledByStealth(this.handle);
+    }
+    get WasKilledByTakedown() {
+        return !!WasPedKilledByTakedown(this.handle);
+    }
+    get SeatIndex() {
+        if (!this.CurrentVehicle)
+            return enums_1.VehicleSeat.None;
+        const numberOfSeats = GetVehicleModelNumberOfSeats(this.CurrentVehicle.Model.Hash);
+        for (let seat = -1; seat < numberOfSeats; seat++) {
+            if (this.CurrentVehicle.getPedOnSeat(seat).Handle == this.handle) {
+                return seat;
+            }
+        }
+        return enums_1.VehicleSeat.None;
     }
     get CurrentVehicle() {
         const veh = new _1.Vehicle(GetVehiclePedIsIn(this.handle, false));
@@ -7278,6 +8408,9 @@ class Ped extends _1.Entity {
     get IsShooting() {
         return !!IsPedShooting(this.handle);
     }
+    get IsAiming() {
+        return this.getConfigFlag(78);
+    }
     get IsReloading() {
         return !!IsPedReloading(this.handle);
     }
@@ -7316,6 +8449,18 @@ class Ped extends _1.Entity {
     }
     set DrivingStyle(style) {
         SetDriveTaskDrivingStyle(this.handle, Number(style));
+    }
+    get Task() {
+        if (!this.tasks) {
+            this.tasks = new Tasks_1.Tasks(this);
+        }
+        return this.tasks;
+    }
+    get TaskSequenceProgress() {
+        return GetSequenceProgress(this.handle);
+    }
+    set BlockPermanentEvents(block) {
+        SetBlockingOfNonTemporaryEvents(this.handle, block);
     }
     isInAnyVehicle() {
         return !!IsPedInAnyVehicle(this.handle, false);
@@ -7412,6 +8557,17 @@ class Ped extends _1.Entity {
         }
         return this.pedBones;
     }
+    /**
+     * Ped Weapons
+     *
+     * @constructor
+     */
+    get Weapons() {
+        if (!this.weapons) {
+            this.weapons = new WeaponCollection_1.WeaponCollection(this);
+        }
+        return this.weapons;
+    }
     giveWeapon(weapon, ammoCount = 999, isHidden = false, equipNow = true) {
         GiveWeaponToPed(this.handle, weapon, ammoCount, isHidden, equipNow);
     }
@@ -7421,9 +8577,12 @@ class Ped extends _1.Entity {
     removeAllWeapons() {
         RemoveAllPedWeapons(this.handle, true);
     }
+    hasGotWeapon(weapon) {
+        return !!HasPedGotWeapon(this.handle, weapon, false);
+    }
     getLastWeaponImpactPosition() {
-        const position = GetPedLastWeaponImpactCoord(this.handle);
-        return new __1.Vector3(position[0], position[1][0], position[1][1]); // Does this work?
+        const position = GetPedLastWeaponImpactCoord(this.handle)[1];
+        return new __1.Vector3(position[0], position[1], position[2]); // Does this work?
     }
     get CanRagdoll() {
         return !!CanPedRagdoll(this.handle);
@@ -7456,14 +8615,17 @@ class Ped extends _1.Entity {
     resetConfigFlag(flagId) {
         SetPedResetFlag(this.handle, flagId, true);
     }
-    clone(heading) {
-        return new Ped(ClonePed(this.handle, heading, false, false));
+    clone(heading, isNetwork = true) {
+        const ped = new Ped(ClonePed(this.handle, isNetwork, false, false));
+        if ((ped === null || ped === void 0 ? void 0 : ped.exists()) && heading)
+            ped.Heading = heading;
+        return ped;
     }
-    exists(ped = null) {
-        if (ped === null) {
-            return super.exists() && GetEntityType(this.handle) === 1;
-        }
-        return ped.exists();
+    isArmed(typeFlag = 7) {
+        return IsPedArmed(this.handle, typeFlag);
+    }
+    exists() {
+        return super.exists() && GetEntityType(this.handle) === 1;
     }
 }
 exports.Ped = Ped;
@@ -7471,16 +8633,16 @@ exports.Ped = Ped;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/PedBone.js":
-/*!******************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/PedBone.js ***!
-  \******************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/PedBone.js":
+/*!******************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/PedBone.js ***!
+  \******************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PedBone = void 0;
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/models/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/models/index.js");
 class PedBone extends _1.EntityBone {
     constructor(owner, boneId) {
         super(owner, GetPedBoneIndex(owner.Handle, Number(boneId)));
@@ -7494,16 +8656,16 @@ exports.PedBone = PedBone;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/PedBoneCollection.js":
-/*!****************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/PedBoneCollection.js ***!
-  \****************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/PedBoneCollection.js":
+/*!****************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/PedBoneCollection.js ***!
+  \****************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PedBoneCollection = void 0;
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/models/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/models/index.js");
 class PedBoneCollection extends _1.EntityBoneCollection {
     constructor(owner) {
         super(owner);
@@ -7512,12 +8674,8 @@ class PedBoneCollection extends _1.EntityBoneCollection {
         return new _1.PedBone(this.owner, -1);
     }
     get LastDamaged() {
-        // const for now until native tested
-        const outBone = 0;
-        // This native may be returning an object instead (bool, outBone)
-        if (GetPedLastDamageBone(this.owner.Handle, outBone)) {
-            return this[outBone];
-        }
+        const [, outBone] = GetPedLastDamageBone(this.owner.Handle, 0);
+        return _1.PedBone[outBone];
     }
     clearLastDamaged() {
         ClearPedLastDamageBone(this.owner.Handle);
@@ -7528,20 +8686,24 @@ exports.PedBoneCollection = PedBoneCollection;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/Player.js":
-/*!*****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/Player.js ***!
-  \*****************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/Player.js":
+/*!*****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/Player.js ***!
+  \*****************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Player = void 0;
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/models/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/models/index.js");
 class Player {
     constructor(handle) {
+        this.pvp = false;
         this.handle = handle;
         this.PvPEnabled = true;
+    }
+    static fromServerId(serverId) {
+        return new Player(GetPlayerFromServerId(serverId));
     }
     get Handle() {
         return this.handle;
@@ -7564,23 +8726,54 @@ class Player {
         SetCanAttackFriendly(this.Character.Handle, value, value);
         this.pvp = value;
     }
+    get WantedLevel() {
+        return GetPlayerWantedLevel(this.handle);
+    }
+    set WantedLevel(level) {
+        SetPlayerWantedLevel(this.handle, level, false);
+        SetPlayerWantedLevelNow(this.handle, false);
+    }
+    set IgnoredByPolice(value) {
+        SetPoliceIgnorePlayer(this.handle, value);
+    }
+    set IgnoredByEveryone(value) {
+        SetEveryoneIgnorePlayer(this.handle, value);
+    }
+    get ServerId() {
+        return GetPlayerServerId(this.handle);
+    }
+    clearWantedLevel() {
+        ClearPlayerWantedLevel(this.handle);
+    }
+    disableFiringThisFrame() {
+        DisablePlayerFiring(this.handle, false);
+    }
 }
 exports.Player = Player;
 
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/Prop.js":
-/*!***************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/Prop.js ***!
-  \***************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/Prop.js":
+/*!***************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/Prop.js ***!
+  \***************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Prop = void 0;
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/models/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/models/index.js");
 class Prop extends _1.Entity {
+    static fromHandle(handle) {
+        if (GetEntityType(handle) == 3) {
+            return new Prop(handle);
+        }
+        return null;
+    }
+    static fromNetworkId(networkId) {
+        return this.fromHandle(NetworkGetEntityFromNetworkId(networkId));
+    }
     static exists(prop) {
         return typeof prop !== 'undefined' && prop.exists();
     }
@@ -7599,21 +8792,31 @@ exports.Prop = Prop;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/Vehicle.js":
-/*!******************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/Vehicle.js ***!
-  \******************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/Vehicle.js":
+/*!******************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/Vehicle.js ***!
+  \******************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Vehicle = void 0;
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/models/index.js");
-const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const Game_1 = __webpack_require__(/*! ../Game */ "../node_modules/fivem-js/lib/Game.js");
+const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const Game_1 = __webpack_require__(/*! ../Game */ "../node_modules/@wdesgardin/fivem-js/lib/Game.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/models/index.js");
 class Vehicle extends _1.Entity {
     constructor(handle) {
         super(handle);
+    }
+    static fromHandle(handle) {
+        if (GetEntityType(handle) == 2) {
+            return new Vehicle(handle);
+        }
+        return null;
+    }
+    static fromNetworkId(networkId) {
+        return this.fromHandle(NetworkGetEntityFromNetworkId(networkId));
     }
     static getModelDisplayName(vehicleModel) {
         return GetDisplayNameFromVehicleModel(vehicleModel.Hash);
@@ -7723,6 +8926,9 @@ class Vehicle extends _1.Entity {
     }
     get WheelSpeed() {
         return GetVehicleDashboardSpeed(this.handle);
+    }
+    get EstimatedMaxSpeed() {
+        return GetVehicleEstimatedMaxSpeed(this.handle);
     }
     get Acceleration() {
         return GetVehicleCurrentAcceleration(this.handle);
@@ -7879,7 +9085,7 @@ class Vehicle extends _1.Entity {
         return !!IsVehicleDriveable(this.handle, false);
     }
     set IsDriveable(value) {
-        SetVehicleUndriveable(this.handle, value);
+        SetVehicleUndriveable(this.handle, !value);
     }
     get IsEngineOnFire() {
         return !!IsVehicleEngineOnFire(this.handle);
@@ -7987,7 +9193,7 @@ class Vehicle extends _1.Entity {
     get Passengers() {
         const passengerCount = this.PassengerCount;
         if (passengerCount === 0) {
-            return;
+            return [];
         }
         const result = [];
         for (let i = 0; i < this.PassengerCapacity; i++) {
@@ -8075,7 +9281,9 @@ class Vehicle extends _1.Entity {
         SetVehicleCanDeformWheels(this.handle, value);
     }
     get HasBombBay() {
-        return this.Bones.hasBone('door_hatch_1') && this.Bones.hasBone('door_hatch_r');
+        return this.Bones
+            ? this.Bones.hasBone('door_hatch_1') && this.Bones.hasBone('door_hatch_r')
+            : false;
     }
     openBombBay() {
         if (this.HasBombBay) {
@@ -8122,16 +9330,31 @@ class Vehicle extends _1.Entity {
     set RespotTimer(time) {
         SetNetworkVehicleRespotTimer(this.NetworkId, time);
     }
+    getHandlingFloat(fieldName) {
+        return GetVehicleHandlingFloat(this.handle, 'CHandlingData', fieldName);
+    }
+    setHandlingFloat(fieldName, value) {
+        SetVehicleHandlingFloat(this.handle, 'CHandlingData', fieldName, value);
+    }
+    getHandlingInt(fieldName) {
+        return GetVehicleHandlingInt(this.handle, 'CHandlingData', fieldName);
+    }
+    setHandlingInt(fieldName, value) {
+        SetVehicleHandlingInt(this.handle, 'CHandlingData', fieldName, Math.ceil(value));
+    }
+    getHandlingVector(fieldName) {
+        return utils_1.Vector3.fromArray(GetVehicleHandlingVector(this.handle, 'CHandlingData', fieldName));
+    }
 }
 exports.Vehicle = Vehicle;
 
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/VehicleDoor.js":
-/*!**********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/VehicleDoor.js ***!
-  \**********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleDoor.js":
+/*!**********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/VehicleDoor.js ***!
+  \**********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -8140,7 +9363,7 @@ exports.VehicleDoor = void 0;
 class VehicleDoor {
     constructor(owner, index) {
         this._owner = owner;
-        this.Index = index;
+        this._index = index;
     }
     get Index() {
         return this._index;
@@ -8184,17 +9407,17 @@ exports.VehicleDoor = VehicleDoor;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/VehicleDoorCollection.js":
-/*!********************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/VehicleDoorCollection.js ***!
-  \********************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleDoorCollection.js":
+/*!********************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/VehicleDoorCollection.js ***!
+  \********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.VehicleDoorCollection = void 0;
-const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const VehicleDoor_1 = __webpack_require__(/*! ./VehicleDoor */ "../node_modules/fivem-js/lib/models/VehicleDoor.js");
+const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const VehicleDoor_1 = __webpack_require__(/*! ./VehicleDoor */ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleDoor.js");
 class VehicleDoorCollection {
     constructor(owner) {
         this._vehicleDoors = new Map();
@@ -8220,20 +9443,22 @@ class VehicleDoorCollection {
     }
     openAllDoors(loose, instantly) {
         this.getAllDoors().forEach(door => {
-            door.open(loose, instantly);
+            door === null || door === void 0 ? void 0 : door.open(loose, instantly);
         });
     }
     closeAllDoors(instantly) {
         this.getAllDoors().forEach(door => {
-            door.close(instantly);
+            door === null || door === void 0 ? void 0 : door.close(instantly);
         });
     }
     breakAllDoors(stayInTheWorld) {
         this.getAllDoors().forEach(door => {
-            door.break(stayInTheWorld);
+            door === null || door === void 0 ? void 0 : door.break(stayInTheWorld);
         });
     }
     hasDoor(index) {
+        if (this._owner.Bones === undefined)
+            return false;
         switch (index) {
             case enums_1.VehicleDoorIndex.FrontLeftDoor:
                 return this._owner.Bones.hasBone('door_dside_f');
@@ -8247,8 +9472,9 @@ class VehicleDoorCollection {
                 return this._owner.Bones.hasBone('bonnet');
             case enums_1.VehicleDoorIndex.Trunk:
                 return this._owner.Bones.hasBone('boot');
+            default:
+                return false;
         }
-        return false;
     }
 }
 exports.VehicleDoorCollection = VehicleDoorCollection;
@@ -8256,10 +9482,10 @@ exports.VehicleDoorCollection = VehicleDoorCollection;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/VehicleMod.js":
-/*!*********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/VehicleMod.js ***!
-  \*********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleMod.js":
+/*!*********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/VehicleMod.js ***!
+  \*********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -8268,7 +9494,7 @@ exports.VehicleMod = void 0;
 class VehicleMod {
     constructor(owner, modType) {
         this._owner = owner;
-        this.ModType = modType;
+        this._modType = modType;
     }
     get ModType() {
         return this._modType;
@@ -8303,19 +9529,19 @@ exports.VehicleMod = VehicleMod;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/VehicleModCollection.js":
-/*!*******************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/VehicleModCollection.js ***!
-  \*******************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleModCollection.js":
+/*!*******************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/VehicleModCollection.js ***!
+  \*******************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.VehicleModCollection = void 0;
-const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const VehicleMod_1 = __webpack_require__(/*! ./VehicleMod */ "../node_modules/fivem-js/lib/models/VehicleMod.js");
-const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const VehicleToggleMod_1 = __webpack_require__(/*! ./VehicleToggleMod */ "../node_modules/fivem-js/lib/models/VehicleToggleMod.js");
+const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const VehicleMod_1 = __webpack_require__(/*! ./VehicleMod */ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleMod.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const VehicleToggleMod_1 = __webpack_require__(/*! ./VehicleToggleMod */ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleToggleMod.js");
 class VehicleModCollection {
     constructor(owner) {
         this._vehicleMods = new Map();
@@ -8359,23 +9585,28 @@ class VehicleModCollection {
         SetVehicleModKit(this._owner.Handle, 0);
     }
     get Livery() {
-        const modCount = this.getMod(enums_1.VehicleModType.Livery).ModCount;
-        if (modCount > 0) {
-            return this.getMod(enums_1.VehicleModType.Livery).Index;
+        var _a, _b;
+        const modCount = (_a = this.getMod(enums_1.VehicleModType.Livery)) === null || _a === void 0 ? void 0 : _a.ModCount;
+        if (modCount !== undefined && modCount > 0) {
+            return (_b = this.getMod(enums_1.VehicleModType.Livery)) === null || _b === void 0 ? void 0 : _b.Index;
         }
         return GetVehicleLivery(this._owner.Handle);
     }
     set Livery(value) {
-        if (this.getMod(enums_1.VehicleModType.Livery).ModCount > 0) {
-            this.getMod(enums_1.VehicleModType.Livery).Index = value;
+        if (value === undefined)
+            return;
+        const mod = this.getMod(enums_1.VehicleModType.Livery);
+        if (mod !== undefined && mod.ModCount > 0) {
+            mod.Index = value;
         }
         else {
             SetVehicleLivery(this._owner.Handle, value);
         }
     }
     get LiveryCount() {
-        const modCount = this.getMod(enums_1.VehicleModType.Livery).ModCount;
-        if (modCount > 0) {
+        var _a;
+        const modCount = (_a = this.getMod(enums_1.VehicleModType.Livery)) === null || _a === void 0 ? void 0 : _a.ModCount;
+        if (modCount !== undefined && modCount > 0) {
             return modCount;
         }
         return GetVehicleLiveryCount(this._owner.Handle);
@@ -8479,6 +9710,8 @@ class VehicleModCollection {
             .findIndex(light => !this.hasNeonLight(Number(light))) === -1);
     }
     hasNeonLight(light) {
+        if (this._owner.Bones === undefined)
+            return false;
         switch (light) {
             case enums_1.VehicleNeonLight.Left:
                 return this._owner.Bones.hasBone('neon_l');
@@ -8539,10 +9772,10 @@ exports.VehicleModCollection = VehicleModCollection;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/VehicleToggleMod.js":
-/*!***************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/VehicleToggleMod.js ***!
-  \***************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleToggleMod.js":
+/*!***************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/VehicleToggleMod.js ***!
+  \***************************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -8551,7 +9784,7 @@ exports.VehicleToggleMod = void 0;
 class VehicleToggleMod {
     constructor(owner, modType) {
         this._owner = owner;
-        this.ModType = modType;
+        this._modType = modType;
     }
     get ModType() {
         return this._modType;
@@ -8580,10 +9813,10 @@ exports.VehicleToggleMod = VehicleToggleMod;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/VehicleWheel.js":
-/*!***********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/VehicleWheel.js ***!
-  \***********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleWheel.js":
+/*!***********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/VehicleWheel.js ***!
+  \***********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -8592,7 +9825,7 @@ exports.VehicleWheel = void 0;
 class VehicleWheel {
     constructor(owner, index) {
         this._owner = owner;
-        this.Index = index;
+        this._index = index;
     }
     get Index() {
         return this._index;
@@ -8615,17 +9848,17 @@ exports.VehicleWheel = VehicleWheel;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/VehicleWheelCollection.js":
-/*!*********************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/VehicleWheelCollection.js ***!
-  \*********************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleWheelCollection.js":
+/*!*********************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/VehicleWheelCollection.js ***!
+  \*********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.VehicleWheelCollection = void 0;
-const VehicleWheel_1 = __webpack_require__(/*! ./VehicleWheel */ "../node_modules/fivem-js/lib/models/VehicleWheel.js");
-const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/fivem-js/lib/enums/index.js");
+const VehicleWheel_1 = __webpack_require__(/*! ./VehicleWheel */ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleWheel.js");
+const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
 class VehicleWheelCollection {
     constructor(owner) {
         this._vehicleWheels = new Map();
@@ -8651,15 +9884,17 @@ class VehicleWheelCollection {
     }
     burstAllWheels() {
         this.getAllWheels().forEach(wheel => {
-            wheel.burst();
+            wheel === null || wheel === void 0 ? void 0 : wheel.burst();
         });
     }
     fixAllWheels() {
         this.getAllWheels().forEach(wheel => {
-            wheel.fix();
+            wheel === null || wheel === void 0 ? void 0 : wheel.fix();
         });
     }
     hasWheel(wheel) {
+        if (this._owner.Bones === undefined)
+            return false;
         switch (wheel) {
             case enums_1.VehicleWheelIndex.FrontLeftWheel:
                 return this._owner.Bones.hasBone('wheel_lf');
@@ -8683,10 +9918,10 @@ exports.VehicleWheelCollection = VehicleWheelCollection;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/VehicleWindow.js":
-/*!************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/VehicleWindow.js ***!
-  \************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleWindow.js":
+/*!************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/VehicleWindow.js ***!
+  \************************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -8695,7 +9930,7 @@ exports.VehicleWindow = void 0;
 class VehicleWindow {
     constructor(owner, index) {
         this._owner = owner;
-        this.Index = index;
+        this._index = index;
     }
     get Index() {
         return this._index;
@@ -8730,17 +9965,17 @@ exports.VehicleWindow = VehicleWindow;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/VehicleWindowCollection.js":
-/*!**********************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/VehicleWindowCollection.js ***!
-  \**********************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleWindowCollection.js":
+/*!**********************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/VehicleWindowCollection.js ***!
+  \**********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.VehicleWindowCollection = void 0;
-const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const VehicleWindow_1 = __webpack_require__(/*! ./VehicleWindow */ "../node_modules/fivem-js/lib/models/VehicleWindow.js");
+const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const VehicleWindow_1 = __webpack_require__(/*! ./VehicleWindow */ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleWindow.js");
 class VehicleWindowCollection {
     constructor(owner) {
         this._vehicleWindows = new Map();
@@ -8769,15 +10004,17 @@ class VehicleWindowCollection {
     }
     rollDownAllWindows() {
         this.getAllWindows().forEach(window => {
-            window.rollDown();
+            window === null || window === void 0 ? void 0 : window.rollDown();
         });
     }
     rollUpAllWindows() {
         this.getAllWindows().forEach(window => {
-            window.rollUp();
+            window === null || window === void 0 ? void 0 : window.rollUp();
         });
     }
     hasWindow(window) {
+        if (this._owner.Bones === undefined)
+            return false;
         switch (window) {
             case enums_1.VehicleWindowIndex.FrontLeftWindow:
                 return this._owner.Bones.hasBone('window_lf');
@@ -8797,66 +10034,66 @@ exports.VehicleWindowCollection = VehicleWindowCollection;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/models/index.js":
-/*!****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/models/index.js ***!
-  \****************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/models/index.js":
+/*!****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/models/index.js ***!
+  \****************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.VehicleWindowCollection = exports.VehicleWindow = exports.VehicleWheelCollection = exports.VehicleWheel = exports.VehicleModCollection = exports.VehicleToggleMod = exports.VehicleMod = exports.VehicleDoorCollection = exports.VehicleDoor = exports.Vehicle = exports.Prop = exports.Player = exports.PedBoneCollection = exports.PedBone = exports.Ped = exports.EntityBoneCollection = exports.EntityBone = exports.Entity = void 0;
-var Entity_1 = __webpack_require__(/*! ./Entity */ "../node_modules/fivem-js/lib/models/Entity.js");
+var Entity_1 = __webpack_require__(/*! ./Entity */ "../node_modules/@wdesgardin/fivem-js/lib/models/Entity.js");
 Object.defineProperty(exports, "Entity", ({ enumerable: true, get: function () { return Entity_1.Entity; } }));
-var EntityBone_1 = __webpack_require__(/*! ./EntityBone */ "../node_modules/fivem-js/lib/models/EntityBone.js");
+var EntityBone_1 = __webpack_require__(/*! ./EntityBone */ "../node_modules/@wdesgardin/fivem-js/lib/models/EntityBone.js");
 Object.defineProperty(exports, "EntityBone", ({ enumerable: true, get: function () { return EntityBone_1.EntityBone; } }));
-var EntityBoneCollection_1 = __webpack_require__(/*! ./EntityBoneCollection */ "../node_modules/fivem-js/lib/models/EntityBoneCollection.js");
+var EntityBoneCollection_1 = __webpack_require__(/*! ./EntityBoneCollection */ "../node_modules/@wdesgardin/fivem-js/lib/models/EntityBoneCollection.js");
 Object.defineProperty(exports, "EntityBoneCollection", ({ enumerable: true, get: function () { return EntityBoneCollection_1.EntityBoneCollection; } }));
-var Ped_1 = __webpack_require__(/*! ./Ped */ "../node_modules/fivem-js/lib/models/Ped.js");
+var Ped_1 = __webpack_require__(/*! ./Ped */ "../node_modules/@wdesgardin/fivem-js/lib/models/Ped.js");
 Object.defineProperty(exports, "Ped", ({ enumerable: true, get: function () { return Ped_1.Ped; } }));
-var PedBone_1 = __webpack_require__(/*! ./PedBone */ "../node_modules/fivem-js/lib/models/PedBone.js");
+var PedBone_1 = __webpack_require__(/*! ./PedBone */ "../node_modules/@wdesgardin/fivem-js/lib/models/PedBone.js");
 Object.defineProperty(exports, "PedBone", ({ enumerable: true, get: function () { return PedBone_1.PedBone; } }));
-var PedBoneCollection_1 = __webpack_require__(/*! ./PedBoneCollection */ "../node_modules/fivem-js/lib/models/PedBoneCollection.js");
+var PedBoneCollection_1 = __webpack_require__(/*! ./PedBoneCollection */ "../node_modules/@wdesgardin/fivem-js/lib/models/PedBoneCollection.js");
 Object.defineProperty(exports, "PedBoneCollection", ({ enumerable: true, get: function () { return PedBoneCollection_1.PedBoneCollection; } }));
-var Player_1 = __webpack_require__(/*! ./Player */ "../node_modules/fivem-js/lib/models/Player.js");
+var Player_1 = __webpack_require__(/*! ./Player */ "../node_modules/@wdesgardin/fivem-js/lib/models/Player.js");
 Object.defineProperty(exports, "Player", ({ enumerable: true, get: function () { return Player_1.Player; } }));
-var Prop_1 = __webpack_require__(/*! ./Prop */ "../node_modules/fivem-js/lib/models/Prop.js");
+var Prop_1 = __webpack_require__(/*! ./Prop */ "../node_modules/@wdesgardin/fivem-js/lib/models/Prop.js");
 Object.defineProperty(exports, "Prop", ({ enumerable: true, get: function () { return Prop_1.Prop; } }));
-var Vehicle_1 = __webpack_require__(/*! ./Vehicle */ "../node_modules/fivem-js/lib/models/Vehicle.js");
+var Vehicle_1 = __webpack_require__(/*! ./Vehicle */ "../node_modules/@wdesgardin/fivem-js/lib/models/Vehicle.js");
 Object.defineProperty(exports, "Vehicle", ({ enumerable: true, get: function () { return Vehicle_1.Vehicle; } }));
-var VehicleDoor_1 = __webpack_require__(/*! ./VehicleDoor */ "../node_modules/fivem-js/lib/models/VehicleDoor.js");
+var VehicleDoor_1 = __webpack_require__(/*! ./VehicleDoor */ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleDoor.js");
 Object.defineProperty(exports, "VehicleDoor", ({ enumerable: true, get: function () { return VehicleDoor_1.VehicleDoor; } }));
-var VehicleDoorCollection_1 = __webpack_require__(/*! ./VehicleDoorCollection */ "../node_modules/fivem-js/lib/models/VehicleDoorCollection.js");
+var VehicleDoorCollection_1 = __webpack_require__(/*! ./VehicleDoorCollection */ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleDoorCollection.js");
 Object.defineProperty(exports, "VehicleDoorCollection", ({ enumerable: true, get: function () { return VehicleDoorCollection_1.VehicleDoorCollection; } }));
-var VehicleMod_1 = __webpack_require__(/*! ./VehicleMod */ "../node_modules/fivem-js/lib/models/VehicleMod.js");
+var VehicleMod_1 = __webpack_require__(/*! ./VehicleMod */ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleMod.js");
 Object.defineProperty(exports, "VehicleMod", ({ enumerable: true, get: function () { return VehicleMod_1.VehicleMod; } }));
-var VehicleToggleMod_1 = __webpack_require__(/*! ./VehicleToggleMod */ "../node_modules/fivem-js/lib/models/VehicleToggleMod.js");
+var VehicleToggleMod_1 = __webpack_require__(/*! ./VehicleToggleMod */ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleToggleMod.js");
 Object.defineProperty(exports, "VehicleToggleMod", ({ enumerable: true, get: function () { return VehicleToggleMod_1.VehicleToggleMod; } }));
-var VehicleModCollection_1 = __webpack_require__(/*! ./VehicleModCollection */ "../node_modules/fivem-js/lib/models/VehicleModCollection.js");
+var VehicleModCollection_1 = __webpack_require__(/*! ./VehicleModCollection */ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleModCollection.js");
 Object.defineProperty(exports, "VehicleModCollection", ({ enumerable: true, get: function () { return VehicleModCollection_1.VehicleModCollection; } }));
-var VehicleWheel_1 = __webpack_require__(/*! ./VehicleWheel */ "../node_modules/fivem-js/lib/models/VehicleWheel.js");
+var VehicleWheel_1 = __webpack_require__(/*! ./VehicleWheel */ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleWheel.js");
 Object.defineProperty(exports, "VehicleWheel", ({ enumerable: true, get: function () { return VehicleWheel_1.VehicleWheel; } }));
-var VehicleWheelCollection_1 = __webpack_require__(/*! ./VehicleWheelCollection */ "../node_modules/fivem-js/lib/models/VehicleWheelCollection.js");
+var VehicleWheelCollection_1 = __webpack_require__(/*! ./VehicleWheelCollection */ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleWheelCollection.js");
 Object.defineProperty(exports, "VehicleWheelCollection", ({ enumerable: true, get: function () { return VehicleWheelCollection_1.VehicleWheelCollection; } }));
-var VehicleWindow_1 = __webpack_require__(/*! ./VehicleWindow */ "../node_modules/fivem-js/lib/models/VehicleWindow.js");
+var VehicleWindow_1 = __webpack_require__(/*! ./VehicleWindow */ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleWindow.js");
 Object.defineProperty(exports, "VehicleWindow", ({ enumerable: true, get: function () { return VehicleWindow_1.VehicleWindow; } }));
-var VehicleWindowCollection_1 = __webpack_require__(/*! ./VehicleWindowCollection */ "../node_modules/fivem-js/lib/models/VehicleWindowCollection.js");
+var VehicleWindowCollection_1 = __webpack_require__(/*! ./VehicleWindowCollection */ "../node_modules/@wdesgardin/fivem-js/lib/models/VehicleWindowCollection.js");
 Object.defineProperty(exports, "VehicleWindowCollection", ({ enumerable: true, get: function () { return VehicleWindowCollection_1.VehicleWindowCollection; } }));
 
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/Container.js":
-/*!****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/Container.js ***!
-  \****************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/Container.js":
+/*!****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/Container.js ***!
+  \****************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Container = void 0;
-const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/ui/index.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/index.js");
 class Container {
     constructor(pos, size, color) {
         this.items = [];
@@ -8888,10 +10125,10 @@ exports.Container = Container;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/Effects.js":
-/*!**************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/Effects.js ***!
-  \**************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/Effects.js":
+/*!**************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/Effects.js ***!
+  \**************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -9008,10 +10245,10 @@ Effects.effects = [
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/Fading.js":
-/*!*************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/Fading.js ***!
-  \*************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/Fading.js":
+/*!*************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/Fading.js ***!
+  \*************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -9091,16 +10328,16 @@ exports.Fading = Fading;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/Hud.js":
-/*!**********************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/Hud.js ***!
-  \**********************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/Hud.js":
+/*!**********************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/Hud.js ***!
+  \**********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Hud = void 0;
-const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/fivem-js/lib/enums/index.js");
+const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
 class Hud {
     static isComponentActive(component) {
         return !!IsHudComponentActive(Number(component));
@@ -9144,16 +10381,16 @@ exports.Hud = Hud;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/LoadingPrompt.js":
-/*!********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/LoadingPrompt.js ***!
-  \********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/LoadingPrompt.js":
+/*!********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/LoadingPrompt.js ***!
+  \********************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.LoadingPrompt = void 0;
-const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/fivem-js/lib/enums/index.js");
+const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
 /**
  * Show and hide loading prompt on the bottom right of the screen.
  *
@@ -9176,12 +10413,12 @@ class LoadingPrompt {
      * @param loadingText Text to be displayed inside loading prompt.
      * @param spinnerType Type of spinner.
      */
-    static show(loadingText = null, spinnerType = enums_1.LoadingSpinnerType.RegularClockwise) {
+    static show(loadingText = '', spinnerType = enums_1.LoadingSpinnerType.RegularClockwise) {
         if (this.IsActive) {
             this.hide();
         }
-        if (loadingText === null) {
-            BeginTextCommandBusyString(null);
+        if (loadingText === '') {
+            BeginTextCommandBusyString('');
         }
         else {
             BeginTextCommandBusyString('STRING');
@@ -9203,10 +10440,10 @@ exports.LoadingPrompt = LoadingPrompt;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/Notification.js":
-/*!*******************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/Notification.js ***!
-  \*******************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/Notification.js":
+/*!*******************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/Notification.js ***!
+  \*******************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -9225,17 +10462,17 @@ exports.Notification = Notification;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/Rectangle.js":
-/*!****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/Rectangle.js ***!
-  \****************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/Rectangle.js":
+/*!****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/Rectangle.js ***!
+  \****************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Rectangle = void 0;
-const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/ui/index.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/index.js");
 class Rectangle {
     constructor(pos, size, color) {
         this.pos = pos;
@@ -9276,10 +10513,10 @@ exports.Rectangle = Rectangle;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/Scaleform.js":
-/*!****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/Scaleform.js ***!
-  \****************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/Scaleform.js":
+/*!****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/Scaleform.js ***!
+  \****************************************************************/
 /***/ (function(__unused_webpack_module, exports) {
 
 
@@ -9313,6 +10550,7 @@ exports.Scaleform = void 0;
  */
 class Scaleform {
     constructor(name) {
+        this.loaded = false;
         this.name = name;
         this.handle = RequestScaleformMovie(this.name);
     }
@@ -9480,19 +10718,19 @@ exports.Scaleform = Scaleform;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/Screen.js":
-/*!*************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/Screen.js ***!
-  \*************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/Screen.js":
+/*!*************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/Screen.js ***!
+  \*************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Screen = void 0;
-const Audio_1 = __webpack_require__(/*! ../Audio */ "../node_modules/fivem-js/lib/Audio.js");
-const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/ui/index.js");
+const Audio_1 = __webpack_require__(/*! ../Audio */ "../node_modules/@wdesgardin/fivem-js/lib/Audio.js");
+const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/index.js");
 class Screen {
     static get Resolution() {
         const [width, height] = GetScreenActiveResolution();
@@ -9515,7 +10753,7 @@ class Screen {
         return GetAspectRatio(false);
     }
     static showSubtitle(message, duration = 2500) {
-        const strings = utils_1.stringToArray(message);
+        const strings = utils_1.String.stringToArray(message);
         BeginTextCommandPrint('CELL_EMAIL_BCON');
         strings.forEach(element => {
             AddTextComponentSubstringPlayerName(element);
@@ -9523,7 +10761,7 @@ class Screen {
         EndTextCommandPrint(duration, true);
     }
     static displayHelpTextThisFrame(message) {
-        const strings = utils_1.stringToArray(message);
+        const strings = utils_1.String.stringToArray(message);
         BeginTextCommandDisplayHelp('CELL_EMAIL_BCON');
         strings.forEach(element => {
             AddTextComponentSubstringPlayerName(element);
@@ -9531,7 +10769,7 @@ class Screen {
         EndTextCommandDisplayHelp(0, false, false, -1);
     }
     static showNotification(message, blinking = false) {
-        const strings = utils_1.stringToArray(message);
+        const strings = utils_1.String.stringToArray(message);
         SetNotificationTextEntry('CELL_EMAIL_BCON');
         strings.forEach(element => {
             AddTextComponentSubstringPlayerName(element);
@@ -9539,7 +10777,7 @@ class Screen {
         return new _1.Notification(DrawNotification(blinking, true));
     }
     static showAdvancedNotification(message, title, subtitle, iconSet, icon, bgColor = enums_1.HudColor.NONE, flashColor = utils_1.Color.empty, blinking = false, type = enums_1.NotificationType.Default, showInBrief = true, sound = true) {
-        const strings = utils_1.stringToArray(message);
+        const strings = utils_1.String.stringToArray(message);
         SetNotificationTextEntry('CELL_EMAIL_BCON');
         strings.forEach(element => {
             AddTextComponentSubstringPlayerName(element);
@@ -9558,7 +10796,7 @@ class Screen {
     }
     static worldToScreen(position, scaleWidth = false) {
         const coords = GetScreenCoordFromWorldCoord(position.x, position.y, position.z);
-        return new utils_1.PointF(coords[0] * (scaleWidth ? this.ScaledWidth : this.Width), coords[1] * this.Height, coords[2]);
+        return new utils_1.Size(coords[1] * (scaleWidth ? this.ScaledWidth : this.Width), coords[2] * this.Height);
     }
 }
 exports.Screen = Screen;
@@ -9566,17 +10804,17 @@ exports.Screen = Screen;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/Sprite.js":
-/*!*************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/Sprite.js ***!
-  \*************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/Sprite.js":
+/*!*************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/Sprite.js ***!
+  \*************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Sprite = void 0;
-const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/ui/index.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/index.js");
 class Sprite {
     constructor(textureDict, textureName, pos, size, heading = 0, color = utils_1.Color.white) {
         this._textureDict = textureDict;
@@ -9633,18 +10871,18 @@ exports.Sprite = Sprite;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/Text.js":
-/*!***********************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/Text.js ***!
-  \***********************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/Text.js":
+/*!***********************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/Text.js ***!
+  \***********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Text = void 0;
-const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/ui/index.js");
+const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/index.js");
 class Text {
     /**
      *
@@ -9749,24 +10987,25 @@ exports.Text = Text;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/Timerbar.js":
-/*!***************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/Timerbar.js ***!
-  \***************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/Timerbar.js":
+/*!***************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/Timerbar.js ***!
+  \***************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Timerbar = void 0;
-const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const Hud_1 = __webpack_require__(/*! ./Hud */ "../node_modules/fivem-js/lib/ui/Hud.js");
-const LoadingPrompt_1 = __webpack_require__(/*! ./LoadingPrompt */ "../node_modules/fivem-js/lib/ui/LoadingPrompt.js");
-const Screen_1 = __webpack_require__(/*! ./Screen */ "../node_modules/fivem-js/lib/ui/Screen.js");
-const Sprite_1 = __webpack_require__(/*! ./Sprite */ "../node_modules/fivem-js/lib/ui/Sprite.js");
+const enums_1 = __webpack_require__(/*! ../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const Hud_1 = __webpack_require__(/*! ./Hud */ "../node_modules/@wdesgardin/fivem-js/lib/ui/Hud.js");
+const LoadingPrompt_1 = __webpack_require__(/*! ./LoadingPrompt */ "../node_modules/@wdesgardin/fivem-js/lib/ui/LoadingPrompt.js");
+const Screen_1 = __webpack_require__(/*! ./Screen */ "../node_modules/@wdesgardin/fivem-js/lib/ui/Screen.js");
+const Sprite_1 = __webpack_require__(/*! ./Sprite */ "../node_modules/@wdesgardin/fivem-js/lib/ui/Sprite.js");
 /** @internal */
 const activeTimerBars = [];
 /** @internal */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const drawText = (text, position, options) => {
     options = Object.assign({
         align: 1,
@@ -9823,7 +11062,6 @@ const drawText = (text, position, options) => {
  */
 class Timerbar {
     constructor(title, useProgressBar = false) {
-        this.sprite = null;
         this.title = '';
         this.text = '';
         this.useProgressBar = false;
@@ -9966,8 +11204,24 @@ setTick(() => {
             const pbarX = 0.918 - safeZoneX + 0.047;
             const pbarY = drawY + 0.0015;
             const width = 0.0616 * timerbar.Progress;
-            DrawRect(pbarX, pbarY, 0.0616, 0.0105, timerbar.ProgressbarBgColor[0], timerbar.ProgressbarBgColor[1], timerbar.ProgressbarBgColor[2], timerbar.ProgressbarBgColor[3]);
-            DrawRect(pbarX - 0.0616 / 2 + width / 2, pbarY, width, 0.0105, timerbar.ProgressbarFgColor[0], timerbar.ProgressbarFgColor[1], timerbar.ProgressbarFgColor[2], timerbar.ProgressbarFgColor[3]);
+            DrawRect(pbarX, pbarY, 0.0616, 0.0105, typeof timerbar.ProgressbarBgColor === 'number'
+                ? timerbar.ProgressbarBgColor
+                : timerbar.ProgressbarBgColor[0], typeof timerbar.ProgressbarBgColor === 'number'
+                ? timerbar.ProgressbarBgColor
+                : timerbar.ProgressbarBgColor[1], typeof timerbar.ProgressbarBgColor === 'number'
+                ? timerbar.ProgressbarBgColor
+                : timerbar.ProgressbarBgColor[2], typeof timerbar.ProgressbarBgColor === 'number'
+                ? timerbar.ProgressbarBgColor
+                : timerbar.ProgressbarBgColor[3]);
+            DrawRect(pbarX - 0.0616 / 2 + width / 2, pbarY, width, 0.0105, typeof timerbar.ProgressbarFgColor === 'number'
+                ? timerbar.ProgressbarFgColor
+                : timerbar.ProgressbarFgColor[0], typeof timerbar.ProgressbarFgColor === 'number'
+                ? timerbar.ProgressbarFgColor
+                : timerbar.ProgressbarFgColor[1], typeof timerbar.ProgressbarFgColor === 'number'
+                ? timerbar.ProgressbarFgColor
+                : timerbar.ProgressbarFgColor[2], typeof timerbar.ProgressbarFgColor === 'number'
+                ? timerbar.ProgressbarFgColor
+                : timerbar.ProgressbarFgColor[3]);
         }
         else {
             drawText(timerbar.Text, [0.918 - safeZoneX + 0.0785, drawY + -0.0165], {
@@ -9985,10 +11239,10 @@ setTick(() => {
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/index.js":
-/*!************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/index.js ***!
-  \************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/index.js":
+/*!************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/index.js ***!
+  \************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10004,40 +11258,40 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Timerbar = exports.Text = exports.Sprite = exports.Screen = exports.Scaleform = exports.Notification = exports.LoadingPrompt = exports.Hud = exports.Fading = exports.Effects = exports.Container = exports.Rectangle = void 0;
-__exportStar(__webpack_require__(/*! ./interfaces */ "../node_modules/fivem-js/lib/ui/interfaces/index.js"), exports);
-var Rectangle_1 = __webpack_require__(/*! ./Rectangle */ "../node_modules/fivem-js/lib/ui/Rectangle.js");
+__exportStar(__webpack_require__(/*! ./interfaces */ "../node_modules/@wdesgardin/fivem-js/lib/ui/interfaces/index.js"), exports);
+var Rectangle_1 = __webpack_require__(/*! ./Rectangle */ "../node_modules/@wdesgardin/fivem-js/lib/ui/Rectangle.js");
 Object.defineProperty(exports, "Rectangle", ({ enumerable: true, get: function () { return Rectangle_1.Rectangle; } }));
-var Container_1 = __webpack_require__(/*! ./Container */ "../node_modules/fivem-js/lib/ui/Container.js");
+var Container_1 = __webpack_require__(/*! ./Container */ "../node_modules/@wdesgardin/fivem-js/lib/ui/Container.js");
 Object.defineProperty(exports, "Container", ({ enumerable: true, get: function () { return Container_1.Container; } }));
-var Effects_1 = __webpack_require__(/*! ./Effects */ "../node_modules/fivem-js/lib/ui/Effects.js");
+var Effects_1 = __webpack_require__(/*! ./Effects */ "../node_modules/@wdesgardin/fivem-js/lib/ui/Effects.js");
 Object.defineProperty(exports, "Effects", ({ enumerable: true, get: function () { return Effects_1.Effects; } }));
-var Fading_1 = __webpack_require__(/*! ./Fading */ "../node_modules/fivem-js/lib/ui/Fading.js");
+var Fading_1 = __webpack_require__(/*! ./Fading */ "../node_modules/@wdesgardin/fivem-js/lib/ui/Fading.js");
 Object.defineProperty(exports, "Fading", ({ enumerable: true, get: function () { return Fading_1.Fading; } }));
-var Hud_1 = __webpack_require__(/*! ./Hud */ "../node_modules/fivem-js/lib/ui/Hud.js");
+var Hud_1 = __webpack_require__(/*! ./Hud */ "../node_modules/@wdesgardin/fivem-js/lib/ui/Hud.js");
 Object.defineProperty(exports, "Hud", ({ enumerable: true, get: function () { return Hud_1.Hud; } }));
-var LoadingPrompt_1 = __webpack_require__(/*! ./LoadingPrompt */ "../node_modules/fivem-js/lib/ui/LoadingPrompt.js");
+var LoadingPrompt_1 = __webpack_require__(/*! ./LoadingPrompt */ "../node_modules/@wdesgardin/fivem-js/lib/ui/LoadingPrompt.js");
 Object.defineProperty(exports, "LoadingPrompt", ({ enumerable: true, get: function () { return LoadingPrompt_1.LoadingPrompt; } }));
-var Notification_1 = __webpack_require__(/*! ./Notification */ "../node_modules/fivem-js/lib/ui/Notification.js");
+var Notification_1 = __webpack_require__(/*! ./Notification */ "../node_modules/@wdesgardin/fivem-js/lib/ui/Notification.js");
 Object.defineProperty(exports, "Notification", ({ enumerable: true, get: function () { return Notification_1.Notification; } }));
-var Scaleform_1 = __webpack_require__(/*! ./Scaleform */ "../node_modules/fivem-js/lib/ui/Scaleform.js");
+var Scaleform_1 = __webpack_require__(/*! ./Scaleform */ "../node_modules/@wdesgardin/fivem-js/lib/ui/Scaleform.js");
 Object.defineProperty(exports, "Scaleform", ({ enumerable: true, get: function () { return Scaleform_1.Scaleform; } }));
-var Screen_1 = __webpack_require__(/*! ./Screen */ "../node_modules/fivem-js/lib/ui/Screen.js");
+var Screen_1 = __webpack_require__(/*! ./Screen */ "../node_modules/@wdesgardin/fivem-js/lib/ui/Screen.js");
 Object.defineProperty(exports, "Screen", ({ enumerable: true, get: function () { return Screen_1.Screen; } }));
-var Sprite_1 = __webpack_require__(/*! ./Sprite */ "../node_modules/fivem-js/lib/ui/Sprite.js");
+var Sprite_1 = __webpack_require__(/*! ./Sprite */ "../node_modules/@wdesgardin/fivem-js/lib/ui/Sprite.js");
 Object.defineProperty(exports, "Sprite", ({ enumerable: true, get: function () { return Sprite_1.Sprite; } }));
-var Text_1 = __webpack_require__(/*! ./Text */ "../node_modules/fivem-js/lib/ui/Text.js");
+var Text_1 = __webpack_require__(/*! ./Text */ "../node_modules/@wdesgardin/fivem-js/lib/ui/Text.js");
 Object.defineProperty(exports, "Text", ({ enumerable: true, get: function () { return Text_1.Text; } }));
-var Timerbar_1 = __webpack_require__(/*! ./Timerbar */ "../node_modules/fivem-js/lib/ui/Timerbar.js");
+var Timerbar_1 = __webpack_require__(/*! ./Timerbar */ "../node_modules/@wdesgardin/fivem-js/lib/ui/Timerbar.js");
 Object.defineProperty(exports, "Timerbar", ({ enumerable: true, get: function () { return Timerbar_1.Timerbar; } }));
-__exportStar(__webpack_require__(/*! ./menu */ "../node_modules/fivem-js/lib/ui/menu/index.js"), exports);
+__exportStar(__webpack_require__(/*! ./menu */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/index.js"), exports);
 
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/interfaces/index.js":
-/*!***********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/interfaces/index.js ***!
-  \***********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/interfaces/index.js":
+/*!***********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/interfaces/index.js ***!
+  \***********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -10046,10 +11300,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/Menu.js":
-/*!****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/Menu.js ***!
-  \****************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/Menu.js":
+/*!****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/Menu.js ***!
+  \****************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10064,14 +11318,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Menu = void 0;
-const __1 = __webpack_require__(/*! ../ */ "../node_modules/fivem-js/lib/ui/index.js");
-const __2 = __webpack_require__(/*! ../../ */ "../node_modules/fivem-js/lib/index.js");
-const enums_1 = __webpack_require__(/*! ../../enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const utils_1 = __webpack_require__(/*! ../../utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const items_1 = __webpack_require__(/*! ./items */ "../node_modules/fivem-js/lib/ui/menu/items/index.js");
+const __1 = __webpack_require__(/*! ../ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/index.js");
+const __2 = __webpack_require__(/*! ../../ */ "../node_modules/@wdesgardin/fivem-js/lib/index.js");
+const enums_1 = __webpack_require__(/*! ../../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const utils_1 = __webpack_require__(/*! ../../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const items_1 = __webpack_require__(/*! ./items */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/index.js");
 class Menu {
     constructor(title, subtitle, offset = new utils_1.Point(), spriteLibrary = 'commonmenu', spriteName = 'interaction_bgd') {
-        this.id = utils_1.uuidv4();
+        this.id = utils_1.Crypto.uuidv4();
         this.visible = false;
         this.items = [];
         this.children = new Map();
@@ -10087,6 +11341,8 @@ class Menu {
         this.itemSelect = new utils_1.LiteEvent();
         this.panelActivated = new utils_1.LiteEvent();
         this._counterPretext = '';
+        this._counterOverride = '';
+        this._alignment = enums_1.MenuAlignment.Left;
         this._navigationDelay = 140;
         this._lastUpDownNavigation = 0;
         this._lastLeftRightNavigation = 0;
@@ -10133,11 +11389,23 @@ class Menu {
     get Title() {
         return this._title.caption;
     }
+    get TitleFont() {
+        return this._title.font;
+    }
+    set TitleFont(font) {
+        this._title.font = font;
+    }
     set Subtitle(text) {
         this._subtitle.caption = text;
     }
     get Subtitle() {
         return this._subtitle.caption;
+    }
+    set SubtitleFont(font) {
+        this._subtitle.font = font;
+    }
+    get SubtitleFont() {
+        return this._subtitle.font;
     }
     set SubtitleForeColor(color) {
         this._subtitle.color = color;
@@ -10176,6 +11444,12 @@ class Menu {
             this._minItem = currentSelection;
         }
     }
+    get Alignment() {
+        return this._alignment;
+    }
+    set Alignment(alignment) {
+        this._alignment = alignment;
+    }
     get WidthOffset() {
         return this._widthOffset;
     }
@@ -10202,7 +11476,7 @@ class Menu {
         });
     }
     get DrawOffset() {
-        return this.Settings.scaleWithSafezone ? this._drawOffset : new utils_1.Point();
+        return this._drawOffset;
     }
     get Controls() {
         return this._controls;
@@ -10214,8 +11488,11 @@ class Menu {
         let menu;
         if (inherit) {
             menu = new Menu(this._title.caption, text, this._offset, this._logo.TextureDict, this._logo.textureName);
+            menu.Alignment = this.Alignment;
             menu.WidthOffset = this.WidthOffset;
             menu._settings = this._settings;
+            menu.TitleFont = this.TitleFont;
+            menu.SubtitleFont = this.SubtitleFont;
         }
         else {
             menu = new Menu(this._title.caption, text);
@@ -10227,8 +11504,11 @@ class Menu {
     }
     addSubMenu(subMenuToAdd, text, description, inherit = true) {
         if (inherit) {
+            subMenuToAdd.Alignment = this.Alignment;
             subMenuToAdd.WidthOffset = this.WidthOffset;
             subMenuToAdd._settings = this._settings;
+            subMenuToAdd.TitleFont = this.TitleFont;
+            subMenuToAdd.SubtitleFont = this.SubtitleFont;
         }
         const item = new items_1.UIMenuItem(text, description);
         this.addItem(item);
@@ -10266,8 +11546,10 @@ class Menu {
             return false;
         }
         const menu = this.children.get(releaseFrom.id);
-        menu.parentItem = null;
-        menu.parentMenu = null;
+        if (menu instanceof Menu) {
+            menu.parentItem = undefined;
+            menu.parentMenu = undefined;
+        }
         this.children.delete(releaseFrom.id);
         return true;
     }
@@ -10375,9 +11657,11 @@ class Menu {
             if (this.children.has(item.id)) {
                 const subMenu = this.children.get(item.id);
                 this.visible = false;
-                subMenu.visible = true;
-                subMenu._justOpened = true;
-                subMenu.menuOpen.emit();
+                if (subMenu instanceof Menu) {
+                    subMenu.visible = true;
+                    subMenu._justOpened = true;
+                    subMenu.menuOpen.emit();
+                }
                 this.menuChange.emit(subMenu, true);
             }
         }
@@ -10546,10 +11830,10 @@ class Menu {
                 }
                 else {
                     this._playSoundAndReleaseId(this.Settings.audio.error, this.Settings.audio.library);
-                    this.CurrentSelection = hoveredItemIndex;
+                    this.CurrentSelection = hoveredItemIndex !== null && hoveredItemIndex !== void 0 ? hoveredItemIndex : 0;
                     this.indexChange.emit(this.CurrentSelection);
                 }
-                yield new Promise(resolve => setTimeout(resolve, this._navigationDelay));
+                yield (0, __2.Wait)(this._navigationDelay);
                 while (__2.Game.isDisabledControlPressed(0, enums_1.Control.Attack) && hoveredItem.IsMouseInBounds) {
                     if (hoveredItem.selected) {
                         if (hoveredItem.enabled) {
@@ -10569,10 +11853,10 @@ class Menu {
                     }
                     else {
                         this._playSoundAndReleaseId(this.Settings.audio.error, this.Settings.audio.library);
-                        this.CurrentSelection = hoveredItemIndex;
+                        this.CurrentSelection = hoveredItemIndex !== null && hoveredItemIndex !== void 0 ? hoveredItemIndex : 0;
                         this.indexChange.emit(this.CurrentSelection);
                     }
-                    yield new Promise(resolve => setTimeout(resolve, 125));
+                    yield (0, __2.Wait)(125);
                 }
                 this._mousePressed = false;
             }))();
@@ -10586,10 +11870,10 @@ class Menu {
                 (() => __awaiter(this, void 0, void 0, function* () {
                     this._mousePressed = true;
                     this.goUp();
-                    yield new Promise(resolve => setTimeout(resolve, this._navigationDelay));
+                    yield (0, __2.Wait)(this._navigationDelay);
                     while (__2.Game.isDisabledControlPressed(0, enums_1.Control.Attack)) {
                         this.goUp();
-                        yield new Promise(resolve => setTimeout(resolve, 125));
+                        yield (0, __2.Wait)(125);
                     }
                     this._mousePressed = false;
                 }))();
@@ -10607,10 +11891,10 @@ class Menu {
                 (() => __awaiter(this, void 0, void 0, function* () {
                     this._mousePressed = true;
                     this.goDown();
-                    yield new Promise(resolve => setTimeout(resolve, this._navigationDelay));
+                    yield (0, __2.Wait)(this._navigationDelay);
                     while (__2.Game.isDisabledControlPressed(0, enums_1.Control.Attack)) {
                         this.goDown();
-                        yield new Promise(resolve => setTimeout(resolve, 125));
+                        yield (0, __2.Wait)(125);
                     }
                     this._mousePressed = false;
                 }))();
@@ -10734,12 +12018,28 @@ class Menu {
                 this._upAndDownSprite.loadTextureDictionary();
             }
         }
+        SetScriptGfxAlign(this._alignment, 84);
+        const menuWidth = (431 + this._widthOffset) / Menu.screenWidth;
         if (this.Settings.scaleWithSafezone) {
-            ScreenDrawPositionBegin(76, 84);
-            ScreenDrawPositionRatio(0, 0, 0, 0);
+            SetScriptGfxAlignParams(0, 0, menuWidth, 0);
             const pos = GetScriptGfxPosition(0, 0);
             this._drawOffset.X = pos[0];
             this._drawOffset.Y = pos[1];
+        }
+        else {
+            const sSize = (1 - GetSafeZoneSize()) / 2;
+            if (this._alignment === enums_1.MenuAlignment.Right) {
+                SetScriptGfxAlignParams(sSize, -sSize, menuWidth, 0);
+                const pos = GetScriptGfxPosition(0, 0);
+                this._drawOffset.X = pos[0];
+                this._drawOffset.Y = pos[1];
+            }
+            else {
+                SetScriptGfxAlignParams(-sSize, -sSize, menuWidth, 0);
+                const pos = GetScriptGfxPosition(0, 0);
+                this._drawOffset.X = pos[0];
+                this._drawOffset.Y = pos[1];
+            }
         }
         this._mainMenu.draw(undefined, Menu.screenResolution);
         this._processControl();
@@ -10753,7 +12053,9 @@ class Menu {
                 : new utils_1.Size(431 + this._widthOffset, 38 * this.items.length);
         this._background.draw(Menu.screenResolution);
         if (this.items.length > 0) {
-            const hasDescription = this.CurrentItem.Description && this.CurrentItem.Description !== '';
+            let hasDescription = false;
+            if (this.CurrentItem.Description && this.CurrentItem.Description !== '')
+                hasDescription = true;
             this.CurrentItem.selected = true;
             if (hasDescription) {
                 this._recalculateDescriptionPosition();
@@ -10811,13 +12113,11 @@ class Menu {
             }
         }
         this._logo.draw(Menu.screenResolution);
-        if (this.Settings.scaleWithSafezone) {
-            ScreenDrawPositionEnd();
-        }
+        ResetScriptGfxAlign();
     }
 }
 exports.Menu = Menu;
-Menu.screenAspectRatio = IsDuplicityVersion() ? 0 : __1.Screen.AspectRatio;
+Menu.screenAspectRatio = (0, __2.IsClient)() ? __1.Screen.AspectRatio : 0;
 Menu.screenHeight = 1080;
 Menu.screenWidth = Menu.screenHeight * Menu.screenAspectRatio;
 Menu.screenResolution = new utils_1.Size(Menu.screenWidth, Menu.screenHeight);
@@ -10825,10 +12125,10 @@ Menu.screenResolution = new utils_1.Size(Menu.screenWidth, Menu.screenHeight);
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/MenuControl.js":
-/*!***********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/MenuControl.js ***!
-  \***********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/MenuControl.js":
+/*!***********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/MenuControl.js ***!
+  \***********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -10850,16 +12150,16 @@ exports.MenuControl = MenuControl;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/MenuControls.js":
-/*!************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/MenuControls.js ***!
-  \************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/MenuControls.js":
+/*!************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/MenuControls.js ***!
+  \************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MenuControls = void 0;
-const MenuControl_1 = __webpack_require__(/*! ./MenuControl */ "../node_modules/fivem-js/lib/ui/menu/MenuControl.js");
+const MenuControl_1 = __webpack_require__(/*! ./MenuControl */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/MenuControl.js");
 class MenuControls {
     constructor() {
         this.back = new MenuControl_1.MenuControl();
@@ -10875,17 +12175,17 @@ exports.MenuControls = MenuControls;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/MenuSettings.js":
-/*!************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/MenuSettings.js ***!
-  \************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/MenuSettings.js":
+/*!************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/MenuSettings.js ***!
+  \************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MenuSettings = void 0;
-const index_1 = __webpack_require__(/*! ../../index */ "../node_modules/fivem-js/lib/index.js");
-const enums_1 = __webpack_require__(/*! ../../enums */ "../node_modules/fivem-js/lib/enums/index.js");
+const index_1 = __webpack_require__(/*! ../../index */ "../node_modules/@wdesgardin/fivem-js/lib/index.js");
+const enums_1 = __webpack_require__(/*! ../../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
 class MenuSettings {
     constructor() {
         this.scaleWithSafezone = true;
@@ -10940,10 +12240,10 @@ exports.MenuSettings = MenuSettings;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/index.js":
-/*!*****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/index.js ***!
-  \*****************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/index.js":
+/*!*****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/index.js ***!
+  \*****************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10959,35 +12259,35 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MenuSettings = exports.MenuControls = exports.MenuControl = exports.Menu = void 0;
-__exportStar(__webpack_require__(/*! ./items */ "../node_modules/fivem-js/lib/ui/menu/items/index.js"), exports);
-__exportStar(__webpack_require__(/*! ./modules */ "../node_modules/fivem-js/lib/ui/menu/modules/index.js"), exports);
-var Menu_1 = __webpack_require__(/*! ./Menu */ "../node_modules/fivem-js/lib/ui/menu/Menu.js");
+__exportStar(__webpack_require__(/*! ./items */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/index.js"), exports);
+__exportStar(__webpack_require__(/*! ./modules */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/modules/index.js"), exports);
+var Menu_1 = __webpack_require__(/*! ./Menu */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/Menu.js");
 Object.defineProperty(exports, "Menu", ({ enumerable: true, get: function () { return Menu_1.Menu; } }));
-var MenuControl_1 = __webpack_require__(/*! ./MenuControl */ "../node_modules/fivem-js/lib/ui/menu/MenuControl.js");
+var MenuControl_1 = __webpack_require__(/*! ./MenuControl */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/MenuControl.js");
 Object.defineProperty(exports, "MenuControl", ({ enumerable: true, get: function () { return MenuControl_1.MenuControl; } }));
-var MenuControls_1 = __webpack_require__(/*! ./MenuControls */ "../node_modules/fivem-js/lib/ui/menu/MenuControls.js");
+var MenuControls_1 = __webpack_require__(/*! ./MenuControls */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/MenuControls.js");
 Object.defineProperty(exports, "MenuControls", ({ enumerable: true, get: function () { return MenuControls_1.MenuControls; } }));
-var MenuSettings_1 = __webpack_require__(/*! ./MenuSettings */ "../node_modules/fivem-js/lib/ui/menu/MenuSettings.js");
+var MenuSettings_1 = __webpack_require__(/*! ./MenuSettings */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/MenuSettings.js");
 Object.defineProperty(exports, "MenuSettings", ({ enumerable: true, get: function () { return MenuSettings_1.MenuSettings; } }));
 
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/items/UIMenuCheckboxItem.js":
-/*!************************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/items/UIMenuCheckboxItem.js ***!
-  \************************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/UIMenuCheckboxItem.js":
+/*!************************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/UIMenuCheckboxItem.js ***!
+  \************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UIMenuCheckboxItem = void 0;
-const __1 = __webpack_require__(/*! ../../ */ "../node_modules/fivem-js/lib/ui/index.js");
-const utils_1 = __webpack_require__(/*! ../../../utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/ui/menu/items/index.js");
-const enums_1 = __webpack_require__(/*! ../../../enums */ "../node_modules/fivem-js/lib/enums/index.js");
+const __1 = __webpack_require__(/*! ../../ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/index.js");
+const utils_1 = __webpack_require__(/*! ../../../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/index.js");
+const enums_1 = __webpack_require__(/*! ../../../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
 class UIMenuCheckboxItem extends _1.UIMenuItem {
-    constructor(text, checked = false, description, style = null) {
+    constructor(text, checked = false, description, style = enums_1.CheckboxStyle.Tick) {
         super(text, description);
         this.checkboxChanged = new utils_1.LiteEvent();
         this.supportsRightBadge = false;
@@ -11016,7 +12316,7 @@ class UIMenuCheckboxItem extends _1.UIMenuItem {
     }
     draw() {
         super.draw();
-        this._checkboxSprite.pos.X = 380 + this.offset.X + this.parent.WidthOffset;
+        this._checkboxSprite.pos.X = 380 + this.offset.X + (this.parent ? this.parent.WidthOffset : 0);
         this._checkboxSprite.textureName = this._getSpriteName();
         this._checkboxSprite.color = this._getSpriteColor();
         this._checkboxSprite.draw(__1.Menu.screenResolution);
@@ -11044,23 +12344,26 @@ exports.UIMenuCheckboxItem = UIMenuCheckboxItem;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/items/UIMenuItem.js":
-/*!****************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/items/UIMenuItem.js ***!
-  \****************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/UIMenuItem.js":
+/*!****************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/UIMenuItem.js ***!
+  \****************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UIMenuItem = void 0;
-const __1 = __webpack_require__(/*! ../ */ "../node_modules/fivem-js/lib/ui/menu/index.js");
-const __2 = __webpack_require__(/*! ../../ */ "../node_modules/fivem-js/lib/ui/index.js");
-const enums_1 = __webpack_require__(/*! ../../../enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const utils_1 = __webpack_require__(/*! ../../../utils */ "../node_modules/fivem-js/lib/utils/index.js");
+const __1 = __webpack_require__(/*! ../ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/index.js");
+const __2 = __webpack_require__(/*! ../../ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/index.js");
+const enums_1 = __webpack_require__(/*! ../../../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const utils_1 = __webpack_require__(/*! ../../../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
 class UIMenuItem {
     constructor(text, description) {
-        this.id = utils_1.uuidv4();
+        this.id = utils_1.Crypto.uuidv4();
         this.enabled = true;
+        this.selected = false;
+        this.hovered = false;
+        this.offset = new utils_1.Point(0, 0);
         this.activated = new utils_1.LiteEvent();
         this.panelActivated = new utils_1.LiteEvent();
         this.supportsDescription = true;
@@ -11068,12 +12371,15 @@ class UIMenuItem {
         this.supportsLeftBadge = true;
         this.supportsRightBadge = true;
         this.supportsRightLabel = true;
+        this._description = '';
+        this._formattedDescription = '';
         this._backColor = UIMenuItem.defaultBackColor;
         this._highlightedBackColor = UIMenuItem.defaultHighlightedBackColor;
         this._foreColor = UIMenuItem.defaultForeColor;
         this._highlightedForeColor = UIMenuItem.defaultHighlightedForeColor;
         this._leftBadge = enums_1.BadgeStyle.None;
         this._rightBadge = enums_1.BadgeStyle.None;
+        this._event = { event: '', args: [] };
         this._panels = [];
         this.rectangle = new __2.Rectangle(new utils_1.Point(), new utils_1.Size(431, 38), this._backColor);
         this.text = new __2.Text('', new utils_1.Point(), 0.33, this._foreColor, enums_1.Font.ChaletLondon, enums_1.Alignment.Left);
@@ -11082,7 +12388,7 @@ class UIMenuItem {
         this.badgeRight = new __2.Sprite('', '');
         this.labelText = new __2.Text('', new utils_1.Point(), 0.35, this._foreColor, 0, enums_1.Alignment.Right);
         this.Text = text;
-        this.Description = description;
+        this.Description = description !== null && description !== void 0 ? description : '';
     }
     static badgeToTextureDict(badge) {
         switch (badge) {
@@ -11425,7 +12731,7 @@ class UIMenuItem {
     }
     get Description() {
         if (!this.supportsDescription) {
-            return null;
+            return '';
         }
         return this._description;
     }
@@ -11471,7 +12777,7 @@ class UIMenuItem {
     }
     get LeftBadge() {
         if (!this.supportsLeftBadge) {
-            return null;
+            return enums_1.BadgeStyle.None;
         }
         return this._leftBadge;
     }
@@ -11486,7 +12792,7 @@ class UIMenuItem {
     }
     get RightBadge() {
         if (!this.supportsRightBadge) {
-            return null;
+            return enums_1.BadgeStyle.None;
         }
         return this._rightBadge;
     }
@@ -11501,7 +12807,7 @@ class UIMenuItem {
     }
     get RightLabel() {
         if (!this.supportsRightLabel) {
-            return null;
+            return '';
         }
         return this.labelText.caption;
     }
@@ -11512,11 +12818,13 @@ class UIMenuItem {
         this.labelText.caption = value ? value.trim() : '';
     }
     get IsMouseInBounds() {
-        return this.parent.isMouseInBounds(this.rectangle.pos, this.rectangle.size);
+        return this.parent
+            ? this.parent.isMouseInBounds(this.rectangle.pos, this.rectangle.size)
+            : false;
     }
     get Panels() {
         if (!this.supportsPanels) {
-            return null;
+            return [];
         }
         return this._panels;
     }
@@ -11541,7 +12849,7 @@ class UIMenuItem {
             throw new Error('This item does not support panels');
         }
         const index = this._panels.findIndex(p => p.id === panel.id);
-        return index !== -1 ? index : null;
+        return index !== -1 ? index : 0;
     }
     removePanel(panelOrIndex) {
         if (!this.supportsPanels) {
@@ -11574,9 +12882,9 @@ class UIMenuItem {
         let aggregatePixels = 0;
         let output = '';
         const words = input.split(' ');
-        const spaceWidth = utils_1.measureString(' ', enums_1.Font.ChaletLondon, 0.33, __1.Menu.screenWidth);
+        const spaceWidth = utils_1.String.measureString(' ', enums_1.Font.ChaletLondon, 0.33, __1.Menu.screenWidth);
         for (const word of words) {
-            const offset = utils_1.measureString(word, enums_1.Font.ChaletLondon, 0.33, __1.Menu.screenWidth);
+            const offset = utils_1.String.measureString(word, enums_1.Font.ChaletLondon, 0.33, __1.Menu.screenWidth);
             aggregatePixels += offset;
             if (aggregatePixels > maxPixelsPerLine) {
                 output = `${output} \n${word} `;
@@ -11948,7 +13256,7 @@ class UIMenuItem {
             case enums_1.BadgeStyle.Info:
                 return 'info_icon_32';
             default:
-                break;
+                return '';
         }
     }
     badgeToColor(badge) {
@@ -12081,12 +13389,12 @@ class UIMenuItem {
     }
     draw() {
         if (this.selected) {
-            this.selectedSprite.size.width = 431 + this.parent.WidthOffset;
+            this.selectedSprite.size.width = 431 + (this.parent ? this.parent.WidthOffset : 0);
             this.selectedSprite.pos.X = this.offset.X;
             this.selectedSprite.draw(__1.Menu.screenResolution);
         }
         else {
-            this.rectangle.size.width = 431 + this.parent.WidthOffset;
+            this.rectangle.size.width = 431 + (this.parent ? this.parent.WidthOffset : 0);
             this.rectangle.pos.X = this.offset.X;
             this.rectangle.color = this.hovered ? UIMenuItem.defaultHoveredBackColor : this._backColor;
             this.rectangle.draw(undefined, __1.Menu.screenResolution);
@@ -12112,7 +13420,7 @@ class UIMenuItem {
         if (this.supportsRightBadge && this._rightBadge !== enums_1.BadgeStyle.None) {
             this.labelText.pos.X = -40;
             const widthOffset = UIMenuItem.getBadgeSpriteWidthOffset(this.badgeRight);
-            this.badgeRight.pos.X = 431 + this.offset.X + this.parent.WidthOffset;
+            this.badgeRight.pos.X = 431 + this.offset.X + (this.parent ? this.parent.WidthOffset : 0);
             this.badgeRight.pos.X -= this.badgeRight.size.width + widthOffset;
             this.badgeRight.textureName = this.badgeToTextureName(this._rightBadge);
             this.badgeRight.color = this.badgeToColor(this._rightBadge);
@@ -12122,7 +13430,7 @@ class UIMenuItem {
             this.labelText.pos.X = -11;
         }
         if (this.supportsRightLabel && this.labelText.caption !== '') {
-            this.labelText.pos.X += 431 + this.offset.X + this.parent.WidthOffset;
+            this.labelText.pos.X += 431 + this.offset.X + (this.parent ? this.parent.WidthOffset : 0);
             this.labelText.color = this.text.color;
             this.labelText.draw(undefined, __1.Menu.screenResolution);
         }
@@ -12140,19 +13448,19 @@ UIMenuItem.defaultHighlightedForeColor = utils_1.Color.black;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/items/UIMenuListItem.js":
-/*!********************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/items/UIMenuListItem.js ***!
-  \********************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/UIMenuListItem.js":
+/*!********************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/UIMenuListItem.js ***!
+  \********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UIMenuListItem = void 0;
-const __1 = __webpack_require__(/*! ../../ */ "../node_modules/fivem-js/lib/ui/index.js");
-const enums_1 = __webpack_require__(/*! ../../../enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const utils_1 = __webpack_require__(/*! ../../../utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/ui/menu/items/index.js");
+const __1 = __webpack_require__(/*! ../../ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/index.js");
+const enums_1 = __webpack_require__(/*! ../../../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const utils_1 = __webpack_require__(/*! ../../../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/index.js");
 class UIMenuListItem extends _1.UIMenuItem {
     constructor(text, items, startIndex = 0, description, arrowOnlyOnSelected = true) {
         super(text, description);
@@ -12161,7 +13469,9 @@ class UIMenuListItem extends _1.UIMenuItem {
         this.supportsRightBadge = false;
         this.supportsRightLabel = false;
         this._index = 0;
+        this._arrowOnlyOnSelected = false;
         this._items = [];
+        this._textWidth = 0;
         this._leftArrow = new __1.Sprite('commonmenu', 'arrowleft', new utils_1.Point(), new utils_1.Size(30, 30));
         this._rightArrow = new __1.Sprite('commonmenu', 'arrowright', new utils_1.Point(), new utils_1.Size(30, 30));
         this._itemText = new __1.Text('', new utils_1.Point(), 0.35, utils_1.Color.white, enums_1.Font.ChaletLondon, enums_1.Alignment.Right);
@@ -12200,7 +13510,7 @@ class UIMenuListItem extends _1.UIMenuItem {
         }
         value = value < 0 ? this._items.length - 1 : value > this._items.length - 1 ? 0 : value;
         this._index = value;
-        delete this._textWidth;
+        this._textWidth = 0;
     }
     get ArrowOnlyOnSelected() {
         return this._arrowOnlyOnSelected;
@@ -12209,10 +13519,14 @@ class UIMenuListItem extends _1.UIMenuItem {
         this._arrowOnlyOnSelected = value;
     }
     get IsMouseInBoundsOfLeftArrow() {
-        return this.parent.isMouseInBounds(this._leftArrow.pos, this._leftArrow.size);
+        return this.parent
+            ? this.parent.isMouseInBounds(this._leftArrow.pos, this._leftArrow.size)
+            : false;
     }
     get IsMouseInBoundsOfRightArrow() {
-        return this.parent.isMouseInBounds(this._rightArrow.pos, this._rightArrow.size);
+        return this.parent
+            ? this.parent.isMouseInBounds(this._rightArrow.pos, this._rightArrow.size)
+            : false;
     }
     setVerticalPosition(y) {
         const yOffset = y + this.offset.Y + 147;
@@ -12226,9 +13540,9 @@ class UIMenuListItem extends _1.UIMenuItem {
         if (this._textWidth === undefined) {
             const caption = this._getSelectedItemCaption();
             this._itemText.caption = caption;
-            this._textWidth = utils_1.measureString(caption, this._itemText.font, this._itemText.scale, __1.Menu.screenWidth);
+            this._textWidth = utils_1.String.measureString(caption, this._itemText.font, this._itemText.scale, __1.Menu.screenWidth);
         }
-        this._rightArrow.pos.X = this.offset.X + this.parent.WidthOffset + 400;
+        this._rightArrow.pos.X = this.offset.X + (this.parent ? this.parent.WidthOffset : 0) + 400;
         this._itemText.pos.X = this._rightArrow.pos.X + 5;
         this._itemText.color = this.enabled
             ? this.selected
@@ -12258,21 +13572,21 @@ exports.UIMenuListItem = UIMenuListItem;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/items/UIMenuSeparatorItem.js":
-/*!*************************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/items/UIMenuSeparatorItem.js ***!
-  \*************************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/UIMenuSeparatorItem.js":
+/*!*************************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/UIMenuSeparatorItem.js ***!
+  \*************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UIMenuSeparatorItem = void 0;
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/ui/menu/items/index.js");
-const enums_1 = __webpack_require__(/*! ../../../enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const __1 = __webpack_require__(/*! ../ */ "../node_modules/fivem-js/lib/ui/menu/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/index.js");
+const enums_1 = __webpack_require__(/*! ../../../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const __1 = __webpack_require__(/*! ../ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/index.js");
 class UIMenuSeparatorItem extends _1.UIMenuItem {
     constructor(text) {
-        super(text);
+        super(text !== null && text !== void 0 ? text : '');
         this.supportsDescription = false;
         this.supportsPanels = false;
         this.supportsLeftBadge = false;
@@ -12286,7 +13600,7 @@ class UIMenuSeparatorItem extends _1.UIMenuItem {
         this.text.pos.Y = yOffset + 147;
     }
     draw() {
-        const width = 431 + this.parent.WidthOffset;
+        const width = 431 + (this.parent ? this.parent.WidthOffset : 0);
         this.rectangle.size.width = width;
         this.rectangle.pos.X = this.offset.X;
         this.rectangle.draw(undefined, __1.Menu.screenResolution);
@@ -12301,19 +13615,19 @@ exports.UIMenuSeparatorItem = UIMenuSeparatorItem;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/items/UIMenuSliderItem.js":
-/*!**********************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/items/UIMenuSliderItem.js ***!
-  \**********************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/UIMenuSliderItem.js":
+/*!**********************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/UIMenuSliderItem.js ***!
+  \**********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UIMenuSliderItem = void 0;
-const __1 = __webpack_require__(/*! ../../ */ "../node_modules/fivem-js/lib/ui/index.js");
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/ui/menu/items/index.js");
-const utils_1 = __webpack_require__(/*! ../../../utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const enums_1 = __webpack_require__(/*! ../../../enums */ "../node_modules/fivem-js/lib/enums/index.js");
+const __1 = __webpack_require__(/*! ../../ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/index.js");
+const utils_1 = __webpack_require__(/*! ../../../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const enums_1 = __webpack_require__(/*! ../../../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
 class UIMenuSliderItem extends _1.UIMenuItem {
     constructor(text, items, startIndex = 0, description, showDivider = false, arrowOnlyOnSelected = false) {
         super(text, description);
@@ -12321,6 +13635,10 @@ class UIMenuSliderItem extends _1.UIMenuItem {
         this.sliderSelected = new utils_1.LiteEvent();
         this.supportsRightBadge = false;
         this.supportsRightLabel = false;
+        this._index = 0;
+        this._items = [];
+        this._showDivider = true;
+        this._arrowOnlyOnSelected = false;
         this._leftSliderBadge = enums_1.BadgeStyle.None;
         this._rightSliderBadge = enums_1.BadgeStyle.None;
         this._background = new __1.Rectangle(new utils_1.Point(), new utils_1.Size(150, 9), new utils_1.Color(255, 4, 32, 57));
@@ -12399,10 +13717,14 @@ class UIMenuSliderItem extends _1.UIMenuItem {
         this._rightSliderBadgeSprite.size = _1.UIMenuItem.getBadgeSize(value);
     }
     get IsMouseInBoundsOfLeftArrow() {
-        return this.parent.isMouseInBounds(this._leftArrow.pos, this._leftArrow.size);
+        return this.parent
+            ? this.parent.isMouseInBounds(this._leftArrow.pos, this._leftArrow.size)
+            : false;
     }
     get IsMouseInBoundsOfRightArrow() {
-        return this.parent.isMouseInBounds(this._rightArrow.pos, this._rightArrow.size);
+        return this.parent
+            ? this.parent.isMouseInBounds(this._rightArrow.pos, this._rightArrow.size)
+            : false;
     }
     indexToItem(index) {
         return this._items[index];
@@ -12423,7 +13745,7 @@ class UIMenuSliderItem extends _1.UIMenuItem {
     draw() {
         super.draw();
         const showArrows = !this._arrowOnlyOnSelected || this.selected;
-        const x = this.offset.X + this.parent.WidthOffset;
+        const x = this.offset.X + (this.parent ? this.parent.WidthOffset : 0);
         this._background.pos.X = 431 + x - this._background.size.width;
         if (showArrows) {
             this._background.pos.X -= this._rightArrow.size.width / 2;
@@ -12480,10 +13802,10 @@ exports.UIMenuSliderItem = UIMenuSliderItem;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/items/index.js":
-/*!***********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/items/index.js ***!
-  \***********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/index.js":
+/*!***********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/index.js ***!
+  \***********************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -12499,43 +13821,44 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UIMenuSliderItem = exports.UIMenuSeparatorItem = exports.UIMenuListItem = exports.UIMenuCheckboxItem = exports.UIMenuItem = void 0;
-__exportStar(__webpack_require__(/*! ./panels */ "../node_modules/fivem-js/lib/ui/menu/items/panels/index.js"), exports);
-var UIMenuItem_1 = __webpack_require__(/*! ./UIMenuItem */ "../node_modules/fivem-js/lib/ui/menu/items/UIMenuItem.js");
+__exportStar(__webpack_require__(/*! ./panels */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/index.js"), exports);
+var UIMenuItem_1 = __webpack_require__(/*! ./UIMenuItem */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/UIMenuItem.js");
 Object.defineProperty(exports, "UIMenuItem", ({ enumerable: true, get: function () { return UIMenuItem_1.UIMenuItem; } }));
-var UIMenuCheckboxItem_1 = __webpack_require__(/*! ./UIMenuCheckboxItem */ "../node_modules/fivem-js/lib/ui/menu/items/UIMenuCheckboxItem.js");
+var UIMenuCheckboxItem_1 = __webpack_require__(/*! ./UIMenuCheckboxItem */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/UIMenuCheckboxItem.js");
 Object.defineProperty(exports, "UIMenuCheckboxItem", ({ enumerable: true, get: function () { return UIMenuCheckboxItem_1.UIMenuCheckboxItem; } }));
-var UIMenuListItem_1 = __webpack_require__(/*! ./UIMenuListItem */ "../node_modules/fivem-js/lib/ui/menu/items/UIMenuListItem.js");
+var UIMenuListItem_1 = __webpack_require__(/*! ./UIMenuListItem */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/UIMenuListItem.js");
 Object.defineProperty(exports, "UIMenuListItem", ({ enumerable: true, get: function () { return UIMenuListItem_1.UIMenuListItem; } }));
-var UIMenuSeparatorItem_1 = __webpack_require__(/*! ./UIMenuSeparatorItem */ "../node_modules/fivem-js/lib/ui/menu/items/UIMenuSeparatorItem.js");
+var UIMenuSeparatorItem_1 = __webpack_require__(/*! ./UIMenuSeparatorItem */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/UIMenuSeparatorItem.js");
 Object.defineProperty(exports, "UIMenuSeparatorItem", ({ enumerable: true, get: function () { return UIMenuSeparatorItem_1.UIMenuSeparatorItem; } }));
-var UIMenuSliderItem_1 = __webpack_require__(/*! ./UIMenuSliderItem */ "../node_modules/fivem-js/lib/ui/menu/items/UIMenuSliderItem.js");
+var UIMenuSliderItem_1 = __webpack_require__(/*! ./UIMenuSliderItem */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/UIMenuSliderItem.js");
 Object.defineProperty(exports, "UIMenuSliderItem", ({ enumerable: true, get: function () { return UIMenuSliderItem_1.UIMenuSliderItem; } }));
 
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/items/panels/AbstractUIMenuPanel.js":
-/*!********************************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/items/panels/AbstractUIMenuPanel.js ***!
-  \********************************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/AbstractUIMenuPanel.js":
+/*!********************************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/AbstractUIMenuPanel.js ***!
+  \********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AbstractUIMenuPanel = void 0;
-const utils_1 = __webpack_require__(/*! ../../../../utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const __1 = __webpack_require__(/*! ../../../ */ "../node_modules/fivem-js/lib/ui/index.js");
-const __2 = __webpack_require__(/*! ../../ */ "../node_modules/fivem-js/lib/ui/menu/index.js");
+const utils_1 = __webpack_require__(/*! ../../../../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const __1 = __webpack_require__(/*! ../../../ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/index.js");
+const __2 = __webpack_require__(/*! ../../ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/index.js");
 class AbstractUIMenuPanel {
     constructor() {
-        this.id = utils_1.uuidv4();
+        this.id = utils_1.Crypto.uuidv4();
         this.enabled = true;
     }
     get ParentMenu() {
-        return this.parentItem.parent;
+        return this.parentItem ? this.parentItem.parent : undefined;
     }
     get ParentItem() {
-        return this.parentItem;
+        var _a;
+        return (_a = this.parentItem) !== null && _a !== void 0 ? _a : undefined;
     }
     set ParentItem(value) {
         this.parentItem = value;
@@ -12547,19 +13870,22 @@ class AbstractUIMenuPanel {
         this.enabled = value;
     }
     get Height() {
-        return this.background.size.height;
+        return this.background ? this.background.size.height : 0;
     }
     setVerticalPosition(y) {
-        this.background.pos.Y = y;
+        if (this.background)
+            this.background.pos.Y = y;
     }
     draw() {
-        this.background.size.width = 431 + this.ParentMenu.WidthOffset;
-        this.background.pos.X = this.parentItem.offset.X;
-        if (this.background instanceof __1.Sprite) {
-            this.background.draw(__2.Menu.screenResolution);
-        }
-        else {
-            this.background.draw(undefined, __2.Menu.screenResolution);
+        if (this.background) {
+            this.background.size.width = 431 + (this.ParentMenu ? this.ParentMenu.WidthOffset : 0);
+            this.background.pos.X = this.parentItem ? this.parentItem.offset.X : 0;
+            if (this.background instanceof __1.Sprite) {
+                this.background.draw(__2.Menu.screenResolution);
+            }
+            else {
+                this.background.draw(undefined, __2.Menu.screenResolution);
+            }
         }
     }
 }
@@ -12568,10 +13894,10 @@ exports.AbstractUIMenuPanel = AbstractUIMenuPanel;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/items/panels/UIMenuColorPanel.js":
-/*!*****************************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/items/panels/UIMenuColorPanel.js ***!
-  \*****************************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/UIMenuColorPanel.js":
+/*!*****************************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/UIMenuColorPanel.js ***!
+  \*****************************************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -12586,16 +13912,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UIMenuColorPanel = void 0;
-const utils_1 = __webpack_require__(/*! ../../../../utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/ui/menu/items/panels/index.js");
-const __1 = __webpack_require__(/*! ../../../ */ "../node_modules/fivem-js/lib/ui/index.js");
-const enums_1 = __webpack_require__(/*! ../../../../enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const __2 = __webpack_require__(/*! ../../../../ */ "../node_modules/fivem-js/lib/index.js");
+const utils_1 = __webpack_require__(/*! ../../../../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/index.js");
+const __1 = __webpack_require__(/*! ../../../ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/index.js");
+const enums_1 = __webpack_require__(/*! ../../../../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const __2 = __webpack_require__(/*! ../../../../ */ "../node_modules/@wdesgardin/fivem-js/lib/index.js");
 class UIMenuColorPanel extends _1.AbstractUIMenuPanel {
     constructor(title, colors) {
         super();
+        this._title = '';
         this._colors = [];
         this._bar = [];
+        this._lastColor = utils_1.Color.empty;
         // Pagination
         this._min = 0;
         this._max = 8;
@@ -12672,8 +14000,10 @@ class UIMenuColorPanel extends _1.AbstractUIMenuPanel {
             last.g !== current.g ||
             last.b !== current.b) {
             this._lastColor = current;
-            this.ParentMenu.panelActivated.emit(this.parentItem, this, this.Index, current);
-            this.parentItem.panelActivated.emit(this, this.Index, current);
+            if (this.ParentMenu)
+                this.ParentMenu.panelActivated.emit(this.parentItem, this, this.Index, current);
+            if (this.parentItem)
+                this.parentItem.panelActivated.emit(this, this.Index, current);
         }
     }
     setVerticalPosition(y) {
@@ -12689,7 +14019,8 @@ class UIMenuColorPanel extends _1.AbstractUIMenuPanel {
     draw() {
         if (this.enabled) {
             super.draw();
-            const x = this.parentItem.offset.X + this.ParentMenu.WidthOffset / 2;
+            const x = (this.parentItem ? this.parentItem.offset.X : 0) +
+                (this.ParentMenu ? this.ParentMenu.WidthOffset / 2 : 0);
             this._selectedRectangle.pos.X = x + 15 + 44.5 * (this.Index - this._min);
             this._leftArrow.pos.X = x + 7.5;
             this._rightArrow.pos.X = x + 393.5;
@@ -12776,17 +14107,19 @@ class UIMenuColorPanel extends _1.AbstractUIMenuPanel {
     }
     _processControls() {
         if (__2.Game.isDisabledControlJustPressed(0, enums_1.Control.Attack)) {
-            if (this.ParentMenu.isMouseInBounds(this._leftArrow.pos, this._leftArrow.size)) {
-                this._goLeft();
-            }
-            else if (this.ParentMenu.isMouseInBounds(this._rightArrow.pos, this._rightArrow.size)) {
-                this._goRight();
-            }
-            this._bar.forEach((colorRect, index) => __awaiter(this, void 0, void 0, function* () {
-                if (this.ParentMenu.isMouseInBounds(colorRect.pos, colorRect.size)) {
-                    this.Index = this._min + index;
+            if (this.ParentMenu) {
+                if (this.ParentMenu.isMouseInBounds(this._leftArrow.pos, this._leftArrow.size)) {
+                    this._goLeft();
                 }
-            }));
+                else if (this.ParentMenu.isMouseInBounds(this._rightArrow.pos, this._rightArrow.size)) {
+                    this._goRight();
+                }
+                this._bar.forEach((colorRect, index) => __awaiter(this, void 0, void 0, function* () {
+                    if (this.ParentMenu && this.ParentMenu.isMouseInBounds(colorRect.pos, colorRect.size)) {
+                        this.Index = this._min + index;
+                    }
+                }));
+            }
         }
     }
 }
@@ -12795,10 +14128,10 @@ exports.UIMenuColorPanel = UIMenuColorPanel;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/items/panels/UIMenuGridPanel.js":
-/*!****************************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/items/panels/UIMenuGridPanel.js ***!
-  \****************************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/UIMenuGridPanel.js":
+/*!****************************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/UIMenuGridPanel.js ***!
+  \****************************************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -12813,11 +14146,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UIMenuGridPanel = void 0;
-const utils_1 = __webpack_require__(/*! ../../../../utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/ui/menu/items/panels/index.js");
-const __1 = __webpack_require__(/*! ../../../ */ "../node_modules/fivem-js/lib/ui/index.js");
-const enums_1 = __webpack_require__(/*! ../../../../enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const Game_1 = __webpack_require__(/*! ../../../../Game */ "../node_modules/fivem-js/lib/Game.js");
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+const utils_1 = __webpack_require__(/*! ../../../../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/index.js");
+const __1 = __webpack_require__(/*! ../../../ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/index.js");
+const enums_1 = __webpack_require__(/*! ../../../../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const Game_1 = __webpack_require__(/*! ../../../../Game */ "../node_modules/@wdesgardin/fivem-js/lib/Game.js");
 class UIMenuGridPanel extends _1.AbstractUIMenuPanel {
     constructor(topText, leftText, rightText, bottomText, circlePosition) {
         super();
@@ -12829,31 +14163,32 @@ class UIMenuGridPanel extends _1.AbstractUIMenuPanel {
         this.background = new __1.Sprite('commonmenu', 'gradient_bgd', new utils_1.Point(), new utils_1.Size(431, 275));
         this._grid = new __1.Sprite('pause_menu_pages_char_mom_dad', 'nose_grid', new utils_1.Point(), new utils_1.Size(200, 200));
         this._circle = new __1.Sprite('mpinventory', 'in_world_circle', new utils_1.Point(), new utils_1.Size(20, 20));
-        this.TopText = topText;
-        this.LeftText = leftText;
-        this.RightText = rightText;
-        this.BottomText = bottomText;
+        this.TopText = topText !== null && topText !== void 0 ? topText : '';
+        this.LeftText = leftText !== null && leftText !== void 0 ? leftText : '';
+        this.RightText = rightText !== null && rightText !== void 0 ? rightText : '';
+        this.BottomText = bottomText !== null && bottomText !== void 0 ? bottomText : '';
+        this._lastCirclePosition = this._setCirclePosition;
     }
     get TopText() {
-        return this._topText ? this._topText.caption : null;
+        return this._topText ? this._topText.caption : '';
     }
     set TopText(value) {
         this._setText('_topText', value);
     }
     get LeftText() {
-        return this._leftText ? this._leftText.caption : null;
+        return this._leftText ? this._leftText.caption : '';
     }
     set LeftText(value) {
         this._setText('_leftText', value);
     }
     get RightText() {
-        return this._rightText ? this._rightText.caption : null;
+        return this._rightText ? this._rightText.caption : '';
     }
     set RightText(value) {
         this._setText('_rightText', value);
     }
     get BottomText() {
-        return this._bottomText ? this._bottomText.caption : null;
+        return this._bottomText ? this._bottomText.caption : '';
     }
     set BottomText(value) {
         this._setText('_bottomText', value);
@@ -12916,8 +14251,10 @@ class UIMenuGridPanel extends _1.AbstractUIMenuPanel {
         const current = this.CirclePosition;
         if (!last || last.X !== current.X || last.Y !== current.Y) {
             this._lastCirclePosition = current;
-            this.ParentMenu.panelActivated.emit(this.parentItem, this, current);
-            this.parentItem.panelActivated.emit(this, current);
+            if (this.ParentMenu && this.parentItem) {
+                this.ParentMenu.panelActivated.emit(this.parentItem, this, current);
+                this.parentItem.panelActivated.emit(this, current);
+            }
         }
     }
     setVerticalPosition(y) {
@@ -12937,9 +14274,10 @@ class UIMenuGridPanel extends _1.AbstractUIMenuPanel {
         }
     }
     draw() {
+        var _a, _b, _c, _d;
         if (this.enabled) {
             super.draw();
-            const x = this.parentItem.offset.X + this.ParentMenu.WidthOffset / 2;
+            const x = (_b = (_a = this.parentItem) === null || _a === void 0 ? void 0 : _a.offset.X) !== null && _b !== void 0 ? _b : 0 + ((_d = (_c = this.ParentMenu) === null || _c === void 0 ? void 0 : _c.WidthOffset) !== null && _d !== void 0 ? _d : 0) / 2;
             this._grid.pos.X = x + 115.5;
             if (!this._isCircleLocked) {
                 this.CirclePosition = this._setCirclePosition;
@@ -12968,26 +14306,33 @@ class UIMenuGridPanel extends _1.AbstractUIMenuPanel {
     }
     _setText(name, value) {
         if (value && value.trim() !== '') {
+            // @ts-ignore
             if (!this[name]) {
+                // @ts-ignore
                 this[name] = new __1.Text(value, new utils_1.Point(), 0.35, utils_1.Color.white, enums_1.Font.ChaletLondon, enums_1.Alignment.Centered);
             }
             else {
+                // @ts-ignore
                 this[name].caption = value;
             }
+            // @ts-ignore
         }
         else if (this[name]) {
+            // @ts-ignore
             delete this[name];
         }
     }
     _processControls() {
+        var _a;
         if (!this._pressed &&
             Game_1.Game.isDisabledControlJustPressed(0, enums_1.Control.Attack) &&
-            this.ParentMenu.isMouseInBounds(this._grid.pos, this._grid.size)) {
+            ((_a = this.ParentMenu) === null || _a === void 0 ? void 0 : _a.isMouseInBounds(this._grid.pos, this._grid.size))) {
             this._pressed = true;
             (() => __awaiter(this, void 0, void 0, function* () {
-                const drawOffset = this.ParentMenu.DrawOffset;
+                var _b, _c;
+                const drawOffset = (_c = (_b = this.ParentMenu) === null || _b === void 0 ? void 0 : _b.DrawOffset) !== null && _c !== void 0 ? _c : new utils_1.Point(0, 0);
                 while (Game_1.Game.isDisabledControlPressed(0, enums_1.Control.Attack)) {
-                    yield new Promise(resolve => setTimeout(resolve, 0));
+                    yield (0, utils_1.Wait)(0);
                     let cX = (GetControlNormal(0, enums_1.Control.CursorX) - drawOffset.X) * __1.Menu.screenWidth;
                     let cY = (GetControlNormal(0, enums_1.Control.CursorY) - drawOffset.Y) * __1.Menu.screenHeight;
                     cX -= this._circle.size.width / 2;
@@ -13024,10 +14369,10 @@ exports.UIMenuGridPanel = UIMenuGridPanel;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/items/panels/UIMenuPercentagePanel.js":
-/*!**********************************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/items/panels/UIMenuPercentagePanel.js ***!
-  \**********************************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/UIMenuPercentagePanel.js":
+/*!**********************************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/UIMenuPercentagePanel.js ***!
+  \**********************************************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13042,13 +14387,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UIMenuPercentagePanel = void 0;
-const utils_1 = __webpack_require__(/*! ../../../../utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/ui/menu/items/panels/index.js");
-const __1 = __webpack_require__(/*! ../../../ */ "../node_modules/fivem-js/lib/ui/index.js");
-const enums_1 = __webpack_require__(/*! ../../../../enums */ "../node_modules/fivem-js/lib/enums/index.js");
-const __2 = __webpack_require__(/*! ../../../../ */ "../node_modules/fivem-js/lib/index.js");
+const utils_1 = __webpack_require__(/*! ../../../../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/index.js");
+const __1 = __webpack_require__(/*! ../../../ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/index.js");
+const enums_1 = __webpack_require__(/*! ../../../../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
+const __2 = __webpack_require__(/*! ../../../../ */ "../node_modules/@wdesgardin/fivem-js/lib/index.js");
 class UIMenuPercentagePanel extends _1.AbstractUIMenuPanel {
-    constructor(title, percentage = 0, minText, maxText) {
+    constructor(title = '', percentage = 0, minText, maxText) {
         super();
         this._pressed = false;
         this.background = new __1.Sprite('commonmenu', 'gradient_bgd', new utils_1.Point(), new utils_1.Size(431, 76));
@@ -13062,6 +14407,7 @@ class UIMenuPercentagePanel extends _1.AbstractUIMenuPanel {
         this.MinText = minText || '0%';
         this.MaxText = maxText || '100%';
         this.Percentage = percentage;
+        this._lastPercentage = percentage;
     }
     get Title() {
         return this._title.caption;
@@ -13095,8 +14441,10 @@ class UIMenuPercentagePanel extends _1.AbstractUIMenuPanel {
         const current = this.Percentage;
         if (last !== current) {
             this._lastPercentage = current;
-            this.ParentMenu.panelActivated.emit(this.parentItem, this, current);
-            this.parentItem.panelActivated.emit(this, current);
+            if (this.ParentMenu && this.parentItem) {
+                this.ParentMenu.panelActivated.emit(this.parentItem, this, current);
+                this.parentItem.panelActivated.emit(this, current);
+            }
         }
     }
     setVerticalPosition(y) {
@@ -13109,9 +14457,10 @@ class UIMenuPercentagePanel extends _1.AbstractUIMenuPanel {
         this._maxText.pos.Y = y;
     }
     draw() {
+        var _a, _b, _c, _d;
         if (this.enabled) {
             super.draw();
-            const x = this.parentItem.offset.X + this.ParentMenu.WidthOffset / 2;
+            const x = (_b = (_a = this.parentItem) === null || _a === void 0 ? void 0 : _a.offset.X) !== null && _b !== void 0 ? _b : 0 + ((_d = (_c = this.ParentMenu) === null || _c === void 0 ? void 0 : _c.WidthOffset) !== null && _d !== void 0 ? _d : 0) / 2;
             this._activeBar.pos.X = x + 9;
             this._backgroundBar.pos.X = x + 9;
             this._minText.pos.X = x + 25;
@@ -13126,13 +14475,14 @@ class UIMenuPercentagePanel extends _1.AbstractUIMenuPanel {
         }
     }
     _processControls() {
+        var _a;
         if (!this._pressed &&
             __2.Game.isDisabledControlJustPressed(0, enums_1.Control.Attack) &&
-            this.ParentMenu.isMouseInBounds(new utils_1.Point(this._backgroundBar.pos.X, this._backgroundBar.pos.Y - 4), new utils_1.Size(this._backgroundBar.size.width, this._backgroundBar.size.height + 8))) {
+            ((_a = this.ParentMenu) === null || _a === void 0 ? void 0 : _a.isMouseInBounds(new utils_1.Point(this._backgroundBar.pos.X, this._backgroundBar.pos.Y - 4), new utils_1.Size(this._backgroundBar.size.width, this._backgroundBar.size.height + 8)))) {
             this._pressed = true;
             (() => __awaiter(this, void 0, void 0, function* () {
                 while (__2.Game.isDisabledControlPressed(0, enums_1.Control.Attack)) {
-                    yield new Promise(resolve => setTimeout(resolve, 0));
+                    yield (0, __2.Wait)(0);
                     this._activeBar.size.width = this._getProgress();
                 }
                 this.updateParentItem();
@@ -13149,7 +14499,8 @@ class UIMenuPercentagePanel extends _1.AbstractUIMenuPanel {
         }
     }
     _getProgress() {
-        const drawOffset = this.ParentMenu.DrawOffset;
+        var _a, _b;
+        const drawOffset = (_b = (_a = this.ParentMenu) === null || _a === void 0 ? void 0 : _a.DrawOffset) !== null && _b !== void 0 ? _b : new utils_1.Point(0, 0);
         const progress = (GetControlNormal(0, 239) - drawOffset.X) * __1.Menu.screenWidth - this._activeBar.pos.X;
         return progress < 0 ? 0 : progress > 413 ? 413 : progress;
     }
@@ -13159,10 +14510,10 @@ exports.UIMenuPercentagePanel = UIMenuPercentagePanel;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/items/panels/UIMenuStatisticsPanel.js":
-/*!**********************************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/items/panels/UIMenuStatisticsPanel.js ***!
-  \**********************************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/UIMenuStatisticsPanel.js":
+/*!**********************************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/UIMenuStatisticsPanel.js ***!
+  \**********************************************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13177,9 +14528,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UIMenuStatisticsPanel = void 0;
-const utils_1 = __webpack_require__(/*! ../../../../utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const _1 = __webpack_require__(/*! ./ */ "../node_modules/fivem-js/lib/ui/menu/items/panels/index.js");
-const __1 = __webpack_require__(/*! ../../../ */ "../node_modules/fivem-js/lib/ui/index.js");
+const utils_1 = __webpack_require__(/*! ../../../../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const _1 = __webpack_require__(/*! ./ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/index.js");
+const __1 = __webpack_require__(/*! ../../../ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/index.js");
 class UIMenuStatisticsPanel extends _1.AbstractUIMenuPanel {
     constructor(item, divider = true) {
         super();
@@ -13231,9 +14582,10 @@ class UIMenuStatisticsPanel extends _1.AbstractUIMenuPanel {
         }));
     }
     draw() {
+        var _a, _b, _c, _d;
         if (this.enabled) {
             super.draw();
-            const x = this.parentItem.offset.X + this.ParentMenu.WidthOffset / 2;
+            const x = (_b = (_a = this.parentItem) === null || _a === void 0 ? void 0 : _a.offset.X) !== null && _b !== void 0 ? _b : 0 + ((_d = (_c = this.ParentMenu) === null || _c === void 0 ? void 0 : _c.WidthOffset) !== null && _d !== void 0 ? _d : 0) / 2;
             this._items.forEach((item, index) => __awaiter(this, void 0, void 0, function* () {
                 const itemCountOffset = 40 * (index + 1);
                 item.backgroundBar.pos.X = x + 200;
@@ -13259,21 +14611,21 @@ exports.UIMenuStatisticsPanel = UIMenuStatisticsPanel;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/items/panels/UIMenuStatisticsPanelItem.js":
-/*!**************************************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/items/panels/UIMenuStatisticsPanelItem.js ***!
-  \**************************************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/UIMenuStatisticsPanelItem.js":
+/*!**************************************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/UIMenuStatisticsPanelItem.js ***!
+  \**************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UIMenuStatisticsPanelItem = void 0;
-const utils_1 = __webpack_require__(/*! ../../../../utils */ "../node_modules/fivem-js/lib/utils/index.js");
-const __1 = __webpack_require__(/*! ../../../ */ "../node_modules/fivem-js/lib/ui/index.js");
-const enums_1 = __webpack_require__(/*! ../../../../enums */ "../node_modules/fivem-js/lib/enums/index.js");
+const utils_1 = __webpack_require__(/*! ../../../../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const __1 = __webpack_require__(/*! ../../../ */ "../node_modules/@wdesgardin/fivem-js/lib/ui/index.js");
+const enums_1 = __webpack_require__(/*! ../../../../enums */ "../node_modules/@wdesgardin/fivem-js/lib/enums/index.js");
 class UIMenuStatisticsPanelItem {
     constructor(name, percentage = 0) {
-        this.id = utils_1.uuidv4();
+        this.id = utils_1.Crypto.uuidv4();
         this.divider = [];
         this.text = new __1.Text('', new utils_1.Point(), 0.35, utils_1.Color.white, enums_1.Font.ChaletLondon, enums_1.Alignment.Left);
         this.backgroundBar = new __1.Rectangle(new utils_1.Point(), new utils_1.Size(200, 10), utils_1.Color.fromArgb(100, 87, 87, 87));
@@ -13305,44 +14657,44 @@ exports.UIMenuStatisticsPanelItem = UIMenuStatisticsPanelItem;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/items/panels/index.js":
-/*!******************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/items/panels/index.js ***!
-  \******************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/index.js":
+/*!******************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/index.js ***!
+  \******************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UIMenuStatisticsPanelItem = exports.UIMenuStatisticsPanel = exports.UIMenuPercentagePanel = exports.UIMenuColorPanel = exports.UIMenuGridPanel = exports.AbstractUIMenuPanel = void 0;
-var AbstractUIMenuPanel_1 = __webpack_require__(/*! ./AbstractUIMenuPanel */ "../node_modules/fivem-js/lib/ui/menu/items/panels/AbstractUIMenuPanel.js");
+var AbstractUIMenuPanel_1 = __webpack_require__(/*! ./AbstractUIMenuPanel */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/AbstractUIMenuPanel.js");
 Object.defineProperty(exports, "AbstractUIMenuPanel", ({ enumerable: true, get: function () { return AbstractUIMenuPanel_1.AbstractUIMenuPanel; } }));
-var UIMenuGridPanel_1 = __webpack_require__(/*! ./UIMenuGridPanel */ "../node_modules/fivem-js/lib/ui/menu/items/panels/UIMenuGridPanel.js");
+var UIMenuGridPanel_1 = __webpack_require__(/*! ./UIMenuGridPanel */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/UIMenuGridPanel.js");
 Object.defineProperty(exports, "UIMenuGridPanel", ({ enumerable: true, get: function () { return UIMenuGridPanel_1.UIMenuGridPanel; } }));
-var UIMenuColorPanel_1 = __webpack_require__(/*! ./UIMenuColorPanel */ "../node_modules/fivem-js/lib/ui/menu/items/panels/UIMenuColorPanel.js");
+var UIMenuColorPanel_1 = __webpack_require__(/*! ./UIMenuColorPanel */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/UIMenuColorPanel.js");
 Object.defineProperty(exports, "UIMenuColorPanel", ({ enumerable: true, get: function () { return UIMenuColorPanel_1.UIMenuColorPanel; } }));
-var UIMenuPercentagePanel_1 = __webpack_require__(/*! ./UIMenuPercentagePanel */ "../node_modules/fivem-js/lib/ui/menu/items/panels/UIMenuPercentagePanel.js");
+var UIMenuPercentagePanel_1 = __webpack_require__(/*! ./UIMenuPercentagePanel */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/UIMenuPercentagePanel.js");
 Object.defineProperty(exports, "UIMenuPercentagePanel", ({ enumerable: true, get: function () { return UIMenuPercentagePanel_1.UIMenuPercentagePanel; } }));
-var UIMenuStatisticsPanel_1 = __webpack_require__(/*! ./UIMenuStatisticsPanel */ "../node_modules/fivem-js/lib/ui/menu/items/panels/UIMenuStatisticsPanel.js");
+var UIMenuStatisticsPanel_1 = __webpack_require__(/*! ./UIMenuStatisticsPanel */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/UIMenuStatisticsPanel.js");
 Object.defineProperty(exports, "UIMenuStatisticsPanel", ({ enumerable: true, get: function () { return UIMenuStatisticsPanel_1.UIMenuStatisticsPanel; } }));
-var UIMenuStatisticsPanelItem_1 = __webpack_require__(/*! ./UIMenuStatisticsPanelItem */ "../node_modules/fivem-js/lib/ui/menu/items/panels/UIMenuStatisticsPanelItem.js");
+var UIMenuStatisticsPanelItem_1 = __webpack_require__(/*! ./UIMenuStatisticsPanelItem */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/items/panels/UIMenuStatisticsPanelItem.js");
 Object.defineProperty(exports, "UIMenuStatisticsPanelItem", ({ enumerable: true, get: function () { return UIMenuStatisticsPanelItem_1.UIMenuStatisticsPanelItem; } }));
 
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/modules/ListItem.js":
-/*!****************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/modules/ListItem.js ***!
-  \****************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/modules/ListItem.js":
+/*!****************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/modules/ListItem.js ***!
+  \****************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ListItem = void 0;
-const utils_1 = __webpack_require__(/*! ../../../utils */ "../node_modules/fivem-js/lib/utils/index.js");
+const utils_1 = __webpack_require__(/*! ../../../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
 class ListItem {
     constructor(name, value = null) {
-        this.id = utils_1.uuidv4();
+        this.id = utils_1.Crypto.uuidv4();
         this.name = name;
         this.value = value;
     }
@@ -13352,25 +14704,25 @@ exports.ListItem = ListItem;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/ui/menu/modules/index.js":
-/*!*************************************************************!*\
-  !*** ../node_modules/fivem-js/lib/ui/menu/modules/index.js ***!
-  \*************************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/modules/index.js":
+/*!*************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/ui/menu/modules/index.js ***!
+  \*************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ListItem = void 0;
-var ListItem_1 = __webpack_require__(/*! ./ListItem */ "../node_modules/fivem-js/lib/ui/menu/modules/ListItem.js");
+var ListItem_1 = __webpack_require__(/*! ./ListItem */ "../node_modules/@wdesgardin/fivem-js/lib/ui/menu/modules/ListItem.js");
 Object.defineProperty(exports, "ListItem", ({ enumerable: true, get: function () { return ListItem_1.ListItem; } }));
 
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/utils/Color.js":
-/*!***************************************************!*\
-  !*** ../node_modules/fivem-js/lib/utils/Color.js ***!
-  \***************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/utils/Color.js":
+/*!***************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/utils/Color.js ***!
+  \***************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13400,10 +14752,49 @@ Color.whiteSmoke = new Color(255, 245, 245, 245);
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/utils/LiteEvent.js":
-/*!*******************************************************!*\
-  !*** ../node_modules/fivem-js/lib/utils/LiteEvent.js ***!
-  \*******************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/utils/Crypto.js":
+/*!****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/utils/Crypto.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Crypto = void 0;
+class Crypto {
+    static uuidv4() {
+        let uuid = '';
+        for (let ii = 0; ii < 32; ii += 1) {
+            switch (ii) {
+                case 8:
+                case 20:
+                    uuid += '-';
+                    uuid += ((Math.random() * 16) | 0).toString(16);
+                    break;
+                case 12:
+                    uuid += '-';
+                    uuid += '4';
+                    break;
+                case 16:
+                    uuid += '-';
+                    uuid += ((Math.random() * 4) | 8).toString(16);
+                    break;
+                default:
+                    uuid += ((Math.random() * 16) | 0).toString(16);
+            }
+        }
+        return uuid;
+    }
+}
+exports.Crypto = Crypto;
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/utils/LiteEvent.js":
+/*!*******************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/utils/LiteEvent.js ***!
+  \*******************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13433,33 +14824,34 @@ exports.LiteEvent = LiteEvent;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/utils/Math.js":
-/*!**************************************************!*\
-  !*** ../node_modules/fivem-js/lib/utils/Math.js ***!
-  \**************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/utils/Maths.js":
+/*!***************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/utils/Maths.js ***!
+  \***************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getRandomInt = exports.clamp = void 0;
-function clamp(num, min, max) {
-    return num <= min ? min : num >= max ? max : num;
+exports.Maths = void 0;
+class Maths {
+    static clamp(num, min, max) {
+        return num <= min ? min : num >= max ? max : num;
+    }
+    static getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
 }
-exports.clamp = clamp;
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
-}
-exports.getRandomInt = getRandomInt;
+exports.Maths = Maths;
 
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/utils/Point.js":
-/*!***************************************************!*\
-  !*** ../node_modules/fivem-js/lib/utils/Point.js ***!
-  \***************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/utils/Point.js":
+/*!***************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/utils/Point.js ***!
+  \***************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13498,10 +14890,10 @@ exports.Point = Point;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/utils/PointF.js":
-/*!****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/utils/PointF.js ***!
-  \****************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/utils/PointF.js":
+/*!****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/utils/PointF.js ***!
+  \****************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13522,23 +14914,23 @@ exports.PointF = PointF;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/utils/Quaternion.js":
-/*!********************************************************!*\
-  !*** ../node_modules/fivem-js/lib/utils/Quaternion.js ***!
-  \********************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/utils/Quaternion.js":
+/*!********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/utils/Quaternion.js ***!
+  \********************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Quaternion = void 0;
-const Vector3_1 = __webpack_require__(/*! ./Vector3 */ "../node_modules/fivem-js/lib/utils/Vector3.js");
+const Vector3_1 = __webpack_require__(/*! ./Vector3 */ "../node_modules/@wdesgardin/fivem-js/lib/utils/Vector3.js");
 class Quaternion {
     constructor(valueXOrVector, yOrW, z, w) {
         if (valueXOrVector instanceof Vector3_1.Vector3) {
             this.x = valueXOrVector.x;
             this.y = valueXOrVector.y;
             this.z = valueXOrVector.z;
-            this.w = yOrW;
+            this.w = yOrW !== null && yOrW !== void 0 ? yOrW : 0;
         }
         else if (yOrW === undefined) {
             this.x = valueXOrVector;
@@ -13549,8 +14941,8 @@ class Quaternion {
         else {
             this.x = valueXOrVector;
             this.y = yOrW;
-            this.z = z;
-            this.w = w;
+            this.z = z !== null && z !== void 0 ? z : 0;
+            this.w = w !== null && w !== void 0 ? w : 0;
         }
     }
 }
@@ -13559,10 +14951,10 @@ exports.Quaternion = Quaternion;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/utils/Size.js":
-/*!**************************************************!*\
-  !*** ../node_modules/fivem-js/lib/utils/Size.js ***!
-  \**************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/utils/Size.js":
+/*!**************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/utils/Size.js ***!
+  \**************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13579,86 +14971,49 @@ exports.Size = Size;
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/utils/String.js":
-/*!****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/utils/String.js ***!
-  \****************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/utils/String.js":
+/*!****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/utils/String.js ***!
+  \****************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.measureString = exports.measureStringWidthNoConvert = exports.stringToArray = void 0;
-const __1 = __webpack_require__(/*! .. */ "../node_modules/fivem-js/lib/index.js");
-const Math_1 = __webpack_require__(/*! ./Math */ "../node_modules/fivem-js/lib/utils/Math.js");
-function stringToArray(input) {
-    let stringsNeeded = 1;
-    if (input.length > 99) {
-        stringsNeeded = Math.ceil(input.length / 99);
-    }
-    const outputString = new Array(stringsNeeded);
-    for (let i = 0; i < stringsNeeded; i++) {
-        outputString[i] = input.substring(i * 99, i * 99 + Math_1.clamp(input.substring(i * 99).length, 0, 99));
-    }
-    return outputString;
-}
-exports.stringToArray = stringToArray;
-function measureStringWidthNoConvert(input, font = __1.Font.ChaletLondon, scale = 0) {
-    SetTextEntryForWidth('STRING');
-    __1.Text.addLongString(input);
-    SetTextFont(font);
-    SetTextScale(1, scale);
-    return GetTextScreenWidth(false);
-}
-exports.measureStringWidthNoConvert = measureStringWidthNoConvert;
-function measureString(str, font, scale, screenWidth = __1.Screen.ScaledWidth) {
-    return this.measureStringWidthNoConvert(str, font, scale) * screenWidth;
-}
-exports.measureString = measureString;
-
-
-/***/ }),
-
-/***/ "../node_modules/fivem-js/lib/utils/UUIDV4.js":
-/*!****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/utils/UUIDV4.js ***!
-  \****************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.uuidv4 = void 0;
-function uuidv4() {
-    let uuid = '';
-    for (let ii = 0; ii < 32; ii += 1) {
-        switch (ii) {
-            case 8:
-            case 20:
-                uuid += '-';
-                uuid += ((Math.random() * 16) | 0).toString(16);
-                break;
-            case 12:
-                uuid += '-';
-                uuid += '4';
-                break;
-            case 16:
-                uuid += '-';
-                uuid += ((Math.random() * 4) | 8).toString(16);
-                break;
-            default:
-                uuid += ((Math.random() * 16) | 0).toString(16);
+exports.String = void 0;
+const __1 = __webpack_require__(/*! .. */ "../node_modules/@wdesgardin/fivem-js/lib/index.js");
+const Maths_1 = __webpack_require__(/*! ./Maths */ "../node_modules/@wdesgardin/fivem-js/lib/utils/Maths.js");
+class String {
+    static stringToArray(input) {
+        let stringsNeeded = 1;
+        if (input.length > 99) {
+            stringsNeeded = Math.ceil(input.length / 99);
         }
+        const outputString = new Array(stringsNeeded);
+        for (let i = 0; i < stringsNeeded; i++) {
+            outputString[i] = input.substring(i * 99, i * 99 + Maths_1.Maths.clamp(input.substring(i * 99).length, 0, 99));
+        }
+        return outputString;
     }
-    return uuid;
+    static measureStringWidthNoConvert(input, font = __1.Font.ChaletLondon, scale = 0) {
+        SetTextEntryForWidth('STRING');
+        __1.Text.addLongString(input);
+        SetTextFont(font);
+        SetTextScale(1, scale);
+        return GetTextScreenWidth(false);
+    }
+    static measureString(str, font, scale, screenWidth = __1.Screen.ScaledWidth) {
+        return this.measureStringWidthNoConvert(str, font, scale) * screenWidth;
+    }
 }
-exports.uuidv4 = uuidv4;
+exports.String = String;
 
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/utils/Vector3.js":
-/*!*****************************************************!*\
-  !*** ../node_modules/fivem-js/lib/utils/Vector3.js ***!
-  \*****************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/utils/Vector3.js":
+/*!*****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/utils/Vector3.js ***!
+  \*****************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13675,6 +15030,12 @@ class Vector3 {
             return new Vector3(v1, v1, v1);
         }
         return new Vector3(v1.x, v1.y, v1.z);
+    }
+    static fromArray(vector) {
+        return new Vector3(vector[0] || 0, vector[1] || 0, vector[2] || 0);
+    }
+    static toArray(v) {
+        return [v.x, v.y, v.z];
     }
     static clone(v1) {
         return Vector3.create(v1);
@@ -13712,8 +15073,14 @@ class Vector3 {
     static normalize(v) {
         return Vector3.divide(v, v.Length);
     }
+    static distance2d(v1, v2) {
+        return Math.abs(Math.sqrt(Math.pow(v1.x - v2.x, 2) + Math.pow(v1.y - v2.y, 2)));
+    }
     clone() {
         return new Vector3(this.x, this.y, this.z);
+    }
+    toArray() {
+        return Vector3.toArray(this);
     }
     /**
      * The product of the Euclidean magnitudes of this and another Vector3.
@@ -13760,47 +15127,4029 @@ class Vector3 {
         this.y = v.y;
         this.z = v.z;
     }
+    distance2d(v) {
+        return Vector3.distance2d(this, v);
+    }
     get Length() {
         return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
     }
+    get LengthSquared() {
+        return this.x * this.x + this.y * this.y + this.z * this.z;
+    }
 }
 exports.Vector3 = Vector3;
+Vector3.Zero = new Vector3(0, 0, 0);
 
 
 /***/ }),
 
-/***/ "../node_modules/fivem-js/lib/utils/index.js":
-/*!***************************************************!*\
-  !*** ../node_modules/fivem-js/lib/utils/index.js ***!
-  \***************************************************/
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/utils/enumValues.js":
+/*!********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/utils/enumValues.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.enumValues = void 0;
+function* enumValues(enumObj) {
+    let isStringEnum = true;
+    for (const property in enumObj) {
+        if (typeof enumObj[property] === 'number') {
+            isStringEnum = false;
+            break;
+        }
+    }
+    for (const property in enumObj) {
+        if (isStringEnum || typeof enumObj[property] === 'number') {
+            yield enumObj[property];
+        }
+    }
+}
+exports.enumValues = enumValues;
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/utils/getStringFromUInt8Array.js":
+/*!*********************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/utils/getStringFromUInt8Array.js ***!
+  \*********************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getStringFromUInt8Array = void 0;
+/**
+ * get string from uint8 array
+ *
+ * @param buffer - Uint8Array
+ * @param start - The beginning of the specified portion of the array
+ * @param end - The end of the specified portion of the array
+ */
+const getStringFromUInt8Array = (buffer, start, end) => String.fromCharCode(...buffer.slice(start, end))
+    // eslint-disable-next-line no-control-regex
+    .replace(/\u0000/g, '');
+exports.getStringFromUInt8Array = getStringFromUInt8Array;
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/utils/getUInt32FromUint8Array.js":
+/*!*********************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/utils/getUInt32FromUint8Array.js ***!
+  \*********************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getUInt32FromUint8Array = void 0;
+/**
+ * get uint32 from uint8 array
+ *
+ * @param buffer - Uint8Array
+ * @param start - The beginning of the specified portion of the array
+ * @param end - The end of the specified portion of the array
+ */
+const getUInt32FromUint8Array = (buffer, start, end) => new Uint32Array(buffer.slice(start, end).buffer)[0];
+exports.getUInt32FromUint8Array = getUInt32FromUint8Array;
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js":
+/*!***************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/utils/index.js ***!
+  \***************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Quaternion = exports.Size = exports.getRandomInt = exports.clamp = exports.Color = exports.Point = exports.uuidv4 = exports.PointF = exports.LiteEvent = exports.measureStringWidthNoConvert = exports.measureString = exports.stringToArray = exports.Vector3 = void 0;
-var Vector3_1 = __webpack_require__(/*! ./Vector3 */ "../node_modules/fivem-js/lib/utils/Vector3.js");
-Object.defineProperty(exports, "Vector3", ({ enumerable: true, get: function () { return Vector3_1.Vector3; } }));
-var String_1 = __webpack_require__(/*! ./String */ "../node_modules/fivem-js/lib/utils/String.js");
-Object.defineProperty(exports, "stringToArray", ({ enumerable: true, get: function () { return String_1.stringToArray; } }));
-Object.defineProperty(exports, "measureString", ({ enumerable: true, get: function () { return String_1.measureString; } }));
-Object.defineProperty(exports, "measureStringWidthNoConvert", ({ enumerable: true, get: function () { return String_1.measureStringWidthNoConvert; } }));
-var LiteEvent_1 = __webpack_require__(/*! ./LiteEvent */ "../node_modules/fivem-js/lib/utils/LiteEvent.js");
-Object.defineProperty(exports, "LiteEvent", ({ enumerable: true, get: function () { return LiteEvent_1.LiteEvent; } }));
-var PointF_1 = __webpack_require__(/*! ./PointF */ "../node_modules/fivem-js/lib/utils/PointF.js");
-Object.defineProperty(exports, "PointF", ({ enumerable: true, get: function () { return PointF_1.PointF; } }));
-var UUIDV4_1 = __webpack_require__(/*! ./UUIDV4 */ "../node_modules/fivem-js/lib/utils/UUIDV4.js");
-Object.defineProperty(exports, "uuidv4", ({ enumerable: true, get: function () { return UUIDV4_1.uuidv4; } }));
-var Point_1 = __webpack_require__(/*! ./Point */ "../node_modules/fivem-js/lib/utils/Point.js");
-Object.defineProperty(exports, "Point", ({ enumerable: true, get: function () { return Point_1.Point; } }));
-var Color_1 = __webpack_require__(/*! ./Color */ "../node_modules/fivem-js/lib/utils/Color.js");
+exports.IsClient = exports.Wait = exports.Vector3 = exports.String = exports.Size = exports.Quaternion = exports.PointF = exports.Point = exports.Maths = exports.LiteEvent = exports.getUInt32FromUint8Array = exports.getStringFromUInt8Array = exports.enumValues = exports.Crypto = exports.Color = void 0;
+var Color_1 = __webpack_require__(/*! ./Color */ "../node_modules/@wdesgardin/fivem-js/lib/utils/Color.js");
 Object.defineProperty(exports, "Color", ({ enumerable: true, get: function () { return Color_1.Color; } }));
-var Math_1 = __webpack_require__(/*! ./Math */ "../node_modules/fivem-js/lib/utils/Math.js");
-Object.defineProperty(exports, "clamp", ({ enumerable: true, get: function () { return Math_1.clamp; } }));
-Object.defineProperty(exports, "getRandomInt", ({ enumerable: true, get: function () { return Math_1.getRandomInt; } }));
-var Size_1 = __webpack_require__(/*! ./Size */ "../node_modules/fivem-js/lib/utils/Size.js");
-Object.defineProperty(exports, "Size", ({ enumerable: true, get: function () { return Size_1.Size; } }));
-var Quaternion_1 = __webpack_require__(/*! ./Quaternion */ "../node_modules/fivem-js/lib/utils/Quaternion.js");
+var Crypto_1 = __webpack_require__(/*! ./Crypto */ "../node_modules/@wdesgardin/fivem-js/lib/utils/Crypto.js");
+Object.defineProperty(exports, "Crypto", ({ enumerable: true, get: function () { return Crypto_1.Crypto; } }));
+var enumValues_1 = __webpack_require__(/*! ./enumValues */ "../node_modules/@wdesgardin/fivem-js/lib/utils/enumValues.js");
+Object.defineProperty(exports, "enumValues", ({ enumerable: true, get: function () { return enumValues_1.enumValues; } }));
+var getStringFromUInt8Array_1 = __webpack_require__(/*! ./getStringFromUInt8Array */ "../node_modules/@wdesgardin/fivem-js/lib/utils/getStringFromUInt8Array.js");
+Object.defineProperty(exports, "getStringFromUInt8Array", ({ enumerable: true, get: function () { return getStringFromUInt8Array_1.getStringFromUInt8Array; } }));
+var getUInt32FromUint8Array_1 = __webpack_require__(/*! ./getUInt32FromUint8Array */ "../node_modules/@wdesgardin/fivem-js/lib/utils/getUInt32FromUint8Array.js");
+Object.defineProperty(exports, "getUInt32FromUint8Array", ({ enumerable: true, get: function () { return getUInt32FromUint8Array_1.getUInt32FromUint8Array; } }));
+var LiteEvent_1 = __webpack_require__(/*! ./LiteEvent */ "../node_modules/@wdesgardin/fivem-js/lib/utils/LiteEvent.js");
+Object.defineProperty(exports, "LiteEvent", ({ enumerable: true, get: function () { return LiteEvent_1.LiteEvent; } }));
+var Maths_1 = __webpack_require__(/*! ./Maths */ "../node_modules/@wdesgardin/fivem-js/lib/utils/Maths.js");
+Object.defineProperty(exports, "Maths", ({ enumerable: true, get: function () { return Maths_1.Maths; } }));
+var Point_1 = __webpack_require__(/*! ./Point */ "../node_modules/@wdesgardin/fivem-js/lib/utils/Point.js");
+Object.defineProperty(exports, "Point", ({ enumerable: true, get: function () { return Point_1.Point; } }));
+var PointF_1 = __webpack_require__(/*! ./PointF */ "../node_modules/@wdesgardin/fivem-js/lib/utils/PointF.js");
+Object.defineProperty(exports, "PointF", ({ enumerable: true, get: function () { return PointF_1.PointF; } }));
+var Quaternion_1 = __webpack_require__(/*! ./Quaternion */ "../node_modules/@wdesgardin/fivem-js/lib/utils/Quaternion.js");
 Object.defineProperty(exports, "Quaternion", ({ enumerable: true, get: function () { return Quaternion_1.Quaternion; } }));
+var Size_1 = __webpack_require__(/*! ./Size */ "../node_modules/@wdesgardin/fivem-js/lib/utils/Size.js");
+Object.defineProperty(exports, "Size", ({ enumerable: true, get: function () { return Size_1.Size; } }));
+var String_1 = __webpack_require__(/*! ./String */ "../node_modules/@wdesgardin/fivem-js/lib/utils/String.js");
+Object.defineProperty(exports, "String", ({ enumerable: true, get: function () { return String_1.String; } }));
+var Vector3_1 = __webpack_require__(/*! ./Vector3 */ "../node_modules/@wdesgardin/fivem-js/lib/utils/Vector3.js");
+Object.defineProperty(exports, "Vector3", ({ enumerable: true, get: function () { return Vector3_1.Vector3; } }));
+const Wait = (milliseconds) => new Promise(resolve => setTimeout(resolve, milliseconds));
+exports.Wait = Wait;
+const IsClient = () => {
+    return typeof IsDuplicityVersion == 'function' && !IsDuplicityVersion();
+};
+exports.IsClient = IsClient;
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/ComponentAttachmentPoint.js":
+/*!********************************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/ComponentAttachmentPoint.js ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ComponentAttachmentPoint = void 0;
+var ComponentAttachmentPoint;
+(function (ComponentAttachmentPoint) {
+    ComponentAttachmentPoint[ComponentAttachmentPoint["Invalid"] = 4294967295] = "Invalid";
+    ComponentAttachmentPoint[ComponentAttachmentPoint["Clip"] = 3723347892] = "Clip";
+    ComponentAttachmentPoint[ComponentAttachmentPoint["Clip2"] = 291640902] = "Clip2";
+    ComponentAttachmentPoint[ComponentAttachmentPoint["FlashLaser"] = 679107254] = "FlashLaser";
+    ComponentAttachmentPoint[ComponentAttachmentPoint["FlashLaser2"] = 2722126698] = "FlashLaser2";
+    ComponentAttachmentPoint[ComponentAttachmentPoint["Supp"] = 1863181664] = "Supp";
+    ComponentAttachmentPoint[ComponentAttachmentPoint["Supp2"] = 945598191] = "Supp2";
+    ComponentAttachmentPoint[ComponentAttachmentPoint["GunRoot"] = 962500902] = "GunRoot";
+    ComponentAttachmentPoint[ComponentAttachmentPoint["Scope"] = 196630833] = "Scope";
+    ComponentAttachmentPoint[ComponentAttachmentPoint["Scope2"] = 1684637069] = "Scope2";
+    ComponentAttachmentPoint[ComponentAttachmentPoint["Grip"] = 2972950469] = "Grip";
+    ComponentAttachmentPoint[ComponentAttachmentPoint["Grip2"] = 3748215485] = "Grip2";
+    ComponentAttachmentPoint[ComponentAttachmentPoint["TorchBulb"] = 421673795] = "TorchBulb";
+    ComponentAttachmentPoint[ComponentAttachmentPoint["Rail"] = 2451679629] = "Rail";
+    ComponentAttachmentPoint[ComponentAttachmentPoint["Rail2"] = 497110245] = "Rail2";
+    ComponentAttachmentPoint[ComponentAttachmentPoint["Barrel"] = 2982890265] = "Barrel";
+})(ComponentAttachmentPoint = exports.ComponentAttachmentPoint || (exports.ComponentAttachmentPoint = {}));
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/ComponentAttachmentPointByHash.js":
+/*!**************************************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/ComponentAttachmentPointByHash.js ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ComponentAttachmentPointByHash = void 0;
+const WeaponComponentHash_1 = __webpack_require__(/*! ./WeaponComponentHash */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentHash.js");
+const ComponentAttachmentPoint_1 = __webpack_require__(/*! ./ComponentAttachmentPoint */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/ComponentAttachmentPoint.js");
+const DlcWeaponComponentData_1 = __webpack_require__(/*! ./DlcWeaponComponentData */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/DlcWeaponComponentData.js");
+/**
+ * ComponentAttachmentPointByHash - Mapping of WeaponComponentHash -> ComponentAttachmentPoint
+ *
+ */
+exports.ComponentAttachmentPointByHash = new Map([
+    [WeaponComponentHash_1.WeaponComponentHash.PistolClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolClip02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatPistolClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatPistolClip02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.APPistolClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.APPistolClip02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.MicroSMGClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.MicroSMGClip02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGClip02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGClip03, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleClip02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleClip03, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleClip02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleClip03, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.AdvancedRifleClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.AdvancedRifleClip02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.MGClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.MGClip02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGClip02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.PumpShotgunClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultShotgunClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultShotgunClip02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.SniperRifleClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.MinigunClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultSMGClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultSMGClip02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.BullpupShotgunClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.Pistol50Clip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.Pistol50Clip02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.SawnoffShotgunClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2ClipNormal, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2ClipExtended, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2ClipFMJ, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2ClipHollowpoint, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2ClipIncendiary, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2ClipTracer, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2ClipNormal, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2ClipExtended, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2ClipFMJ, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2ClipArmorPiercing, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2ClipIncendiary, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2ClipTracer, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2ClipNormal, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2ClipExtended, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2ClipFMJ, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2ClipArmorPiercing, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2ClipIncendiary, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2ClipTracer, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2ClipNormal, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2ClipExtended, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2ClipFMJ, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2ClipArmorPiercing, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2ClipIncendiary, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2ClipTracer, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2ClipNormal, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2ClipExtended, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2ClipFMJ, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2ClipArmorPiercing, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2ClipIncendiary, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2ClipExplosive, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2ClipNormal, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2ClipExtended, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2ClipFMJ, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2ClipHollowpoint, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2ClipIncendiary, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2ClipTracer, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip],
+    [WeaponComponentHash_1.WeaponComponentHash.AtPiFlsh, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser],
+    [WeaponComponentHash_1.WeaponComponentHash.AtPiFlsh, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser],
+    [WeaponComponentHash_1.WeaponComponentHash.AtPiFlsh, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser],
+    [WeaponComponentHash_1.WeaponComponentHash.AtPiFlsh, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArFlsh, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArFlsh, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArFlsh, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArFlsh, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArFlsh, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArFlsh, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArFlsh, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArFlsh, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArFlsh, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser],
+    [WeaponComponentHash_1.WeaponComponentHash.AtPiFlsh, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArFlsh, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArFlsh, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArFlsh, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2Compensator, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtPiSupp02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtPiSupp, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtPiSupp, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArSupp02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtPiSupp, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArSupp02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArSupp, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArSupp, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArSupp, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArSupp, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArSupp02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArSupp02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArSupp02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArSupp02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtPiSupp02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle1, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle2, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle3, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle4, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle5, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle6, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle7, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2Suppressor, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2Muzzle8, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2Muzzle9, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArSupp, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle1, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle2, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle3, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle4, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle5, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle6, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle7, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArSupp02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle1, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle2, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle3, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle4, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle5, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle6, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle7, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtPiSupp, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle1, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle2, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle3, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle4, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle5, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle6, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle7, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolVarmodLuxe, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatPistolVarmodLowrider, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.APPistolVarmodLuxe, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.MicroSMGVarmodLuxe, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGVarmodLuxe, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleVarmodLuxe, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleVarmodLuxe, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.AdvancedRifleVarmodLuxe, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.MGVarmodLowrider, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGVarmodLowrider, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.PumpShotgunVarmodLowrider, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.SniperRifleVarmodLuxe, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultSMGVarmodLowrider, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.Pistol50VarmodLuxe, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.SawnoffShotgunVarmodLuxe, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoDigital, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoBrushstroke, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoWoodland, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSkull, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSessanta, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoPerseus, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoLeopard, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoZebra, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoGeometric, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoBoom, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoPatriotic, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoDigital, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoBrushstroke, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoWoodland, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoSkull, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoSessanta, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoPerseus, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoLeopard, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoZebra, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoGeometric, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoBoom, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoPatriotic, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoDigital, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoBrushstroke, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoWoodland, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoSkull, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoSessanta, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoPerseus, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoLeopard, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoZebra, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoGeometric, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoBoom, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoPatriotic, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoDigital, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoBrushstroke, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoWoodland, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoSkull, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoSessanta, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoPerseus, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoLeopard, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoZebra, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoGeometric, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoBoom, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoPatriotic, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoDigital, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoBrushstroke, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoWoodland, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoSkull, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoSessanta, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoPerseus, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoLeopard, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoZebra, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoGeometric, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoBoom, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoPatriotic, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoDigital, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoBrushstroke, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoWoodland, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoSkull, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoSessanta, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoPerseus, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoLeopard, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoZebra, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoGeometric, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoBoom, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoPatriotic, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMacro, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMacro02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMacro, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMedium, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeSmall, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeSmall02, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMedium, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeLarge, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMax, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeLarge, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMax, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeSmall, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMacro, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2Scope, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2Flash, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2ScopeLarge, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMax, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2ScopeNightvision, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2ScopeThermal, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2Sights, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2ScopeMacro, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2ScopeSmall, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlideDigital, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlideBrushstroke, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlideWoodland, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlideSkull, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlideSessanta, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlidePerseus, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlideLeopard, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlideZebra, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlideGeometric, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlideBoom, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlidePatriotic, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtSights, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMacroMk2, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMediumMk2, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtSights, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeSmallMk2, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMediumMk2, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtSights, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMacroMk2, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMediumMk2, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArAfGrip, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Grip2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArAfGrip, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Grip2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArAfGrip, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Grip2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArAfGrip, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Grip2],
+    [WeaponComponentHash_1.WeaponComponentHash.GrenadeLauncherClip01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Grip2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArAfGrip, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Grip2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArAfGrip, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Grip2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArAfGrip2, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Grip2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArAfGrip2, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Grip2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArAfGrip2, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Grip2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArAfGrip2, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Grip2],
+    [WeaponComponentHash_1.WeaponComponentHash.AtRailCover01, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Rail],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2BarrelNormal, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Barrel],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2BarrelHeavy, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Barrel],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2BarrelNormal, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Barrel],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2BarrelHeavy, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Barrel],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2BarrelNormal, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Barrel],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2BarrelHeavy, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Barrel],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2BarrelNormal, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Barrel],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2BarrelHeavy, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Barrel],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2BarrelNormal, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Barrel],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2BarrelHeavy, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Barrel],
+]);
+/**
+ * Initialize with DlcWeaponComponentData, in case of any missing dlc data
+ *
+ */
+function initializeOnce() {
+    let isInitialized = false;
+    return function () {
+        if (isInitialized) {
+            return;
+        }
+        for (const [hash, data] of DlcWeaponComponentData_1.DlcWeaponComponentData) {
+            exports.ComponentAttachmentPointByHash.set(hash, data.attachBone);
+        }
+        isInitialized = true;
+    };
+}
+initializeOnce()();
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/ComponentDisplayNameByHash.js":
+/*!**********************************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/ComponentDisplayNameByHash.js ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ComponentDisplayNameByHash = void 0;
+const WeaponComponentHash_1 = __webpack_require__(/*! ./WeaponComponentHash */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentHash.js");
+const DlcWeaponComponentData_1 = __webpack_require__(/*! ./DlcWeaponComponentData */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/DlcWeaponComponentData.js");
+/**
+ * Mapping of WeaponComponentHash -> ComponentDisplayName(Label)
+ *
+ */
+exports.ComponentDisplayNameByHash = new Map([
+    [WeaponComponentHash_1.WeaponComponentHash.Invalid, 'WCT_INVALID'],
+    // [WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_BASE, 'WT_KNUCKLE'],
+    // [WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_PIMP, 'WCT_KNUCK_02'],
+    // [WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_BALLAS, 'WCT_KNUCK_BG'],
+    // [WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_DOLLAR, 'WCT_KNUCK_DLR'],
+    // [WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_DIAMOND, 'WCT_KNUCK_DMD'],
+    // [WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_HATE, 'WCT_KNUCK_HT'],
+    // [WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_LOVE, 'WCT_KNUCK_LV'],
+    // [WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_PLAYER, 'WCT_KNUCK_PC'],
+    // [WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_KING, 'WCT_KNUCK_SLG'],
+    // [WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_VAGOS, 'WCT_KNUCK_VG'],
+    [WeaponComponentHash_1.WeaponComponentHash.KnuckleVarmodBase, 'WT_KNUCKLE'],
+    [WeaponComponentHash_1.WeaponComponentHash.KnuckleVarmodPimp, 'WCT_KNUCK_02'],
+    [WeaponComponentHash_1.WeaponComponentHash.KnuckleVarmodBallas, 'WCT_KNUCK_BG'],
+    [WeaponComponentHash_1.WeaponComponentHash.KnuckleVarmodDollar, 'WCT_KNUCK_DLR'],
+    [WeaponComponentHash_1.WeaponComponentHash.KnuckleVarmodDiamond, 'WCT_KNUCK_DMD'],
+    [WeaponComponentHash_1.WeaponComponentHash.KnuckleVarmodHate, 'WCT_KNUCK_HT'],
+    [WeaponComponentHash_1.WeaponComponentHash.KnuckleVarmodLove, 'WCT_KNUCK_LV'],
+    [WeaponComponentHash_1.WeaponComponentHash.KnuckleVarmodPlayer, 'WCT_KNUCK_PC'],
+    [WeaponComponentHash_1.WeaponComponentHash.KnuckleVarmodKing, 'WCT_KNUCK_SLG'],
+    [WeaponComponentHash_1.WeaponComponentHash.KnuckleVarmodVagos, 'WCT_KNUCK_VG'],
+    [WeaponComponentHash_1.WeaponComponentHash.Invalid, 'WCT_INVALID'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtRailCover01, 'WCT_RAIL'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArAfGrip, 'WCT_GRIP'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArAfGrip2, 'WCT_GRIP'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtPiFlsh, 'WCT_FLASH'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArFlsh, 'WCT_FLASH'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2Flash, 'WCT_FLASH'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMacro, 'WCT_SCOPE_MAC'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMacro02, 'WCT_SCOPE_MAC'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeSmall, 'WCT_SCOPE_SML'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeSmall02, 'WCT_SCOPE_SML'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMedium, 'WCT_SCOPE_MED'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeLarge, 'WCT_SCOPE_LRG'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMax, 'WCT_SCOPE_MAX'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtPiSupp, 'WCT_SUPP'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArSupp, 'WCT_SUPP'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtArSupp02, 'WCT_SUPP'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtSrSupp, 'WCT_SUPP'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2Suppressor, 'WCT_SUPP'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtPiSupp02, 'WCT_SUPP'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatPistolClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.APPistolClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.MicroSMGClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.AdvancedRifleClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.MGClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultShotgunClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.SniperRifleClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultSMGClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.Pistol50Clip01, 'WCT_CLIP1'],
+    [0x0baab157, 'WCT_CLIP1'],
+    [0x5af49386, 'WCT_CLIP1'],
+    [0xcaebd246, 'WCT_CLIP1'],
+    [0xf8955d89, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.SNSPistolClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.VintagePistolClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavyShotgunClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.MarksmanRifleClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatPDWClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.MarksmanPistolClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.MachinePistolClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2ClipNormal, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2ClipNormal, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2ClipNormal, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2ClipNormal, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2ClipNormal, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2ClipNormal, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolClip02, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatPistolClip02, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.APPistolClip02, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.MicroSMGClip02, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGClip02, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleClip02, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleClip02, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.AdvancedRifleClip02, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.MGClip02, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGClip02, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultShotgunClip02, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.MinigunClip01, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultSMGClip02, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.Pistol50Clip02, 'WCT_CLIP2'],
+    [0x6cbf371b, 'WCT_CLIP2'],
+    [0xe1c5fffa, 'WCT_CLIP2'],
+    [0x3e7e6956, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.SNSPistolClip02, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.VintagePistolClip02, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavyShotgunClip02, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.MarksmanRifleClip02, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatPDWClip02, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.MachinePistolClip02, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2ClipExtended, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2ClipExtended, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2ClipExtended, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2ClipExtended, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2ClipExtended, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2ClipExtended, 'WCT_CLIP2'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeLargeFixedZoom, 'WCT_SCOPE_LRG'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleVarmodLuxe, 'WCT_VAR_GOLD'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleVarmodLuxe, 'WCT_VAR_GOLD'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolVarmodLuxe, 'WCT_VAR_GOLD'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGVarmodLuxe, 'WCT_VAR_GOLD'],
+    [WeaponComponentHash_1.WeaponComponentHash.MicroSMGVarmodLuxe, 'WCT_VAR_GOLD'],
+    [0x161e9241, 'WCT_VAR_GOLD'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultSMGVarmodLowrider, 'WCT_VAR_GOLD'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatPistolVarmodLowrider, 'WCT_VAR_GOLD'],
+    [WeaponComponentHash_1.WeaponComponentHash.MGVarmodLowrider, 'WCT_VAR_GOLD'],
+    [WeaponComponentHash_1.WeaponComponentHash.PumpShotgunVarmodLowrider, 'WCT_VAR_GOLD'],
+    [WeaponComponentHash_1.WeaponComponentHash.AdvancedRifleVarmodLuxe, 'WCT_VAR_METAL'],
+    [WeaponComponentHash_1.WeaponComponentHash.APPistolVarmodLuxe, 'WCT_VAR_METAL'],
+    [WeaponComponentHash_1.WeaponComponentHash.SawnoffShotgunVarmodLuxe, 'WCT_VAR_METAL'],
+    [WeaponComponentHash_1.WeaponComponentHash.BullpupRifleVarmodLow, 'WCT_VAR_METAL'],
+    [WeaponComponentHash_1.WeaponComponentHash.Pistol50VarmodLuxe, 'WCT_VAR_SIL'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavyPistolVarmodLuxe, 'WCT_VAR_WOOD'],
+    [WeaponComponentHash_1.WeaponComponentHash.SniperRifleVarmodLuxe, 'WCT_VAR_WOOD'],
+    [WeaponComponentHash_1.WeaponComponentHash.SNSPistolVarmodLowrider, 'WCT_VAR_WOOD'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGVarmodLowrider, 'WCT_VAR_ETCHM'],
+    [WeaponComponentHash_1.WeaponComponentHash.SpecialCarbineVarmodLowrider, 'WCT_VAR_ETCHM'],
+    [WeaponComponentHash_1.WeaponComponentHash.SwitchbladeVarmodBase, 'WCT_SB_BASE'],
+    [WeaponComponentHash_1.WeaponComponentHash.SwitchbladeVarmodVar1, 'WCT_SB_VAR1'],
+    [WeaponComponentHash_1.WeaponComponentHash.SwitchbladeVarmodVar2, 'WCT_SB_VAR2'],
+    [WeaponComponentHash_1.WeaponComponentHash.RevolverClip01, 'WCT_CLIP1'],
+    [WeaponComponentHash_1.WeaponComponentHash.RevolverVarmodBoss, 'WCT_REV_VARB'],
+    [WeaponComponentHash_1.WeaponComponentHash.RevolverVarmodGoon, 'WCT_REV_VARG'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGClip03, 'WCT_CLIP_DRM'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleClip03, 'WCT_CLIP_DRM'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavyShotgunClip03, 'WCT_CLIP_DRM'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleClip03, 'WCT_CLIP_BOX'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2ClipArmorPiercing, 'WCT_CLIP_AP'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2ClipArmorPiercing, 'WCT_CLIP_AP'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2ClipArmorPiercing, 'WCT_CLIP_AP'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2ClipArmorPiercing, 'WCT_CLIP_AP'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2ClipFMJ, 'WCT_CLIP_FMJ'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2ClipFMJ, 'WCT_CLIP_FMJ'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2ClipFMJ, 'WCT_CLIP_FMJ'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2ClipFMJ, 'WCT_CLIP_FMJ'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2ClipFMJ, 'WCT_CLIP_FMJ'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2ClipFMJ, 'WCT_CLIP_FMJ'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2ClipIncendiary, 'WCT_CLIP_INC'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2ClipIncendiary, 'WCT_CLIP_INC'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2ClipIncendiary, 'WCT_CLIP_INC'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2ClipIncendiary, 'WCT_CLIP_INC'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2ClipIncendiary, 'WCT_CLIP_INC'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2ClipIncendiary, 'WCT_CLIP_INC'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2ClipTracer, 'WCT_CLIP_TR'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2ClipTracer, 'WCT_CLIP_TR'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2ClipTracer, 'WCT_CLIP_TR'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2ClipTracer, 'WCT_CLIP_TR'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2ClipTracer, 'WCT_CLIP_TR'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2ClipExplosive, 'WCT_CLIP_EX'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2ClipHollowpoint, 'WCT_CLIP_HP'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2ClipHollowpoint, 'WCT_CLIP_HP'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2BarrelNormal, 'WCT_BARR'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2BarrelNormal, 'WCT_BARR'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2BarrelNormal, 'WCT_BARR'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2BarrelNormal, 'WCT_BARR'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2BarrelHeavy, 'WCT_BARR2'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2BarrelHeavy, 'WCT_BARR2'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2BarrelHeavy, 'WCT_BARR2'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2BarrelHeavy, 'WCT_BARR2'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoDigital, 'WCT_CAMO_1'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoDigital, 'WCT_CAMO_1'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoDigital, 'WCT_CAMO_1'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoDigital, 'WCT_CAMO_1'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoDigital, 'WCT_CAMO_1'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoDigital, 'WCT_CAMO_1'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlideDigital, 'WCT_CAMO_1'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoBrushstroke, 'WCT_CAMO_2'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoBrushstroke, 'WCT_CAMO_2'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoBrushstroke, 'WCT_CAMO_2'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoBrushstroke, 'WCT_CAMO_2'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoBrushstroke, 'WCT_CAMO_2'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoBrushstroke, 'WCT_CAMO_2'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlideBrushstroke, 'WCT_CAMO_2'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoWoodland, 'WCT_CAMO_3'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoWoodland, 'WCT_CAMO_3'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoWoodland, 'WCT_CAMO_3'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoWoodland, 'WCT_CAMO_3'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoWoodland, 'WCT_CAMO_3'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoWoodland, 'WCT_CAMO_3'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlideWoodland, 'WCT_CAMO_3'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSkull, 'WCT_CAMO_4'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoSkull, 'WCT_CAMO_4'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoSkull, 'WCT_CAMO_4'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoSkull, 'WCT_CAMO_4'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoSkull, 'WCT_CAMO_4'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoSkull, 'WCT_CAMO_4'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlideSkull, 'WCT_CAMO_4'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSessanta, 'WCT_CAMO_5'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoSessanta, 'WCT_CAMO_5'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoSessanta, 'WCT_CAMO_5'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoSessanta, 'WCT_CAMO_5'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoSessanta, 'WCT_CAMO_5'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoSessanta, 'WCT_CAMO_5'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlideSessanta, 'WCT_CAMO_5'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoPerseus, 'WCT_CAMO_6'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoPerseus, 'WCT_CAMO_6'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoPerseus, 'WCT_CAMO_6'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoPerseus, 'WCT_CAMO_6'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoPerseus, 'WCT_CAMO_6'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoPerseus, 'WCT_CAMO_6'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlidePerseus, 'WCT_CAMO_6'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoLeopard, 'WCT_CAMO_7'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoLeopard, 'WCT_CAMO_7'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoLeopard, 'WCT_CAMO_7'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoLeopard, 'WCT_CAMO_7'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoLeopard, 'WCT_CAMO_7'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoLeopard, 'WCT_CAMO_7'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlideLeopard, 'WCT_CAMO_7'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoZebra, 'WCT_CAMO_8'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoZebra, 'WCT_CAMO_8'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoZebra, 'WCT_CAMO_8'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoZebra, 'WCT_CAMO_8'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoZebra, 'WCT_CAMO_8'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoZebra, 'WCT_CAMO_8'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlideZebra, 'WCT_CAMO_8'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoGeometric, 'WCT_CAMO_9'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoGeometric, 'WCT_CAMO_9'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoGeometric, 'WCT_CAMO_9'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoGeometric, 'WCT_CAMO_9'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoGeometric, 'WCT_CAMO_9'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoGeometric, 'WCT_CAMO_9'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlideGeometric, 'WCT_CAMO_9'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoBoom, 'WCT_CAMO_10'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoBoom, 'WCT_CAMO_10'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoBoom, 'WCT_CAMO_10'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoBoom, 'WCT_CAMO_10'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoBoom, 'WCT_CAMO_10'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoBoom, 'WCT_CAMO_10'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlideBoom, 'WCT_CAMO_10'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoPatriotic, 'WCT_CAMO_IND'],
+    [WeaponComponentHash_1.WeaponComponentHash.AssaultRifleMk2CamoPatriotic, 'WCT_CAMO_IND'],
+    [WeaponComponentHash_1.WeaponComponentHash.CarbineRifleMk2CamoPatriotic, 'WCT_CAMO_IND'],
+    [WeaponComponentHash_1.WeaponComponentHash.CombatMGMk2CamoPatriotic, 'WCT_CAMO_IND'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2CamoPatriotic, 'WCT_CAMO_IND'],
+    [WeaponComponentHash_1.WeaponComponentHash.SMGMk2CamoPatriotic, 'WCT_CAMO_IND'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2CamoSlidePatriotic, 'WCT_CAMO_IND'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtSights, 'WCT_HOLO'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeSmallMk2, 'WCT_SCOPE_SML2'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMacroMk2, 'WCT_SCOPE_MAC2'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtScopeMediumMk2, 'WCT_SCOPE_MED2'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle1, 'WCT_MUZZ'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle2, 'WCT_MUZZ'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle3, 'WCT_MUZZ'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle4, 'WCT_MUZZ'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle5, 'WCT_MUZZ'],
+    [WeaponComponentHash_1.WeaponComponentHash.AtMuzzle7, 'WCT_MUZZ'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2Muzzle8, 'WCT_MUZZ'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2Muzzle9, 'WCT_MUZZ'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2Scope, 'WCT_SCOPE_PI'],
+    [WeaponComponentHash_1.WeaponComponentHash.PistolMk2Compensator, 'WCT_COMP'],
+    [WeaponComponentHash_1.WeaponComponentHash.HeavySniperMk2ScopeLarge, 'WCT_SCOPE_LRG2'],
+]);
+/**
+ * Initialize with DlcWeaponComponentData, in case of any missing dlc data
+ *
+ */
+function initializeOnce() {
+    let isInitialized = false;
+    return function () {
+        if (isInitialized) {
+            return;
+        }
+        for (const [hash, data] of DlcWeaponComponentData_1.DlcWeaponComponentData) {
+            exports.ComponentDisplayNameByHash.set(hash, data.name);
+        }
+        isInitialized = true;
+    };
+}
+initializeOnce()();
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/DlcWeaponComponentData.js":
+/*!******************************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/DlcWeaponComponentData.js ***!
+  \******************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DlcWeaponComponentData = void 0;
+const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+/**
+ * DlcWeaponComponentData
+ *
+ */
+exports.DlcWeaponComponentData = new Map();
+/**
+ * Initialize DlcWeaponComponentData, avoid calling expansive native repeatedly
+ *
+ */
+function initializeOnce() {
+    let isInitialized = false;
+    return function () {
+        if (isInitialized) {
+            return;
+        }
+        // magic number based on struct DlcWeaponData
+        const intLength = 4;
+        const strLength = 64;
+        const weaponCount = GetNumDlcWeapons();
+        for (let i = 0; i < weaponCount; i++) {
+            const componentCount = GetNumDlcWeaponComponents(i);
+            for (let j = 0; j < componentCount; j++) {
+                const buffer = new Uint8Array(14 * intLength + 4 * strLength);
+                // https://docs.fivem.net/natives/?_0x6CF598A2957C2BF8
+                Citizen.invokeNative('0x6CF598A2957C2BF8', i, j, buffer, Citizen.returnResultAnyway());
+                // noinspection PointlessArithmeticExpressionJS
+                const dlcWeaponComponentData = {
+                    attachBone: (0, utils_1.getUInt32FromUint8Array)(buffer, 0 * intLength, 1 * intLength),
+                    bActiveByDefault: (0, utils_1.getUInt32FromUint8Array)(buffer, 2 * intLength, 3 * intLength),
+                    unk: (0, utils_1.getUInt32FromUint8Array)(buffer, 4 * intLength, 5 * intLength),
+                    componentHash: (0, utils_1.getUInt32FromUint8Array)(buffer, 6 * intLength, 7 * intLength),
+                    unk2: (0, utils_1.getUInt32FromUint8Array)(buffer, 8 * intLength, 9 * intLength),
+                    componentCost: (0, utils_1.getUInt32FromUint8Array)(buffer, 10 * intLength, 11 * intLength),
+                    name: (0, utils_1.getStringFromUInt8Array)(buffer, 12 * intLength, 12 * intLength + strLength),
+                    desc: (0, utils_1.getStringFromUInt8Array)(buffer, 12 * intLength + strLength, 12 * intLength + 2 * strLength),
+                };
+                exports.DlcWeaponComponentData.set(dlcWeaponComponentData.componentHash, dlcWeaponComponentData);
+            }
+        }
+        isInitialized = true;
+    };
+}
+if ((0, utils_1.IsClient)())
+    initializeOnce()();
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/InvalidWeaponComponent.js":
+/*!******************************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/InvalidWeaponComponent.js ***!
+  \******************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.InvalidWeaponComponent = void 0;
+const WeaponComponent_1 = __webpack_require__(/*! ./WeaponComponent */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponent.js");
+const WeaponComponentHash_1 = __webpack_require__(/*! ./WeaponComponentHash */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentHash.js");
+const ComponentAttachmentPoint_1 = __webpack_require__(/*! ./ComponentAttachmentPoint */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/ComponentAttachmentPoint.js");
+const Game_1 = __webpack_require__(/*! ../Game */ "../node_modules/@wdesgardin/fivem-js/lib/Game.js");
+class InvalidWeaponComponent extends WeaponComponent_1.WeaponComponent {
+    constructor() {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        super(null, null, WeaponComponentHash_1.WeaponComponentHash.Invalid);
+    }
+    get Active() {
+        return false;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    set Active(value) { }
+    get DisplayName() {
+        return 'WCT_INVALID';
+    }
+    get LocalizedName() {
+        return Game_1.Game.getGXTEntry(this.DisplayName);
+    }
+    static getAttachmentPoint(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    hash, 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    componentHash) {
+        return ComponentAttachmentPoint_1.ComponentAttachmentPoint.Invalid;
+    }
+}
+exports.InvalidWeaponComponent = InvalidWeaponComponent;
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponent.js":
+/*!***********************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponent.js ***!
+  \***********************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WeaponComponent = void 0;
+const WeaponComponentHash_1 = __webpack_require__(/*! ./WeaponComponentHash */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentHash.js");
+const ComponentAttachmentPoint_1 = __webpack_require__(/*! ./ComponentAttachmentPoint */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/ComponentAttachmentPoint.js");
+const Game_1 = __webpack_require__(/*! ../Game */ "../node_modules/@wdesgardin/fivem-js/lib/Game.js");
+const ComponentDisplayNameByHash_1 = __webpack_require__(/*! ./ComponentDisplayNameByHash */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/ComponentDisplayNameByHash.js");
+const WeaponComponentHashesByWeaponHash_1 = __webpack_require__(/*! ./WeaponComponentHashesByWeaponHash */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentHashesByWeaponHash.js");
+const ComponentAttachmentPointByHash_1 = __webpack_require__(/*! ./ComponentAttachmentPointByHash */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/ComponentAttachmentPointByHash.js");
+const WeaponComponentHudStats_1 = __webpack_require__(/*! ./WeaponComponentHudStats */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentHudStats.js");
+/**
+ * ped weapon component on weapon
+ *
+ */
+class WeaponComponent {
+    constructor(owner, weapon, componentHash) {
+        this.owner = owner;
+        this.weapon = weapon;
+        this.componentHash = componentHash;
+    }
+    /**
+     * Check WeaponComponent is invalid or not
+     *
+     * @constructor
+     */
+    get IsInvalid() {
+        return this.componentHash === WeaponComponentHash_1.WeaponComponentHash.Invalid;
+    }
+    /**
+     * get component hash
+     *
+     * @constructor
+     */
+    get ComponentHash() {
+        return this.componentHash;
+    }
+    /**
+     * check ped has weapon component
+     *
+     * @constructor
+     */
+    get Active() {
+        return HasPedGotWeaponComponent(this.owner.Handle, this.weapon.Hash, this.componentHash);
+    }
+    /**
+     * give weapon component to ped
+     *
+     * @param value
+     * @constructor
+     */
+    set Active(value) {
+        if (value) {
+            GiveWeaponComponentToPed(this.owner.Handle, this.weapon.Hash, this.componentHash);
+        }
+        else {
+            RemoveWeaponComponentFromPed(this.owner.Handle, this.weapon.Hash, this.componentHash);
+        }
+    }
+    /**
+     * get component display name / label
+     *
+     * @constructor
+     */
+    get DisplayName() {
+        return WeaponComponent.getComponentDisplayNameFromHash(this.weapon.Hash, this.componentHash);
+    }
+    /**
+     * get component localized name
+     *
+     * @constructor
+     */
+    get LocalizedName() {
+        return Game_1.Game.getGXTEntry(this.DisplayName);
+    }
+    /**
+     * get component attachment point
+     *
+     * @constructor
+     */
+    get AttachmentPoint() {
+        return WeaponComponent.getAttachmentPoint(this.weapon.Hash, this.componentHash);
+    }
+    /**
+     * get component hud stats
+     *
+     * @constructor
+     */
+    get HudStats() {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return WeaponComponentHudStats_1.WeaponComponentHudStats.get(this.componentHash);
+    }
+    /**
+     * get component display name / label by hash
+     *
+     * @param hash
+     * @param componentHash
+     * @constructor
+     */
+    static getComponentDisplayNameFromHash(hash, componentHash) {
+        var _a;
+        if (!hash) {
+            return 'WCT_INVALID';
+        }
+        return (_a = ComponentDisplayNameByHash_1.ComponentDisplayNameByHash.get(componentHash)) !== null && _a !== void 0 ? _a : 'WCT_INVALID';
+    }
+    /**
+     * get component attachment point by WeaponHash and WeaponComponentHash
+     *
+     * @param weaponHash
+     * @param componentHash
+     * @constructor
+     */
+    static getAttachmentPoint(weaponHash, componentHash) {
+        var _a;
+        const componentHashes = WeaponComponentHashesByWeaponHash_1.WeaponComponentHashesByWeaponHash.get(weaponHash);
+        if (!componentHashes) {
+            return ComponentAttachmentPoint_1.ComponentAttachmentPoint.Invalid;
+        }
+        if (componentHashes.every(x => x !== componentHash)) {
+            return ComponentAttachmentPoint_1.ComponentAttachmentPoint.Invalid;
+        }
+        return (_a = ComponentAttachmentPointByHash_1.ComponentAttachmentPointByHash.get(componentHash)) !== null && _a !== void 0 ? _a : ComponentAttachmentPoint_1.ComponentAttachmentPoint.Invalid;
+    }
+}
+exports.WeaponComponent = WeaponComponent;
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentCollection.js":
+/*!*********************************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentCollection.js ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WeaponComponentCollection = void 0;
+const WeaponComponent_1 = __webpack_require__(/*! ./WeaponComponent */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponent.js");
+const InvalidWeaponComponent_1 = __webpack_require__(/*! ./InvalidWeaponComponent */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/InvalidWeaponComponent.js");
+const WeaponComponentHashesByWeaponHash_1 = __webpack_require__(/*! ./WeaponComponentHashesByWeaponHash */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentHashesByWeaponHash.js");
+const ComponentAttachmentPoint_1 = __webpack_require__(/*! ./ComponentAttachmentPoint */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/ComponentAttachmentPoint.js");
+const ComponentAttachmentPointByHash_1 = __webpack_require__(/*! ./ComponentAttachmentPointByHash */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/ComponentAttachmentPointByHash.js");
+/**
+ * ped weapon components on weapon
+ *
+ */
+class WeaponComponentCollection {
+    constructor(owner, weapon) {
+        this.components = new Map();
+        this.invalidComponent = new InvalidWeaponComponent_1.InvalidWeaponComponent();
+        this.owner = owner;
+        this.weapon = weapon;
+    }
+    [Symbol.iterator]() {
+        let pointer = 0;
+        const components = Array.from(this.components.values());
+        return {
+            next() {
+                if (pointer < components.length) {
+                    return { done: false, value: components[pointer++] };
+                }
+                else {
+                    return { done: true, value: null };
+                }
+            },
+        };
+    }
+    /**
+     * get component
+     *
+     * @param componentHash
+     */
+    get(componentHash) {
+        if (this.AllWeaponComponentHashes.some(x => x === componentHash)) {
+            let component = this.components.get(componentHash);
+            if (!component) {
+                component = this.createAndAddComponent(componentHash);
+            }
+            return component;
+        }
+        return this.invalidComponent;
+    }
+    /**
+     * get current weapon component count
+     *
+     * @constructor
+     */
+    get Count() {
+        return this.components.size;
+    }
+    /**
+     * get clip component
+     *
+     * @param index - index of component
+     */
+    getClipComponent(index) {
+        return this.getAnyComponentByAttachmentPoints(index, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip2);
+    }
+    /**
+     * get clip variation count
+     *
+     * @constructor
+     */
+    get ClipVariationsCount() {
+        return this.getComponentHashesByAttachmentPoints(ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Clip2).length;
+    }
+    /**
+     * get scope component
+     *
+     * @param index - index of component
+     */
+    getScopeComponent(index) {
+        return this.getAnyComponentByAttachmentPoints(index, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2);
+    }
+    /**
+     * get scope variation count
+     *
+     * @constructor
+     */
+    get ScopeVariationsCount() {
+        return this.getComponentHashesByAttachmentPoints(ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Scope2).length;
+    }
+    /**
+     * get suppressor component
+     *
+     */
+    getSuppressorComponent() {
+        return this.getAnyComponentByAttachmentPoints(undefined, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Supp2);
+    }
+    /**
+     * get flash light component
+     *
+     */
+    getFlashLightComponent() {
+        return this.getAnyComponentByAttachmentPoints(undefined, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser, ComponentAttachmentPoint_1.ComponentAttachmentPoint.FlashLaser2);
+    }
+    /**
+     * get luxury finish component
+     *
+     */
+    getLuxuryFinishComponent() {
+        return this.getAnyComponentByAttachmentPoints(undefined, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot);
+    }
+    /**
+     * get Mk2 camo component
+     *
+     * @param index - index of component
+     */
+    getMk2CamoComponent(index) {
+        return this.getAnyComponentByAttachmentPoints(index, ComponentAttachmentPoint_1.ComponentAttachmentPoint.GunRoot);
+    }
+    /**
+     * get Mk2 barrel component
+     *
+     * @param index - index of component
+     */
+    getMk2BarrelComponent(index) {
+        return this.getAnyComponentByAttachmentPoints(index, ComponentAttachmentPoint_1.ComponentAttachmentPoint.Barrel);
+    }
+    /**
+     * Create component object and add to collection
+     *
+     * @param hash
+     * @private
+     */
+    createAndAddComponent(hash) {
+        const uintHash = hash >>> 0;
+        console.log('createAndAdd', hash, uintHash);
+        console.log('about to create', this.owner, this.weapon, uintHash);
+        const component = new WeaponComponent_1.WeaponComponent(this.owner, this.weapon, uintHash);
+        this.components.set(uintHash, component);
+        return component;
+    }
+    /**
+     * get all WeaponComponentHash belongs to weapon
+     *
+     * @constructor
+     * @private
+     */
+    get AllWeaponComponentHashes() {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return WeaponComponentHashesByWeaponHash_1.WeaponComponentHashesByWeaponHash.get(this.weapon.Hash);
+    }
+    /**
+     * get components belongs to attachmentPoints
+     *
+     * @param attachmentPoints
+     * @private
+     */
+    getComponentHashesByAttachmentPoints(...attachmentPoints) {
+        return this.AllWeaponComponentHashes.filter(hash => attachmentPoints.some(attachmentPoint => ComponentAttachmentPointByHash_1.ComponentAttachmentPointByHash.get(hash) === attachmentPoint));
+    }
+    /**
+     * get component by index and attachmentPoints
+     *
+     * @param index - component index
+     * @param attachmentPoints -  attachmentPoints to search
+     * @private
+     */
+    getAnyComponentByAttachmentPoints(index, ...attachmentPoints) {
+        var _a;
+        const hashes = this.getComponentHashesByAttachmentPoints(...attachmentPoints);
+        if (index === undefined) {
+            return (_a = this.get(hashes[0])) !== null && _a !== void 0 ? _a : this.invalidComponent;
+        }
+        return 0 <= index && index <= hashes.length - 1
+            ? this.get(hashes[index])
+            : this.invalidComponent;
+    }
+}
+exports.WeaponComponentCollection = WeaponComponentCollection;
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentHash.js":
+/*!***************************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentHash.js ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WeaponComponentHash = void 0;
+/**
+ * weapon component hash
+ * refer: https://wiki.rage.mp/index.php?title=Weapons_Components
+ *
+ */
+var WeaponComponentHash;
+(function (WeaponComponentHash) {
+    // Melees
+    // Knuckle Duster
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_KNUCKLE_VARMOD_BASE"] = 4081463091] = "COMPONENT_KNUCKLE_VARMOD_BASE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_KNUCKLE_VARMOD_PIMP"] = 3323197061] = "COMPONENT_KNUCKLE_VARMOD_PIMP";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_KNUCKLE_VARMOD_BALLAS"] = 4007263587] = "COMPONENT_KNUCKLE_VARMOD_BALLAS";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_KNUCKLE_VARMOD_DOLLAR"] = 1351683121] = "COMPONENT_KNUCKLE_VARMOD_DOLLAR";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_KNUCKLE_VARMOD_DIAMOND"] = 2539772380] = "COMPONENT_KNUCKLE_VARMOD_DIAMOND";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_KNUCKLE_VARMOD_HATE"] = 2112683568] = "COMPONENT_KNUCKLE_VARMOD_HATE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_KNUCKLE_VARMOD_LOVE"] = 1062111910] = "COMPONENT_KNUCKLE_VARMOD_LOVE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_KNUCKLE_VARMOD_PLAYER"] = 146278587] = "COMPONENT_KNUCKLE_VARMOD_PLAYER";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_KNUCKLE_VARMOD_KING"] = 3800804335] = "COMPONENT_KNUCKLE_VARMOD_KING";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_KNUCKLE_VARMOD_VAGOS"] = 2062808965] = "COMPONENT_KNUCKLE_VARMOD_VAGOS";
+    // Switchblade
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SWITCHBLADE_VARMOD_BASE"] = 2436343040] = "COMPONENT_SWITCHBLADE_VARMOD_BASE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SWITCHBLADE_VARMOD_VAR1"] = 1530822070] = "COMPONENT_SWITCHBLADE_VARMOD_VAR1";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SWITCHBLADE_VARMOD_VAR2"] = 3885209186] = "COMPONENT_SWITCHBLADE_VARMOD_VAR2";
+    // Pistols
+    // Pistol
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_CLIP_01"] = 4275109233] = "COMPONENT_PISTOL_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_CLIP_02"] = 3978713628] = "COMPONENT_PISTOL_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_PI_FLSH"] = 899381934] = "COMPONENT_AT_PI_FLSH";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_PI_SUPP_02"] = 1709866683] = "COMPONENT_AT_PI_SUPP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_VARMOD_LUXE"] = 3610841222] = "COMPONENT_PISTOL_VARMOD_LUXE";
+    // Combat Pistol
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATPISTOL_CLIP_01"] = 119648377] = "COMPONENT_COMBATPISTOL_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATPISTOL_CLIP_02"] = 3598405421] = "COMPONENT_COMBATPISTOL_CLIP_02";
+    // COMPONENT_AT_PI_FLSH = 0x359B7AAE, // Flashlight
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_PI_SUPP"] = 3271853210] = "COMPONENT_AT_PI_SUPP";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATPISTOL_VARMOD_LOWRIDER"] = 3328527730] = "COMPONENT_COMBATPISTOL_VARMOD_LOWRIDER";
+    // AP Pistol
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_APPISTOL_CLIP_01"] = 834974250] = "COMPONENT_APPISTOL_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_APPISTOL_CLIP_02"] = 614078421] = "COMPONENT_APPISTOL_CLIP_02";
+    // COMPONENT_AT_PI_FLSH = 0x359B7AAE, // Flashlight
+    // COMPONENT_AT_PI_SUPP = 0xC304849A, // Suppressor
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_APPISTOL_VARMOD_LUXE"] = 2608252716] = "COMPONENT_APPISTOL_VARMOD_LUXE";
+    // Pistol .50
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL50_CLIP_01"] = 580369945] = "COMPONENT_PISTOL50_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL50_CLIP_02"] = 3654528146] = "COMPONENT_PISTOL50_CLIP_02";
+    // COMPONENT_AT_PI_FLSH = 0x359B7AAE, // Flashlight
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_AR_SUPP_02"] = 2805810788] = "COMPONENT_AT_AR_SUPP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL50_VARMOD_LUXE"] = 2008591151] = "COMPONENT_PISTOL50_VARMOD_LUXE";
+    // Heavy Revolver
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_VARMOD_BOSS"] = 384708672] = "COMPONENT_REVOLVER_VARMOD_BOSS";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_VARMOD_GOON"] = 2492708877] = "COMPONENT_REVOLVER_VARMOD_GOON";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_CLIP_01"] = 3917905123] = "COMPONENT_REVOLVER_CLIP_01";
+    // SNS Pistol
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_CLIP_01"] = 4169150169] = "COMPONENT_SNSPISTOL_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_CLIP_02"] = 2063610803] = "COMPONENT_SNSPISTOL_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_VARMOD_LOWRIDER"] = 2150886575] = "COMPONENT_SNSPISTOL_VARMOD_LOWRIDER";
+    // Heavy Pistol
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYPISTOL_CLIP_01"] = 222992026] = "COMPONENT_HEAVYPISTOL_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYPISTOL_CLIP_02"] = 1694090795] = "COMPONENT_HEAVYPISTOL_CLIP_02";
+    // COMPONENT_AT_PI_FLSH = 0x359B7AAE, // Flashlight
+    // COMPONENT_AT_PI_SUPP = 0xC304849A, // Suppressor
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYPISTOL_VARMOD_LUXE"] = 2053798779] = "COMPONENT_HEAVYPISTOL_VARMOD_LUXE";
+    // Heavy Revolver Mk II
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_MK2_CLIP_01"] = 3122911422] = "COMPONENT_REVOLVER_MK2_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_MK2_CLIP_TRACER"] = 3336103030] = "COMPONENT_REVOLVER_MK2_CLIP_TRACER";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_MK2_CLIP_INCENDIARY"] = 15712037] = "COMPONENT_REVOLVER_MK2_CLIP_INCENDIARY";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_MK2_CLIP_HOLLOWPOINT"] = 284438159] = "COMPONENT_REVOLVER_MK2_CLIP_HOLLOWPOINT";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_MK2_CLIP_FMJ"] = 231258687] = "COMPONENT_REVOLVER_MK2_CLIP_FMJ";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SIGHTS"] = 1108334355] = "COMPONENT_AT_SIGHTS";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SCOPE_MACRO_MK2"] = 77277509] = "COMPONENT_AT_SCOPE_MACRO_MK2";
+    // COMPONENT_AT_PI_FLSH = 0x359B7AAE, // Flashlight
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_PI_COMP_03"] = 654802123] = "COMPONENT_AT_PI_COMP_03";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_MK2_CAMO"] = 3225415071] = "COMPONENT_REVOLVER_MK2_CAMO";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_MK2_CAMO_02"] = 11918884] = "COMPONENT_REVOLVER_MK2_CAMO_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_MK2_CAMO_03"] = 176157112] = "COMPONENT_REVOLVER_MK2_CAMO_03";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_MK2_CAMO_04"] = 4074914441] = "COMPONENT_REVOLVER_MK2_CAMO_04";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_MK2_CAMO_05"] = 288456487] = "COMPONENT_REVOLVER_MK2_CAMO_05";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_MK2_CAMO_06"] = 398658626] = "COMPONENT_REVOLVER_MK2_CAMO_06";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_MK2_CAMO_07"] = 628697006] = "COMPONENT_REVOLVER_MK2_CAMO_07";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_MK2_CAMO_08"] = 925911836] = "COMPONENT_REVOLVER_MK2_CAMO_08";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_MK2_CAMO_09"] = 1222307441] = "COMPONENT_REVOLVER_MK2_CAMO_09";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_MK2_CAMO_10"] = 552442715] = "COMPONENT_REVOLVER_MK2_CAMO_10";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_REVOLVER_MK2_CAMO_IND_01"] = 3646023783] = "COMPONENT_REVOLVER_MK2_CAMO_IND_01";
+    // SNS Pistol Mk II
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CLIP_01"] = 21392614] = "COMPONENT_SNSPISTOL_MK2_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CLIP_02"] = 3465283442] = "COMPONENT_SNSPISTOL_MK2_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CLIP_TRACER"] = 2418909806] = "COMPONENT_SNSPISTOL_MK2_CLIP_TRACER";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CLIP_INCENDIARY"] = 3870121849] = "COMPONENT_SNSPISTOL_MK2_CLIP_INCENDIARY";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CLIP_HOLLOWPOINT"] = 2366665730] = "COMPONENT_SNSPISTOL_MK2_CLIP_HOLLOWPOINT";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CLIP_FMJ"] = 3239176998] = "COMPONENT_SNSPISTOL_MK2_CLIP_FMJ";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_PI_FLSH_03"] = 1246324211] = "COMPONENT_AT_PI_FLSH_03";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_PI_RAIL_02"] = 1205768792] = "COMPONENT_AT_PI_RAIL_02";
+    // COMPONENT_AT_PI_SUPP_02 = 0x65EA7EBB, // Suppressor
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_PI_COMP_02"] = 2860680127] = "COMPONENT_AT_PI_COMP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO"] = 259780317] = "COMPONENT_SNSPISTOL_MK2_CAMO";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_02"] = 2321624822] = "COMPONENT_SNSPISTOL_MK2_CAMO_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_03"] = 1996130345] = "COMPONENT_SNSPISTOL_MK2_CAMO_03";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_04"] = 2839309484] = "COMPONENT_SNSPISTOL_MK2_CAMO_04";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_05"] = 2626704212] = "COMPONENT_SNSPISTOL_MK2_CAMO_05";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_06"] = 1308243489] = "COMPONENT_SNSPISTOL_MK2_CAMO_06";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_07"] = 1122574335] = "COMPONENT_SNSPISTOL_MK2_CAMO_07";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_08"] = 1420313469] = "COMPONENT_SNSPISTOL_MK2_CAMO_08";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_09"] = 109848390] = "COMPONENT_SNSPISTOL_MK2_CAMO_09";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_10"] = 593945703] = "COMPONENT_SNSPISTOL_MK2_CAMO_10";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_IND_01"] = 1142457062] = "COMPONENT_SNSPISTOL_MK2_CAMO_IND_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_SLIDE"] = 3891161322] = "COMPONENT_SNSPISTOL_MK2_CAMO_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_02_SLIDE"] = 691432737] = "COMPONENT_SNSPISTOL_MK2_CAMO_02_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_03_SLIDE"] = 987648331] = "COMPONENT_SNSPISTOL_MK2_CAMO_03_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_04_SLIDE"] = 3863286761] = "COMPONENT_SNSPISTOL_MK2_CAMO_04_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_05_SLIDE"] = 3447384986] = "COMPONENT_SNSPISTOL_MK2_CAMO_05_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_06_SLIDE"] = 4202375078] = "COMPONENT_SNSPISTOL_MK2_CAMO_06_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_07_SLIDE"] = 3800418970] = "COMPONENT_SNSPISTOL_MK2_CAMO_07_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_08_SLIDE"] = 730876697] = "COMPONENT_SNSPISTOL_MK2_CAMO_08_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_09_SLIDE"] = 583159708] = "COMPONENT_SNSPISTOL_MK2_CAMO_09_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_10_SLIDE"] = 2366463693] = "COMPONENT_SNSPISTOL_MK2_CAMO_10_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNSPISTOL_MK2_CAMO_IND_01_SLIDE"] = 520557834] = "COMPONENT_SNSPISTOL_MK2_CAMO_IND_01_SLIDE";
+    // Pistol Mk II
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CLIP_01"] = 2499030370] = "COMPONENT_PISTOL_MK2_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CLIP_02"] = 1591132456] = "COMPONENT_PISTOL_MK2_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CLIP_TRACER"] = 634039983] = "COMPONENT_PISTOL_MK2_CLIP_TRACER";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CLIP_INCENDIARY"] = 733837882] = "COMPONENT_PISTOL_MK2_CLIP_INCENDIARY";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CLIP_HOLLOWPOINT"] = 2248057097] = "COMPONENT_PISTOL_MK2_CLIP_HOLLOWPOINT";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CLIP_FMJ"] = 1329061674] = "COMPONENT_PISTOL_MK2_CLIP_FMJ";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_PI_RAIL"] = 2396306288] = "COMPONENT_AT_PI_RAIL";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_PI_FLSH_02"] = 1140676955] = "COMPONENT_AT_PI_FLSH_02";
+    // COMPONENT_AT_PI_SUPP_02 = 0x65EA7EBB, // Suppressor
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_PI_COMP"] = 568543123] = "COMPONENT_AT_PI_COMP";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO"] = 1550611612] = "COMPONENT_PISTOL_MK2_CAMO";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_02"] = 368550800] = "COMPONENT_PISTOL_MK2_CAMO_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_03"] = 2525897947] = "COMPONENT_PISTOL_MK2_CAMO_03";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_04"] = 24902297] = "COMPONENT_PISTOL_MK2_CAMO_04";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_05"] = 4066925682] = "COMPONENT_PISTOL_MK2_CAMO_05";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_06"] = 3710005734] = "COMPONENT_PISTOL_MK2_CAMO_06";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_07"] = 3141791350] = "COMPONENT_PISTOL_MK2_CAMO_07";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_08"] = 1301287696] = "COMPONENT_PISTOL_MK2_CAMO_08";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_09"] = 1597093459] = "COMPONENT_PISTOL_MK2_CAMO_09";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_10"] = 1769871776] = "COMPONENT_PISTOL_MK2_CAMO_10";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_IND_01"] = 2467084625] = "COMPONENT_PISTOL_MK2_CAMO_IND_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_SLIDE"] = 3036451504] = "COMPONENT_PISTOL_MK2_CAMO_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_02_SLIDE"] = 438243936] = "COMPONENT_PISTOL_MK2_CAMO_02_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_03_SLIDE"] = 3839888240] = "COMPONENT_PISTOL_MK2_CAMO_03_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_04_SLIDE"] = 740920107] = "COMPONENT_PISTOL_MK2_CAMO_04_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_05_SLIDE"] = 3753350949] = "COMPONENT_PISTOL_MK2_CAMO_05_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_06_SLIDE"] = 1809261196] = "COMPONENT_PISTOL_MK2_CAMO_06_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_07_SLIDE"] = 2648428428] = "COMPONENT_PISTOL_MK2_CAMO_07_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_08_SLIDE"] = 3004802348] = "COMPONENT_PISTOL_MK2_CAMO_08_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_09_SLIDE"] = 3330502162] = "COMPONENT_PISTOL_MK2_CAMO_09_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_10_SLIDE"] = 1135718771] = "COMPONENT_PISTOL_MK2_CAMO_10_SLIDE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PISTOL_MK2_CAMO_IND_01_SLIDE"] = 1253942266] = "COMPONENT_PISTOL_MK2_CAMO_IND_01_SLIDE";
+    // Vintage Pistol
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_VINTAGEPISTOL_CLIP_01"] = 1168357051] = "COMPONENT_VINTAGEPISTOL_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_VINTAGEPISTOL_CLIP_02"] = 867832552] = "COMPONENT_VINTAGEPISTOL_CLIP_02";
+    // COMPONENT_AT_PI_SUPP = 0xC304849A, // Suppressor
+    // Up-n-Atomizer
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_RAYPISTOL_VARMOD_XMAS18"] = 3621517063] = "COMPONENT_RAYPISTOL_VARMOD_XMAS18";
+    // Ceramic Pistol
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CERAMICPISTOL_CLIP_01"] = 1423184737] = "COMPONENT_CERAMICPISTOL_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CERAMICPISTOL_CLIP_02"] = 2172153001] = "COMPONENT_CERAMICPISTOL_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CERAMICPISTOL_SUPP"] = 2466764538] = "COMPONENT_CERAMICPISTOL_SUPP";
+    // Submachine Guns
+    // Micro SMG
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MICROSMG_CLIP_01"] = 3410538224] = "COMPONENT_MICROSMG_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MICROSMG_CLIP_02"] = 283556395] = "COMPONENT_MICROSMG_CLIP_02";
+    // COMPONENT_AT_PI_FLSH = 0x359B7AAE, // Flashlight
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SCOPE_MACRO"] = 2637152041] = "COMPONENT_AT_SCOPE_MACRO";
+    // COMPONENT_AT_AR_SUPP_02 = 0xA73D4664, // Suppressor
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MICROSMG_VARMOD_LUXE"] = 1215999497] = "COMPONENT_MICROSMG_VARMOD_LUXE";
+    // SMG
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_CLIP_01"] = 643254679] = "COMPONENT_SMG_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_CLIP_02"] = 889808635] = "COMPONENT_SMG_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_CLIP_03"] = 2043113590] = "COMPONENT_SMG_CLIP_03";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_AR_FLSH"] = 2076495324] = "COMPONENT_AT_AR_FLSH";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SCOPE_MACRO_02"] = 1019656791] = "COMPONENT_AT_SCOPE_MACRO_02";
+    // COMPONENT_AT_PI_SUPP = 0xC304849A, // Suppressor
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_VARMOD_LUXE"] = 663170192] = "COMPONENT_SMG_VARMOD_LUXE";
+    // Assault SMG
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTSMG_CLIP_01"] = 2366834608] = "COMPONENT_ASSAULTSMG_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTSMG_CLIP_02"] = 3141985303] = "COMPONENT_ASSAULTSMG_CLIP_02";
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    // COMPONENT_AT_SCOPE_MACRO = 0x9D2FBF29, // Scope
+    // COMPONENT_AT_AR_SUPP_02 = 0xA73D4664, // Suppressor
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTSMG_VARMOD_LOWRIDER"] = 663517359] = "COMPONENT_ASSAULTSMG_VARMOD_LOWRIDER";
+    // Mini SMG
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MINISMG_CLIP_01"] = 2227745491] = "COMPONENT_MINISMG_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MINISMG_CLIP_02"] = 2474561719] = "COMPONENT_MINISMG_CLIP_02";
+    // SMG Mk II
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_MK2_CLIP_01"] = 1277460590] = "COMPONENT_SMG_MK2_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_MK2_CLIP_02"] = 3112393518] = "COMPONENT_SMG_MK2_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_MK2_CLIP_TRACER"] = 2146055916] = "COMPONENT_SMG_MK2_CLIP_TRACER";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_MK2_CLIP_INCENDIARY"] = 3650233061] = "COMPONENT_SMG_MK2_CLIP_INCENDIARY";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_MK2_CLIP_HOLLOWPOINT"] = 974903034] = "COMPONENT_SMG_MK2_CLIP_HOLLOWPOINT";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_MK2_CLIP_FMJ"] = 190476639] = "COMPONENT_SMG_MK2_CLIP_FMJ";
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SIGHTS_SMG"] = 2681951826] = "COMPONENT_AT_SIGHTS_SMG";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SCOPE_MACRO_02_SMG_MK2"] = 3842157419] = "COMPONENT_AT_SCOPE_MACRO_02_SMG_MK2";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SCOPE_SMALL_SMG_MK2"] = 1038927834] = "COMPONENT_AT_SCOPE_SMALL_SMG_MK2";
+    // COMPONENT_AT_PI_SUPP = 0xC304849A, // Suppressor
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_MUZZLE_01"] = 3113485012] = "COMPONENT_AT_MUZZLE_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_MUZZLE_02"] = 3362234491] = "COMPONENT_AT_MUZZLE_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_MUZZLE_03"] = 3725708239] = "COMPONENT_AT_MUZZLE_03";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_MUZZLE_04"] = 3968886988] = "COMPONENT_AT_MUZZLE_04";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_MUZZLE_05"] = 48731514] = "COMPONENT_AT_MUZZLE_05";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_MUZZLE_06"] = 880736428] = "COMPONENT_AT_MUZZLE_06";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_MUZZLE_07"] = 1303784126] = "COMPONENT_AT_MUZZLE_07";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SB_BARREL_01"] = 3641720545] = "COMPONENT_AT_SB_BARREL_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SB_BARREL_02"] = 2774849419] = "COMPONENT_AT_SB_BARREL_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_MK2_CAMO"] = 3298267239] = "COMPONENT_SMG_MK2_CAMO";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_MK2_CAMO_02"] = 940943685] = "COMPONENT_SMG_MK2_CAMO_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_MK2_CAMO_03"] = 1263226800] = "COMPONENT_SMG_MK2_CAMO_03";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_MK2_CAMO_04"] = 3966931456] = "COMPONENT_SMG_MK2_CAMO_04";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_MK2_CAMO_05"] = 1224100642] = "COMPONENT_SMG_MK2_CAMO_05";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_MK2_CAMO_06"] = 899228776] = "COMPONENT_SMG_MK2_CAMO_06";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_MK2_CAMO_07"] = 616006309] = "COMPONENT_SMG_MK2_CAMO_07";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_MK2_CAMO_08"] = 2733014785] = "COMPONENT_SMG_MK2_CAMO_08";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_MK2_CAMO_09"] = 572063080] = "COMPONENT_SMG_MK2_CAMO_09";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_MK2_CAMO_10"] = 1170588613] = "COMPONENT_SMG_MK2_CAMO_10";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SMG_MK2_CAMO_IND_01"] = 966612367] = "COMPONENT_SMG_MK2_CAMO_IND_01";
+    // Machine Pistol
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MACHINEPISTOL_CLIP_01"] = 1198425599] = "COMPONENT_MACHINEPISTOL_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MACHINEPISTOL_CLIP_02"] = 3106695545] = "COMPONENT_MACHINEPISTOL_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MACHINEPISTOL_CLIP_03"] = 2850671348] = "COMPONENT_MACHINEPISTOL_CLIP_03";
+    // COMPONENT_AT_PI_SUPP = 0xC304849A, // Suppressor
+    // Combat PDW
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATPDW_CLIP_01"] = 1125642654] = "COMPONENT_COMBATPDW_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATPDW_CLIP_02"] = 860508675] = "COMPONENT_COMBATPDW_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATPDW_CLIP_03"] = 1857603803] = "COMPONENT_COMBATPDW_CLIP_03";
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_AR_AFGRIP"] = 202788691] = "COMPONENT_AT_AR_AFGRIP";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SCOPE_SMALL"] = 2855028148] = "COMPONENT_AT_SCOPE_SMALL";
+    // Shotguns
+    // Pump Shotgun
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SR_SUPP"] = 3859329886] = "COMPONENT_AT_SR_SUPP";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PUMPSHOTGUN_VARMOD_LOWRIDER"] = 2732039643] = "COMPONENT_PUMPSHOTGUN_VARMOD_LOWRIDER";
+    // Sawed-Off Shotgun
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SAWNOFFSHOTGUN_VARMOD_LUXE"] = 2242268665] = "COMPONENT_SAWNOFFSHOTGUN_VARMOD_LUXE";
+    // Assault Shotgun
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTSHOTGUN_CLIP_01"] = 2498239431] = "COMPONENT_ASSAULTSHOTGUN_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTSHOTGUN_CLIP_02"] = 2260565874] = "COMPONENT_ASSAULTSHOTGUN_CLIP_02";
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_AR_SUPP"] = 2205435306] = "COMPONENT_AT_AR_SUPP";
+    // COMPONENT_AT_AR_AFGRIP = 0xC164F53, // Grip
+    // Bullpup Shotgun
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    // COMPONENT_AT_AR_SUPP_02 = 0xA73D4664, // Suppressor
+    // COMPONENT_AT_AR_AFGRIP = 0xC164F53, // Grip
+    // Pump Shotgun Mk II
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PUMPSHOTGUN_MK2_CLIP_01"] = 3449028929] = "COMPONENT_PUMPSHOTGUN_MK2_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PUMPSHOTGUN_MK2_CLIP_INCENDIARY"] = 2676628469] = "COMPONENT_PUMPSHOTGUN_MK2_CLIP_INCENDIARY";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PUMPSHOTGUN_MK2_CLIP_ARMORPIERCING"] = 1315288101] = "COMPONENT_PUMPSHOTGUN_MK2_CLIP_ARMORPIERCING";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PUMPSHOTGUN_MK2_CLIP_HOLLOWPOINT"] = 3914869031] = "COMPONENT_PUMPSHOTGUN_MK2_CLIP_HOLLOWPOINT";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PUMPSHOTGUN_MK2_CLIP_EXPLOSIVE"] = 1004815965] = "COMPONENT_PUMPSHOTGUN_MK2_CLIP_EXPLOSIVE";
+    // COMPONENT_AT_SIGHTS = 0x420FD713, // Holographic Sight
+    // COMPONENT_AT_SCOPE_MACRO_MK2 = 0x49B2945, // Small Scope
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SCOPE_SMALL_MK2"] = 1060929921] = "COMPONENT_AT_SCOPE_SMALL_MK2";
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SR_SUPP_03"] = 2890063729] = "COMPONENT_AT_SR_SUPP_03";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_MUZZLE_08"] = 1602080333] = "COMPONENT_AT_MUZZLE_08";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PUMPSHOTGUN_MK2_CAMO"] = 3820854852] = "COMPONENT_PUMPSHOTGUN_MK2_CAMO";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PUMPSHOTGUN_MK2_CAMO_02"] = 387223451] = "COMPONENT_PUMPSHOTGUN_MK2_CAMO_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PUMPSHOTGUN_MK2_CAMO_03"] = 617753366] = "COMPONENT_PUMPSHOTGUN_MK2_CAMO_03";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PUMPSHOTGUN_MK2_CAMO_04"] = 4072589040] = "COMPONENT_PUMPSHOTGUN_MK2_CAMO_04";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PUMPSHOTGUN_MK2_CAMO_05"] = 8741501] = "COMPONENT_PUMPSHOTGUN_MK2_CAMO_05";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PUMPSHOTGUN_MK2_CAMO_06"] = 3693681093] = "COMPONENT_PUMPSHOTGUN_MK2_CAMO_06";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PUMPSHOTGUN_MK2_CAMO_07"] = 3783533691] = "COMPONENT_PUMPSHOTGUN_MK2_CAMO_07";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PUMPSHOTGUN_MK2_CAMO_08"] = 3639579478] = "COMPONENT_PUMPSHOTGUN_MK2_CAMO_08";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PUMPSHOTGUN_MK2_CAMO_09"] = 4012490698] = "COMPONENT_PUMPSHOTGUN_MK2_CAMO_09";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PUMPSHOTGUN_MK2_CAMO_10"] = 1739501925] = "COMPONENT_PUMPSHOTGUN_MK2_CAMO_10";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_PUMPSHOTGUN_MK2_CAMO_IND_01"] = 1178671645] = "COMPONENT_PUMPSHOTGUN_MK2_CAMO_IND_01";
+    // Heavy Shotgun
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSHOTGUN_CLIP_01"] = 844049759] = "COMPONENT_HEAVYSHOTGUN_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSHOTGUN_CLIP_02"] = 2535257853] = "COMPONENT_HEAVYSHOTGUN_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSHOTGUN_CLIP_03"] = 2294798931] = "COMPONENT_HEAVYSHOTGUN_CLIP_03";
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    // COMPONENT_AT_AR_SUPP_02 = 0xA73D4664, // Suppressor
+    // COMPONENT_AT_AR_AFGRIP = 0xC164F53, // Grip
+    // Combat Shotgun
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    // COMPONENT_AT_AR_SUPP = 0x837445AA, // Suppressor
+    // Rifles
+    // Assault Rifle
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_CLIP_01"] = 3193891350] = "COMPONENT_ASSAULTRIFLE_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_CLIP_02"] = 2971750299] = "COMPONENT_ASSAULTRIFLE_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_CLIP_03"] = 3689981245] = "COMPONENT_ASSAULTRIFLE_CLIP_03";
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    // COMPONENT_AT_SCOPE_MACRO = 0x9D2FBF29, // Scope
+    // COMPONENT_AT_AR_SUPP_02 = 0xA73D4664, // Suppressor
+    // COMPONENT_AT_AR_AFGRIP = 0xC164F53, // Grip
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_VARMOD_LUXE"] = 1319990579] = "COMPONENT_ASSAULTRIFLE_VARMOD_LUXE";
+    // Carbine Rifle
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_CLIP_01"] = 2680042476] = "COMPONENT_CARBINERIFLE_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_CLIP_02"] = 2433783441] = "COMPONENT_CARBINERIFLE_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_CLIP_03"] = 3127044405] = "COMPONENT_CARBINERIFLE_CLIP_03";
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SCOPE_MEDIUM"] = 2698550338] = "COMPONENT_AT_SCOPE_MEDIUM";
+    // COMPONENT_AT_AR_SUPP = 0x837445AA, // Suppressor
+    // COMPONENT_AT_AR_AFGRIP = 0xC164F53, // Grip
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_VARMOD_LUXE"] = 3634075224] = "COMPONENT_CARBINERIFLE_VARMOD_LUXE";
+    // Advanced Rifle
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ADVANCEDRIFLE_CLIP_01"] = 4203716879] = "COMPONENT_ADVANCEDRIFLE_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ADVANCEDRIFLE_CLIP_02"] = 2395064697] = "COMPONENT_ADVANCEDRIFLE_CLIP_02";
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    // COMPONENT_AT_SCOPE_SMALL = 0xAA2C45B4, // Scope
+    // COMPONENT_AT_AR_SUPP = 0x837445AA, // Suppressor
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ADVANCEDRIFLE_VARMOD_LUXE"] = 930927479] = "COMPONENT_ADVANCEDRIFLE_VARMOD_LUXE";
+    // Special Carbine
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_CLIP_01"] = 3334989185] = "COMPONENT_SPECIALCARBINE_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_CLIP_02"] = 2089537806] = "COMPONENT_SPECIALCARBINE_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_CLIP_03"] = 1801039530] = "COMPONENT_SPECIALCARBINE_CLIP_03";
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    // COMPONENT_AT_SCOPE_MEDIUM = 0xA0D89C42, // Scope
+    // COMPONENT_AT_AR_SUPP_02 = 0xA73D4664, // Suppressor
+    // COMPONENT_AT_AR_AFGRIP = 0xC164F53, // Grip
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_VARMOD_LOWRIDER"] = 1929467122] = "COMPONENT_SPECIALCARBINE_VARMOD_LOWRIDER";
+    // Bullpup Rifle
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_CLIP_01"] = 3315675008] = "COMPONENT_BULLPUPRIFLE_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_CLIP_02"] = 3009973007] = "COMPONENT_BULLPUPRIFLE_CLIP_02";
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    // COMPONENT_AT_SCOPE_SMALL = 0xAA2C45B4, // Scope
+    // COMPONENT_AT_AR_SUPP = 0x837445AA, // Suppressor
+    // COMPONENT_AT_AR_AFGRIP = 0xC164F53, // Grip
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_VARMOD_LOW"] = 2824322168] = "COMPONENT_BULLPUPRIFLE_VARMOD_LOW";
+    // Bullpup Rifle Mk II
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_MK2_CLIP_01"] = 25766362] = "COMPONENT_BULLPUPRIFLE_MK2_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_MK2_CLIP_02"] = 4021290536] = "COMPONENT_BULLPUPRIFLE_MK2_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_MK2_CLIP_TRACER"] = 2183159977] = "COMPONENT_BULLPUPRIFLE_MK2_CLIP_TRACER";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_MK2_CLIP_INCENDIARY"] = 2845636954] = "COMPONENT_BULLPUPRIFLE_MK2_CLIP_INCENDIARY";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_MK2_CLIP_ARMORPIERCING"] = 4205311469] = "COMPONENT_BULLPUPRIFLE_MK2_CLIP_ARMORPIERCING";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_MK2_CLIP_FMJ"] = 1130501904] = "COMPONENT_BULLPUPRIFLE_MK2_CLIP_FMJ";
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    // COMPONENT_AT_SIGHTS = 0x420FD713, // Holographic Sight
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SCOPE_MACRO_02_MK2"] = 3350057221] = "COMPONENT_AT_SCOPE_MACRO_02_MK2";
+    // COMPONENT_AT_SCOPE_SMALL_MK2 = 0x3F3C8181, // Medium Scope
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_BP_BARREL_01"] = 1704640795] = "COMPONENT_AT_BP_BARREL_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_BP_BARREL_02"] = 1005743559] = "COMPONENT_AT_BP_BARREL_02";
+    // COMPONENT_AT_AR_SUPP = 0x837445AA, // Suppressor
+    // COMPONENT_AT_MUZZLE_01 = 0xB99402D4, // Flat Muzzle Brake
+    // COMPONENT_AT_MUZZLE_02 = 0xC867A07B, // Tactical Muzzle Brake
+    // COMPONENT_AT_MUZZLE_03 = 0xDE11CBCF, // Fat-End Muzzle Brake
+    // COMPONENT_AT_MUZZLE_04 = 0xEC9068CC, // Precision Muzzle Brake
+    // COMPONENT_AT_MUZZLE_05 = 0x2E7957A, // Heavy Duty Muzzle Brake
+    // COMPONENT_AT_MUZZLE_06 = 0x347EF8AC, // Slanted Muzzle Brake
+    // COMPONENT_AT_MUZZLE_07 = 0x4DB62ABE, // Split-End Muzzle Brake
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_AR_AFGRIP_02"] = 2640679034] = "COMPONENT_AT_AR_AFGRIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_MK2_CAMO"] = 2923451831] = "COMPONENT_BULLPUPRIFLE_MK2_CAMO";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_MK2_CAMO_02"] = 3104173419] = "COMPONENT_BULLPUPRIFLE_MK2_CAMO_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_MK2_CAMO_03"] = 2797881576] = "COMPONENT_BULLPUPRIFLE_MK2_CAMO_03";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_MK2_CAMO_04"] = 2491819116] = "COMPONENT_BULLPUPRIFLE_MK2_CAMO_04";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_MK2_CAMO_05"] = 2318995410] = "COMPONENT_BULLPUPRIFLE_MK2_CAMO_05";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_MK2_CAMO_06"] = 36929477] = "COMPONENT_BULLPUPRIFLE_MK2_CAMO_06";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_MK2_CAMO_07"] = 4026522462] = "COMPONENT_BULLPUPRIFLE_MK2_CAMO_07";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_MK2_CAMO_08"] = 3720197850] = "COMPONENT_BULLPUPRIFLE_MK2_CAMO_08";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_MK2_CAMO_09"] = 3412267557] = "COMPONENT_BULLPUPRIFLE_MK2_CAMO_09";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_MK2_CAMO_10"] = 2826785822] = "COMPONENT_BULLPUPRIFLE_MK2_CAMO_10";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_BULLPUPRIFLE_MK2_CAMO_IND_01"] = 3320426066] = "COMPONENT_BULLPUPRIFLE_MK2_CAMO_IND_01";
+    // Special Carbine Mk II
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_MK2_CLIP_01"] = 382112385] = "COMPONENT_SPECIALCARBINE_MK2_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_MK2_CLIP_02"] = 3726614828] = "COMPONENT_SPECIALCARBINE_MK2_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_MK2_CLIP_TRACER"] = 2271594122] = "COMPONENT_SPECIALCARBINE_MK2_CLIP_TRACER";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_MK2_CLIP_INCENDIARY"] = 3724612230] = "COMPONENT_SPECIALCARBINE_MK2_CLIP_INCENDIARY";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_MK2_CLIP_ARMORPIERCING"] = 1362433589] = "COMPONENT_SPECIALCARBINE_MK2_CLIP_ARMORPIERCING";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_MK2_CLIP_FMJ"] = 1346235024] = "COMPONENT_SPECIALCARBINE_MK2_CLIP_FMJ";
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    // COMPONENT_AT_SIGHTS = 0x420FD713, // Holographic Sight
+    // COMPONENT_AT_SCOPE_MACRO_MK2 = 0x49B2945, // Small Scope
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SCOPE_MEDIUM_MK2"] = 3328927042] = "COMPONENT_AT_SCOPE_MEDIUM_MK2";
+    // COMPONENT_AT_AR_SUPP_02 = 0xA73D4664, // Suppressor
+    // COMPONENT_AT_MUZZLE_01 = 0xB99402D4, // Flat Muzzle Brake
+    // COMPONENT_AT_MUZZLE_02 = 0xC867A07B, // Tactical Muzzle Brake
+    // COMPONENT_AT_MUZZLE_03 = 0xDE11CBCF, // Fat-End Muzzle Brake
+    // COMPONENT_AT_MUZZLE_04 = 0xEC9068CC, // Precision Muzzle Brake
+    // COMPONENT_AT_MUZZLE_05 = 0x2E7957A, // Heavy Duty Muzzle Brake
+    // COMPONENT_AT_MUZZLE_06 = 0x347EF8AC, // Slanted Muzzle Brake
+    // COMPONENT_AT_MUZZLE_07 = 0x4DB62ABE, // Split-End Muzzle Brake
+    // COMPONENT_AT_AR_AFGRIP_02 = 0x9D65907A, // Grip
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SC_BARREL_01"] = 3879097257] = "COMPONENT_AT_SC_BARREL_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SC_BARREL_02"] = 4185880635] = "COMPONENT_AT_SC_BARREL_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_MK2_CAMO"] = 3557537083] = "COMPONENT_SPECIALCARBINE_MK2_CAMO";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_MK2_CAMO_02"] = 1125852043] = "COMPONENT_SPECIALCARBINE_MK2_CAMO_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_MK2_CAMO_03"] = 886015732] = "COMPONENT_SPECIALCARBINE_MK2_CAMO_03";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_MK2_CAMO_04"] = 3032680157] = "COMPONENT_SPECIALCARBINE_MK2_CAMO_04";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_MK2_CAMO_05"] = 3999758885] = "COMPONENT_SPECIALCARBINE_MK2_CAMO_05";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_MK2_CAMO_06"] = 3750812792] = "COMPONENT_SPECIALCARBINE_MK2_CAMO_06";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_MK2_CAMO_07"] = 172765678] = "COMPONENT_SPECIALCARBINE_MK2_CAMO_07";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_MK2_CAMO_08"] = 2312089847] = "COMPONENT_SPECIALCARBINE_MK2_CAMO_08";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_MK2_CAMO_09"] = 2072122460] = "COMPONENT_SPECIALCARBINE_MK2_CAMO_09";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_MK2_CAMO_10"] = 2308747125] = "COMPONENT_SPECIALCARBINE_MK2_CAMO_10";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SPECIALCARBINE_MK2_CAMO_IND_01"] = 1377355801] = "COMPONENT_SPECIALCARBINE_MK2_CAMO_IND_01";
+    // Assault Rifle Mk II
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_MK2_CLIP_01"] = 2249208895] = "COMPONENT_ASSAULTRIFLE_MK2_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_MK2_CLIP_02"] = 3509242479] = "COMPONENT_ASSAULTRIFLE_MK2_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_MK2_CLIP_TRACER"] = 4012669121] = "COMPONENT_ASSAULTRIFLE_MK2_CLIP_TRACER";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_MK2_CLIP_INCENDIARY"] = 4218476627] = "COMPONENT_ASSAULTRIFLE_MK2_CLIP_INCENDIARY";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_MK2_CLIP_ARMORPIERCING"] = 2816286296] = "COMPONENT_ASSAULTRIFLE_MK2_CLIP_ARMORPIERCING";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_MK2_CLIP_FMJ"] = 1675665560] = "COMPONENT_ASSAULTRIFLE_MK2_CLIP_FMJ";
+    // COMPONENT_AT_AR_AFGRIP_02 = 0x9D65907A, // Grip
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    // COMPONENT_AT_SIGHTS = 0x420FD713, // Holographic Sight
+    // COMPONENT_AT_SCOPE_MACRO_MK2 = 0x49B2945, // Small Scope
+    // COMPONENT_AT_SCOPE_MEDIUM_MK2 = 0xC66B6542, // Large Scope
+    // COMPONENT_AT_AR_SUPP_02 = 0xA73D4664, // Suppressor
+    // COMPONENT_AT_MUZZLE_01 = 0xB99402D4, // Flat Muzzle Brake
+    // COMPONENT_AT_MUZZLE_02 = 0xC867A07B, // Tactical Muzzle Brake
+    // COMPONENT_AT_MUZZLE_03 = 0xDE11CBCF, // Fat-End Muzzle Brake
+    //  COMPONENT_AT_MUZZLE_04 = 0xEC9068CC, // Precision Muzzle Brake
+    // COMPONENT_AT_MUZZLE_05 = 0x2E7957A, // Heavy Duty Muzzle Brake
+    // COMPONENT_AT_MUZZLE_06 = 0x347EF8AC, // Slanted Muzzle Brake
+    // COMPONENT_AT_MUZZLE_07 = 0x4DB62ABE, // Split-End Muzzle Brake
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_AR_BARREL_01"] = 1134861606] = "COMPONENT_AT_AR_BARREL_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_AR_BARREL_02"] = 1447477866] = "COMPONENT_AT_AR_BARREL_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_MK2_CAMO"] = 2434475183] = "COMPONENT_ASSAULTRIFLE_MK2_CAMO";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_MK2_CAMO_02"] = 937772107] = "COMPONENT_ASSAULTRIFLE_MK2_CAMO_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_MK2_CAMO_03"] = 1401650071] = "COMPONENT_ASSAULTRIFLE_MK2_CAMO_03";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_MK2_CAMO_04"] = 628662130] = "COMPONENT_ASSAULTRIFLE_MK2_CAMO_04";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_MK2_CAMO_05"] = 3309920045] = "COMPONENT_ASSAULTRIFLE_MK2_CAMO_05";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_MK2_CAMO_06"] = 3482022833] = "COMPONENT_ASSAULTRIFLE_MK2_CAMO_06";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_MK2_CAMO_07"] = 2847614993] = "COMPONENT_ASSAULTRIFLE_MK2_CAMO_07";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_MK2_CAMO_08"] = 4234628436] = "COMPONENT_ASSAULTRIFLE_MK2_CAMO_08";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_MK2_CAMO_09"] = 2088750491] = "COMPONENT_ASSAULTRIFLE_MK2_CAMO_09";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_MK2_CAMO_10"] = 2781053842] = "COMPONENT_ASSAULTRIFLE_MK2_CAMO_10";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_ASSAULTRIFLE_MK2_CAMO_IND_01"] = 3115408816] = "COMPONENT_ASSAULTRIFLE_MK2_CAMO_IND_01";
+    // Carbine Rifle Mk II
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_MK2_CLIP_01"] = 1283078430] = "COMPONENT_CARBINERIFLE_MK2_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_MK2_CLIP_02"] = 1574296533] = "COMPONENT_CARBINERIFLE_MK2_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_MK2_CLIP_TRACER"] = 391640422] = "COMPONENT_CARBINERIFLE_MK2_CLIP_TRACER";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_MK2_CLIP_INCENDIARY"] = 1025884839] = "COMPONENT_CARBINERIFLE_MK2_CLIP_INCENDIARY";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_MK2_CLIP_ARMORPIERCING"] = 626875735] = "COMPONENT_CARBINERIFLE_MK2_CLIP_ARMORPIERCING";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_MK2_CLIP_FMJ"] = 1141059345] = "COMPONENT_CARBINERIFLE_MK2_CLIP_FMJ";
+    // COMPONENT_AT_AR_AFGRIP_02 = 0x9D65907A, // Grip
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    // COMPONENT_AT_SIGHTS = 0x420FD713, // Holographic Sight
+    // COMPONENT_AT_SCOPE_MACRO_MK2 = 0x49B2945, // Small Scope
+    // COMPONENT_AT_SCOPE_MEDIUM_MK2 = 0xC66B6542, // Large Scope
+    // COMPONENT_AT_AR_SUPP = 0x837445AA, // Suppressor
+    // COMPONENT_AT_MUZZLE_01 = 0xB99402D4, // Flat Muzzle Brake
+    // COMPONENT_AT_MUZZLE_02 = 0xC867A07B, // Tactical Muzzle Brake
+    // COMPONENT_AT_MUZZLE_03 = 0xDE11CBCF, // Fat-End Muzzle Brake
+    // COMPONENT_AT_MUZZLE_04 = 0xEC9068CC, // Precision Muzzle Brake
+    // COMPONENT_AT_MUZZLE_05 = 0x2E7957A, // Heavy Duty Muzzle Brake
+    // COMPONENT_AT_MUZZLE_06 = 0x347EF8AC, // Slanted Muzzle Brake
+    // COMPONENT_AT_MUZZLE_07 = 0x4DB62ABE, // Split-End Muzzle Brake
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_CR_BARREL_01"] = 2201368575] = "COMPONENT_AT_CR_BARREL_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_CR_BARREL_02"] = 2335983627] = "COMPONENT_AT_CR_BARREL_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_MK2_CAMO"] = 1272803094] = "COMPONENT_CARBINERIFLE_MK2_CAMO";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_MK2_CAMO_02"] = 1080719624] = "COMPONENT_CARBINERIFLE_MK2_CAMO_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_MK2_CAMO_03"] = 792221348] = "COMPONENT_CARBINERIFLE_MK2_CAMO_03";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_MK2_CAMO_04"] = 3842785869] = "COMPONENT_CARBINERIFLE_MK2_CAMO_04";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_MK2_CAMO_05"] = 3548192559] = "COMPONENT_CARBINERIFLE_MK2_CAMO_05";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_MK2_CAMO_06"] = 2250671235] = "COMPONENT_CARBINERIFLE_MK2_CAMO_06";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_MK2_CAMO_07"] = 4095795318] = "COMPONENT_CARBINERIFLE_MK2_CAMO_07";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_MK2_CAMO_08"] = 2866892280] = "COMPONENT_CARBINERIFLE_MK2_CAMO_08";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_MK2_CAMO_09"] = 2559813981] = "COMPONENT_CARBINERIFLE_MK2_CAMO_09";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_MK2_CAMO_10"] = 1796459838] = "COMPONENT_CARBINERIFLE_MK2_CAMO_10";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_CARBINERIFLE_MK2_CAMO_IND_01"] = 3663056191] = "COMPONENT_CARBINERIFLE_MK2_CAMO_IND_01";
+    // Compact Rifle
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMPACTRIFLE_CLIP_01"] = 1363085923] = "COMPONENT_COMPACTRIFLE_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMPACTRIFLE_CLIP_02"] = 1509923832] = "COMPONENT_COMPACTRIFLE_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMPACTRIFLE_CLIP_03"] = 3322377230] = "COMPONENT_COMPACTRIFLE_CLIP_03";
+    // Military Rifle
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MILITARYRIFLE_CLIP_01"] = 759617595] = "COMPONENT_MILITARYRIFLE_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MILITARYRIFLE_CLIP_02"] = 1749732930] = "COMPONENT_MILITARYRIFLE_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MILITARYRIFLE_SIGHT_01"] = 1803744149] = "COMPONENT_MILITARYRIFLE_SIGHT_01";
+    // COMPONENT_AT_SCOPE_SMALL = 0xAA2C45B4, // Scope
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    // COMPONENT_AT_AR_SUPP = 0x837445AA, // Suppressor
+    // Machine Guns
+    // MG
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MG_CLIP_01"] = 4097109892] = "COMPONENT_MG_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MG_CLIP_02"] = 2182449991] = "COMPONENT_MG_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SCOPE_SMALL_02"] = 1006677997] = "COMPONENT_AT_SCOPE_SMALL_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MG_VARMOD_LOWRIDER"] = 3604658878] = "COMPONENT_MG_VARMOD_LOWRIDER";
+    // Combat MG
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_CLIP_01"] = 3791631178] = "COMPONENT_COMBATMG_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_CLIP_02"] = 3603274966] = "COMPONENT_COMBATMG_CLIP_02";
+    // COMPONENT_AT_SCOPE_MEDIUM = 0xA0D89C42, // Scope
+    // COMPONENT_AT_AR_AFGRIP = 0xC164F53, // Grip
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_VARMOD_LOWRIDER"] = 2466172125] = "COMPONENT_COMBATMG_VARMOD_LOWRIDER";
+    // Combat MG Mk II
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_MK2_CLIP_01"] = 1227564412] = "COMPONENT_COMBATMG_MK2_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_MK2_CLIP_02"] = 400507625] = "COMPONENT_COMBATMG_MK2_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_MK2_CLIP_TRACER"] = 4133787461] = "COMPONENT_COMBATMG_MK2_CLIP_TRACER";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_MK2_CLIP_INCENDIARY"] = 3274096058] = "COMPONENT_COMBATMG_MK2_CLIP_INCENDIARY";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_MK2_CLIP_ARMORPIERCING"] = 696788003] = "COMPONENT_COMBATMG_MK2_CLIP_ARMORPIERCING";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_MK2_CLIP_FMJ"] = 1475288264] = "COMPONENT_COMBATMG_MK2_CLIP_FMJ";
+    // COMPONENT_AT_AR_AFGRIP_02 = 0x9D65907A, // Grip
+    // COMPONENT_AT_SIGHTS = 0x420FD713, // Holographic Sight
+    // COMPONENT_AT_SCOPE_SMALL_MK2 = 0x3F3C8181, // Medium Scope
+    // COMPONENT_AT_SCOPE_MEDIUM_MK2 = 0xC66B6542, // Large Scope
+    // COMPONENT_AT_MUZZLE_01 = 0xB99402D4, // Flat Muzzle Brake
+    // COMPONENT_AT_MUZZLE_02 = 0xC867A07B, // Tactical Muzzle Brake
+    // COMPONENT_AT_MUZZLE_03 = 0xDE11CBCF, // Fat-End Muzzle Brake
+    // COMPONENT_AT_MUZZLE_04 = 0xEC9068CC, // Precision Muzzle Brake
+    // COMPONENT_AT_MUZZLE_05 = 0x2E7957A, // Heavy Duty Muzzle Brake
+    // COMPONENT_AT_MUZZLE_06 = 0x347EF8AC, // Slanted Muzzle Brake
+    // COMPONENT_AT_MUZZLE_07 = 0x4DB62ABE, // Split-End Muzzle Brake
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_MG_BARREL_01"] = 3276730932] = "COMPONENT_AT_MG_BARREL_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_MG_BARREL_02"] = 3051509595] = "COMPONENT_AT_MG_BARREL_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_MK2_CAMO"] = 1249283253] = "COMPONENT_COMBATMG_MK2_CAMO";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_MK2_CAMO_02"] = 3437259709] = "COMPONENT_COMBATMG_MK2_CAMO_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_MK2_CAMO_03"] = 3197423398] = "COMPONENT_COMBATMG_MK2_CAMO_03";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_MK2_CAMO_04"] = 1980349969] = "COMPONENT_COMBATMG_MK2_CAMO_04";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_MK2_CAMO_05"] = 1219453777] = "COMPONENT_COMBATMG_MK2_CAMO_05";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_MK2_CAMO_06"] = 2441508106] = "COMPONENT_COMBATMG_MK2_CAMO_06";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_MK2_CAMO_07"] = 2220186280] = "COMPONENT_COMBATMG_MK2_CAMO_07";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_MK2_CAMO_08"] = 457967755] = "COMPONENT_COMBATMG_MK2_CAMO_08";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_MK2_CAMO_09"] = 235171324] = "COMPONENT_COMBATMG_MK2_CAMO_09";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_MK2_CAMO_10"] = 42685294] = "COMPONENT_COMBATMG_MK2_CAMO_10";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_COMBATMG_MK2_CAMO_IND_01"] = 3607349581] = "COMPONENT_COMBATMG_MK2_CAMO_IND_01";
+    // Gusenberg Sweeper
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_GUSENBERG_CLIP_01"] = 484812453] = "COMPONENT_GUSENBERG_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_GUSENBERG_CLIP_02"] = 3939025520] = "COMPONENT_GUSENBERG_CLIP_02";
+    // Sniper Rifles
+    // Sniper Rifle
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNIPERRIFLE_CLIP_01"] = 2613461129] = "COMPONENT_SNIPERRIFLE_CLIP_01";
+    // COMPONENT_AT_AR_SUPP_02 = 0xA73D4664, // Suppressor
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SCOPE_LARGE"] = 3527687644] = "COMPONENT_AT_SCOPE_LARGE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SCOPE_MAX"] = 3159677559] = "COMPONENT_AT_SCOPE_MAX";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_SNIPERRIFLE_VARMOD_LUXE"] = 1077065191] = "COMPONENT_SNIPERRIFLE_VARMOD_LUXE";
+    // Heavy Sniper
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSNIPER_CLIP_01"] = 1198478068] = "COMPONENT_HEAVYSNIPER_CLIP_01";
+    // COMPONENT_AT_SCOPE_LARGE = 0xD2443DDC, // Scope
+    // COMPONENT_AT_SCOPE_MAX = 0xBC54DA77, // Advanced Scope
+    // Marksman Rifle Mk II
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_MK2_CLIP_01"] = 2497785294] = "COMPONENT_MARKSMANRIFLE_MK2_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_MK2_CLIP_02"] = 3872379306] = "COMPONENT_MARKSMANRIFLE_MK2_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_MK2_CLIP_TRACER"] = 3615105746] = "COMPONENT_MARKSMANRIFLE_MK2_CLIP_TRACER";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_MK2_CLIP_INCENDIARY"] = 1842849902] = "COMPONENT_MARKSMANRIFLE_MK2_CLIP_INCENDIARY";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_MK2_CLIP_ARMORPIERCING"] = 4100968569] = "COMPONENT_MARKSMANRIFLE_MK2_CLIP_ARMORPIERCING";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_MK2_CLIP_FMJ"] = 3779763923] = "COMPONENT_MARKSMANRIFLE_MK2_CLIP_FMJ";
+    // COMPONENT_AT_SIGHTS = 0x420FD713, // Holographic Sight
+    // COMPONENT_AT_SCOPE_MEDIUM_MK2 = 0xC66B6542, // Large Scope
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SCOPE_LARGE_FIXED_ZOOM_MK2"] = 1528590652] = "COMPONENT_AT_SCOPE_LARGE_FIXED_ZOOM_MK2";
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    // COMPONENT_AT_AR_SUPP = 0x837445AA, // Suppressor
+    // COMPONENT_AT_MUZZLE_01 = 0xB99402D4, // Flat Muzzle Brake
+    // COMPONENT_AT_MUZZLE_02 = 0xC867A07B, // Tactical Muzzle Brake
+    // COMPONENT_AT_MUZZLE_03 = 0xDE11CBCF, // Fat-End Muzzle Brake
+    // COMPONENT_AT_MUZZLE_04 = 0xEC9068CC, // Precision Muzzle Brake
+    // COMPONENT_AT_MUZZLE_05 = 0x2E7957A, // Heavy Duty Muzzle Brake
+    // COMPONENT_AT_MUZZLE_06 = 0x347EF8AC, // Slanted Muzzle Brake
+    // COMPONENT_AT_MUZZLE_07 = 0x4DB62ABE, // Split-End Muzzle Brake
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_MRFL_BARREL_01"] = 941317513] = "COMPONENT_AT_MRFL_BARREL_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_MRFL_BARREL_02"] = 1748450780] = "COMPONENT_AT_MRFL_BARREL_02";
+    // COMPONENT_AT_AR_AFGRIP_02 = 0x9D65907A, // Grip
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_MK2_CAMO"] = 2425682848] = "COMPONENT_MARKSMANRIFLE_MK2_CAMO";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_MK2_CAMO_02"] = 1931539634] = "COMPONENT_MARKSMANRIFLE_MK2_CAMO_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_MK2_CAMO_03"] = 1624199183] = "COMPONENT_MARKSMANRIFLE_MK2_CAMO_03";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_MK2_CAMO_04"] = 4268133183] = "COMPONENT_MARKSMANRIFLE_MK2_CAMO_04";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_MK2_CAMO_05"] = 4084561241] = "COMPONENT_MARKSMANRIFLE_MK2_CAMO_05";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_MK2_CAMO_06"] = 423313640] = "COMPONENT_MARKSMANRIFLE_MK2_CAMO_06";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_MK2_CAMO_07"] = 276639596] = "COMPONENT_MARKSMANRIFLE_MK2_CAMO_07";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_MK2_CAMO_08"] = 3303610433] = "COMPONENT_MARKSMANRIFLE_MK2_CAMO_08";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_MK2_CAMO_09"] = 2612118995] = "COMPONENT_MARKSMANRIFLE_MK2_CAMO_09";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_MK2_CAMO_10"] = 996213771] = "COMPONENT_MARKSMANRIFLE_MK2_CAMO_10";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_MK2_CAMO_IND_01"] = 3080918746] = "COMPONENT_MARKSMANRIFLE_MK2_CAMO_IND_01";
+    // Heavy Sniper Mk II
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSNIPER_MK2_CLIP_01"] = 4196276776] = "COMPONENT_HEAVYSNIPER_MK2_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSNIPER_MK2_CLIP_02"] = 752418717] = "COMPONENT_HEAVYSNIPER_MK2_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSNIPER_MK2_CLIP_INCENDIARY"] = 247526935] = "COMPONENT_HEAVYSNIPER_MK2_CLIP_INCENDIARY";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSNIPER_MK2_CLIP_ARMORPIERCING"] = 4164277972] = "COMPONENT_HEAVYSNIPER_MK2_CLIP_ARMORPIERCING";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSNIPER_MK2_CLIP_FMJ"] = 1005144310] = "COMPONENT_HEAVYSNIPER_MK2_CLIP_FMJ";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSNIPER_MK2_CLIP_EXPLOSIVE"] = 2313935527] = "COMPONENT_HEAVYSNIPER_MK2_CLIP_EXPLOSIVE";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SCOPE_LARGE_MK2"] = 2193687427] = "COMPONENT_AT_SCOPE_LARGE_MK2";
+    // COMPONENT_AT_SCOPE_MAX = 0xBC54DA77, // Advanced Scope
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SCOPE_NV"] = 3061846192] = "COMPONENT_AT_SCOPE_NV";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SCOPE_THERMAL"] = 776198721] = "COMPONENT_AT_SCOPE_THERMAL";
+    // COMPONENT_AT_SR_SUPP_03 = 0xAC42DF71, // Suppressor
+    // COMPONENT_AT_MUZZLE_08 = 0x5F7DCE4D, // Squared Muzzle Brake
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_MUZZLE_09"] = 1764221345] = "COMPONENT_AT_MUZZLE_09";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SR_BARREL_01"] = 2425761975] = "COMPONENT_AT_SR_BARREL_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SR_BARREL_02"] = 277524638] = "COMPONENT_AT_SR_BARREL_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSNIPER_MK2_CAMO"] = 4164123906] = "COMPONENT_HEAVYSNIPER_MK2_CAMO";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSNIPER_MK2_CAMO_02"] = 3317620069] = "COMPONENT_HEAVYSNIPER_MK2_CAMO_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSNIPER_MK2_CAMO_03"] = 3916506229] = "COMPONENT_HEAVYSNIPER_MK2_CAMO_03";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSNIPER_MK2_CAMO_04"] = 329939175] = "COMPONENT_HEAVYSNIPER_MK2_CAMO_04";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSNIPER_MK2_CAMO_05"] = 643374672] = "COMPONENT_HEAVYSNIPER_MK2_CAMO_05";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSNIPER_MK2_CAMO_06"] = 807875052] = "COMPONENT_HEAVYSNIPER_MK2_CAMO_06";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSNIPER_MK2_CAMO_07"] = 2893163128] = "COMPONENT_HEAVYSNIPER_MK2_CAMO_07";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSNIPER_MK2_CAMO_08"] = 3198471901] = "COMPONENT_HEAVYSNIPER_MK2_CAMO_08";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSNIPER_MK2_CAMO_09"] = 3447155842] = "COMPONENT_HEAVYSNIPER_MK2_CAMO_09";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSNIPER_MK2_CAMO_10"] = 2881858759] = "COMPONENT_HEAVYSNIPER_MK2_CAMO_10";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_HEAVYSNIPER_MK2_CAMO_IND_01"] = 1815270123] = "COMPONENT_HEAVYSNIPER_MK2_CAMO_IND_01";
+    // Marksman Rifle
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_CLIP_01"] = 3627761985] = "COMPONENT_MARKSMANRIFLE_CLIP_01";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_CLIP_02"] = 3439143621] = "COMPONENT_MARKSMANRIFLE_CLIP_02";
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_AT_SCOPE_LARGE_FIXED_ZOOM"] = 471997210] = "COMPONENT_AT_SCOPE_LARGE_FIXED_ZOOM";
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    // COMPONENT_AT_AR_SUPP = 0x837445AA, // Suppressor
+    // COMPONENT_AT_AR_AFGRIP = 0xC164F53, // Grip
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_MARKSMANRIFLE_VARMOD_LUXE"] = 371102273] = "COMPONENT_MARKSMANRIFLE_VARMOD_LUXE";
+    // Heavy Weapons
+    // Grenade Launcher
+    WeaponComponentHash[WeaponComponentHash["COMPONENT_GRENADELAUNCHER_CLIP_01"] = 296639639] = "COMPONENT_GRENADELAUNCHER_CLIP_01";
+    // COMPONENT_AT_AR_FLSH = 0x7BC4CDDC, // Flashlight
+    // COMPONENT_AT_AR_AFGRIP = 0xC164F53, // Grip
+    // COMPONENT_AT_SCOPE_SMALL = 0xAA2C45B4, // Scope
+    // Invalid
+    WeaponComponentHash[WeaponComponentHash["Invalid"] = 4294967295] = "Invalid";
+    WeaponComponentHash[WeaponComponentHash["AdvancedRifleClip01"] = 4203716879] = "AdvancedRifleClip01";
+    WeaponComponentHash[WeaponComponentHash["AdvancedRifleClip02"] = 2395064697] = "AdvancedRifleClip02";
+    WeaponComponentHash[WeaponComponentHash["AdvancedRifleVarmodLuxe"] = 930927479] = "AdvancedRifleVarmodLuxe";
+    WeaponComponentHash[WeaponComponentHash["APPistolClip01"] = 834974250] = "APPistolClip01";
+    WeaponComponentHash[WeaponComponentHash["APPistolClip02"] = 614078421] = "APPistolClip02";
+    WeaponComponentHash[WeaponComponentHash["APPistolVarmodLuxe"] = 2608252716] = "APPistolVarmodLuxe";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleClip01"] = 3193891350] = "AssaultRifleClip01";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleClip02"] = 2971750299] = "AssaultRifleClip02";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleClip03"] = 3689981245] = "AssaultRifleClip03";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleVarmodLuxe"] = 1319990579] = "AssaultRifleVarmodLuxe";
+    WeaponComponentHash[WeaponComponentHash["AssaultSMGClip01"] = 2366834608] = "AssaultSMGClip01";
+    WeaponComponentHash[WeaponComponentHash["AssaultSMGClip02"] = 3141985303] = "AssaultSMGClip02";
+    WeaponComponentHash[WeaponComponentHash["AssaultSMGVarmodLowrider"] = 663517359] = "AssaultSMGVarmodLowrider";
+    WeaponComponentHash[WeaponComponentHash["AssaultShotgunClip01"] = 2498239431] = "AssaultShotgunClip01";
+    WeaponComponentHash[WeaponComponentHash["AssaultShotgunClip02"] = 2260565874] = "AssaultShotgunClip02";
+    WeaponComponentHash[WeaponComponentHash["AtArAfGrip"] = 202788691] = "AtArAfGrip";
+    WeaponComponentHash[WeaponComponentHash["AtArFlsh"] = 2076495324] = "AtArFlsh";
+    WeaponComponentHash[WeaponComponentHash["AtArSupp"] = 2205435306] = "AtArSupp";
+    WeaponComponentHash[WeaponComponentHash["AtArSupp02"] = 2805810788] = "AtArSupp02";
+    WeaponComponentHash[WeaponComponentHash["AtPiFlsh"] = 899381934] = "AtPiFlsh";
+    WeaponComponentHash[WeaponComponentHash["AtPiSupp"] = 3271853210] = "AtPiSupp";
+    WeaponComponentHash[WeaponComponentHash["AtPiSupp02"] = 1709866683] = "AtPiSupp02";
+    WeaponComponentHash[WeaponComponentHash["AtRailCover01"] = 1967214384] = "AtRailCover01";
+    WeaponComponentHash[WeaponComponentHash["AtScopeLarge"] = 3527687644] = "AtScopeLarge";
+    WeaponComponentHash[WeaponComponentHash["AtScopeLargeFixedZoom"] = 471997210] = "AtScopeLargeFixedZoom";
+    WeaponComponentHash[WeaponComponentHash["AtScopeMacro"] = 2637152041] = "AtScopeMacro";
+    WeaponComponentHash[WeaponComponentHash["AtScopeMacro02"] = 1019656791] = "AtScopeMacro02";
+    WeaponComponentHash[WeaponComponentHash["AtScopeMax"] = 3159677559] = "AtScopeMax";
+    WeaponComponentHash[WeaponComponentHash["AtScopeMedium"] = 2698550338] = "AtScopeMedium";
+    WeaponComponentHash[WeaponComponentHash["AtScopeSmall"] = 2855028148] = "AtScopeSmall";
+    WeaponComponentHash[WeaponComponentHash["AtScopeSmall02"] = 1006677997] = "AtScopeSmall02";
+    WeaponComponentHash[WeaponComponentHash["AtSrSupp"] = 3859329886] = "AtSrSupp";
+    WeaponComponentHash[WeaponComponentHash["BullpupRifleClip01"] = 3315675008] = "BullpupRifleClip01";
+    WeaponComponentHash[WeaponComponentHash["BullpupRifleClip02"] = 3009973007] = "BullpupRifleClip02";
+    WeaponComponentHash[WeaponComponentHash["BullpupRifleVarmodLow"] = 2824322168] = "BullpupRifleVarmodLow";
+    WeaponComponentHash[WeaponComponentHash["BullpupShotgunClip01"] = 3377353998] = "BullpupShotgunClip01";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleClip01"] = 2680042476] = "CarbineRifleClip01";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleClip02"] = 2433783441] = "CarbineRifleClip02";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleClip03"] = 3127044405] = "CarbineRifleClip03";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleVarmodLuxe"] = 3634075224] = "CarbineRifleVarmodLuxe";
+    WeaponComponentHash[WeaponComponentHash["CombatMGClip01"] = 3791631178] = "CombatMGClip01";
+    WeaponComponentHash[WeaponComponentHash["CombatMGClip02"] = 3603274966] = "CombatMGClip02";
+    WeaponComponentHash[WeaponComponentHash["CombatMGVarmodLowrider"] = 2466172125] = "CombatMGVarmodLowrider";
+    WeaponComponentHash[WeaponComponentHash["CombatPDWClip01"] = 1125642654] = "CombatPDWClip01";
+    WeaponComponentHash[WeaponComponentHash["CombatPDWClip02"] = 860508675] = "CombatPDWClip02";
+    WeaponComponentHash[WeaponComponentHash["CombatPDWClip03"] = 1857603803] = "CombatPDWClip03";
+    WeaponComponentHash[WeaponComponentHash["CombatPistolClip01"] = 119648377] = "CombatPistolClip01";
+    WeaponComponentHash[WeaponComponentHash["CombatPistolClip02"] = 3598405421] = "CombatPistolClip02";
+    WeaponComponentHash[WeaponComponentHash["CombatPistolVarmodLowrider"] = 3328527730] = "CombatPistolVarmodLowrider";
+    WeaponComponentHash[WeaponComponentHash["CompactRifleClip01"] = 1363085923] = "CompactRifleClip01";
+    WeaponComponentHash[WeaponComponentHash["CompactRifleClip02"] = 1509923832] = "CompactRifleClip02";
+    WeaponComponentHash[WeaponComponentHash["CompactRifleClip03"] = 3322377230] = "CompactRifleClip03";
+    WeaponComponentHash[WeaponComponentHash["DBShotgunClip01"] = 703231006] = "DBShotgunClip01";
+    WeaponComponentHash[WeaponComponentHash["FireworkClip01"] = 3840197261] = "FireworkClip01";
+    WeaponComponentHash[WeaponComponentHash["FlareGunClip01"] = 2481569177] = "FlareGunClip01";
+    WeaponComponentHash[WeaponComponentHash["FlashlightLight"] = 3719772431] = "FlashlightLight";
+    WeaponComponentHash[WeaponComponentHash["GrenadeLauncherClip01"] = 296639639] = "GrenadeLauncherClip01";
+    WeaponComponentHash[WeaponComponentHash["GusenbergClip01"] = 484812453] = "GusenbergClip01";
+    WeaponComponentHash[WeaponComponentHash["GusenbergClip02"] = 3939025520] = "GusenbergClip02";
+    WeaponComponentHash[WeaponComponentHash["HeavyPistolClip01"] = 222992026] = "HeavyPistolClip01";
+    WeaponComponentHash[WeaponComponentHash["HeavyPistolClip02"] = 1694090795] = "HeavyPistolClip02";
+    WeaponComponentHash[WeaponComponentHash["HeavyPistolVarmodLuxe"] = 2053798779] = "HeavyPistolVarmodLuxe";
+    WeaponComponentHash[WeaponComponentHash["HeavyShotgunClip01"] = 844049759] = "HeavyShotgunClip01";
+    WeaponComponentHash[WeaponComponentHash["HeavyShotgunClip02"] = 2535257853] = "HeavyShotgunClip02";
+    WeaponComponentHash[WeaponComponentHash["HeavyShotgunClip03"] = 2294798931] = "HeavyShotgunClip03";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperClip01"] = 1198478068] = "HeavySniperClip01";
+    WeaponComponentHash[WeaponComponentHash["HomingLauncherClip01"] = 4162006335] = "HomingLauncherClip01";
+    WeaponComponentHash[WeaponComponentHash["KnuckleVarmodBallas"] = 4007263587] = "KnuckleVarmodBallas";
+    WeaponComponentHash[WeaponComponentHash["KnuckleVarmodBase"] = 4081463091] = "KnuckleVarmodBase";
+    WeaponComponentHash[WeaponComponentHash["KnuckleVarmodDiamond"] = 2539772380] = "KnuckleVarmodDiamond";
+    WeaponComponentHash[WeaponComponentHash["KnuckleVarmodDollar"] = 1351683121] = "KnuckleVarmodDollar";
+    WeaponComponentHash[WeaponComponentHash["KnuckleVarmodHate"] = 2112683568] = "KnuckleVarmodHate";
+    WeaponComponentHash[WeaponComponentHash["KnuckleVarmodKing"] = 3800804335] = "KnuckleVarmodKing";
+    WeaponComponentHash[WeaponComponentHash["KnuckleVarmodLove"] = 1062111910] = "KnuckleVarmodLove";
+    WeaponComponentHash[WeaponComponentHash["KnuckleVarmodPimp"] = 3323197061] = "KnuckleVarmodPimp";
+    WeaponComponentHash[WeaponComponentHash["KnuckleVarmodPlayer"] = 146278587] = "KnuckleVarmodPlayer";
+    WeaponComponentHash[WeaponComponentHash["KnuckleVarmodVagos"] = 2062808965] = "KnuckleVarmodVagos";
+    WeaponComponentHash[WeaponComponentHash["MGClip01"] = 4097109892] = "MGClip01";
+    WeaponComponentHash[WeaponComponentHash["MGClip02"] = 2182449991] = "MGClip02";
+    WeaponComponentHash[WeaponComponentHash["MGVarmodLowrider"] = 3604658878] = "MGVarmodLowrider";
+    WeaponComponentHash[WeaponComponentHash["MachinePistolClip01"] = 1198425599] = "MachinePistolClip01";
+    WeaponComponentHash[WeaponComponentHash["MachinePistolClip02"] = 3106695545] = "MachinePistolClip02";
+    WeaponComponentHash[WeaponComponentHash["MachinePistolClip03"] = 2850671348] = "MachinePistolClip03";
+    WeaponComponentHash[WeaponComponentHash["MarksmanPistolClip01"] = 3416146413] = "MarksmanPistolClip01";
+    WeaponComponentHash[WeaponComponentHash["MarksmanRifleClip01"] = 3627761985] = "MarksmanRifleClip01";
+    WeaponComponentHash[WeaponComponentHash["MarksmanRifleClip02"] = 3439143621] = "MarksmanRifleClip02";
+    WeaponComponentHash[WeaponComponentHash["MarksmanRifleVarmodLuxe"] = 371102273] = "MarksmanRifleVarmodLuxe";
+    WeaponComponentHash[WeaponComponentHash["MicroSMGClip01"] = 3410538224] = "MicroSMGClip01";
+    WeaponComponentHash[WeaponComponentHash["MicroSMGClip02"] = 283556395] = "MicroSMGClip02";
+    WeaponComponentHash[WeaponComponentHash["MicroSMGVarmodLuxe"] = 1215999497] = "MicroSMGVarmodLuxe";
+    WeaponComponentHash[WeaponComponentHash["MinigunClip01"] = 3370020614] = "MinigunClip01";
+    WeaponComponentHash[WeaponComponentHash["MusketClip01"] = 1322387263] = "MusketClip01";
+    WeaponComponentHash[WeaponComponentHash["Pistol50Clip01"] = 580369945] = "Pistol50Clip01";
+    WeaponComponentHash[WeaponComponentHash["Pistol50Clip02"] = 3654528146] = "Pistol50Clip02";
+    WeaponComponentHash[WeaponComponentHash["Pistol50VarmodLuxe"] = 2008591151] = "Pistol50VarmodLuxe";
+    WeaponComponentHash[WeaponComponentHash["PistolClip01"] = 4275109233] = "PistolClip01";
+    WeaponComponentHash[WeaponComponentHash["PistolClip02"] = 3978713628] = "PistolClip02";
+    WeaponComponentHash[WeaponComponentHash["PistolVarmodLuxe"] = 3610841222] = "PistolVarmodLuxe";
+    WeaponComponentHash[WeaponComponentHash["PoliceTorchFlashlight"] = 3315797997] = "PoliceTorchFlashlight";
+    WeaponComponentHash[WeaponComponentHash["PumpShotgunClip01"] = 3513717816] = "PumpShotgunClip01";
+    WeaponComponentHash[WeaponComponentHash["PumpShotgunVarmodLowrider"] = 2732039643] = "PumpShotgunVarmodLowrider";
+    WeaponComponentHash[WeaponComponentHash["RPGClip01"] = 1319465907] = "RPGClip01";
+    WeaponComponentHash[WeaponComponentHash["RailgunClip01"] = 59044840] = "RailgunClip01";
+    WeaponComponentHash[WeaponComponentHash["RevolverClip01"] = 3917905123] = "RevolverClip01";
+    WeaponComponentHash[WeaponComponentHash["RevolverVarmodBoss"] = 384708672] = "RevolverVarmodBoss";
+    WeaponComponentHash[WeaponComponentHash["RevolverVarmodGoon"] = 2492708877] = "RevolverVarmodGoon";
+    WeaponComponentHash[WeaponComponentHash["SMGClip01"] = 643254679] = "SMGClip01";
+    WeaponComponentHash[WeaponComponentHash["SMGClip02"] = 889808635] = "SMGClip02";
+    WeaponComponentHash[WeaponComponentHash["SMGClip03"] = 2043113590] = "SMGClip03";
+    WeaponComponentHash[WeaponComponentHash["SMGVarmodLuxe"] = 663170192] = "SMGVarmodLuxe";
+    WeaponComponentHash[WeaponComponentHash["SNSPistolClip01"] = 4169150169] = "SNSPistolClip01";
+    WeaponComponentHash[WeaponComponentHash["SNSPistolClip02"] = 2063610803] = "SNSPistolClip02";
+    WeaponComponentHash[WeaponComponentHash["SNSPistolVarmodLowrider"] = 2150886575] = "SNSPistolVarmodLowrider";
+    WeaponComponentHash[WeaponComponentHash["SawnoffShotgunClip01"] = 3352699429] = "SawnoffShotgunClip01";
+    WeaponComponentHash[WeaponComponentHash["SawnoffShotgunVarmodLuxe"] = 2242268665] = "SawnoffShotgunVarmodLuxe";
+    WeaponComponentHash[WeaponComponentHash["SniperRifleClip01"] = 2613461129] = "SniperRifleClip01";
+    WeaponComponentHash[WeaponComponentHash["SniperRifleVarmodLuxe"] = 1077065191] = "SniperRifleVarmodLuxe";
+    WeaponComponentHash[WeaponComponentHash["SpecialCarbineClip01"] = 3334989185] = "SpecialCarbineClip01";
+    WeaponComponentHash[WeaponComponentHash["SpecialCarbineClip02"] = 2089537806] = "SpecialCarbineClip02";
+    WeaponComponentHash[WeaponComponentHash["SpecialCarbineClip03"] = 1801039530] = "SpecialCarbineClip03";
+    WeaponComponentHash[WeaponComponentHash["SpecialCarbineVarmodLowrider"] = 1929467122] = "SpecialCarbineVarmodLowrider";
+    WeaponComponentHash[WeaponComponentHash["SwitchbladeVarmodBase"] = 2436343040] = "SwitchbladeVarmodBase";
+    WeaponComponentHash[WeaponComponentHash["SwitchbladeVarmodVar1"] = 1530822070] = "SwitchbladeVarmodVar1";
+    WeaponComponentHash[WeaponComponentHash["SwitchbladeVarmodVar2"] = 3885209186] = "SwitchbladeVarmodVar2";
+    WeaponComponentHash[WeaponComponentHash["VintagePistolClip01"] = 1168357051] = "VintagePistolClip01";
+    WeaponComponentHash[WeaponComponentHash["VintagePistolClip02"] = 867832552] = "VintagePistolClip02";
+    // mpgunrunning
+    WeaponComponentHash[WeaponComponentHash["AtSights"] = 1108334355] = "AtSights";
+    WeaponComponentHash[WeaponComponentHash["AtScopeSmallMk2"] = 1060929921] = "AtScopeSmallMk2";
+    WeaponComponentHash[WeaponComponentHash["AtScopeMacroMk2"] = 77277509] = "AtScopeMacroMk2";
+    WeaponComponentHash[WeaponComponentHash["AtScopeMediumMk2"] = 3328927042] = "AtScopeMediumMk2";
+    WeaponComponentHash[WeaponComponentHash["AtMuzzle1"] = 3113485012] = "AtMuzzle1";
+    WeaponComponentHash[WeaponComponentHash["AtMuzzle2"] = 3362234491] = "AtMuzzle2";
+    WeaponComponentHash[WeaponComponentHash["AtMuzzle3"] = 3725708239] = "AtMuzzle3";
+    WeaponComponentHash[WeaponComponentHash["AtMuzzle4"] = 3968886988] = "AtMuzzle4";
+    WeaponComponentHash[WeaponComponentHash["AtMuzzle5"] = 48731514] = "AtMuzzle5";
+    WeaponComponentHash[WeaponComponentHash["AtMuzzle6"] = 880736428] = "AtMuzzle6";
+    WeaponComponentHash[WeaponComponentHash["AtMuzzle7"] = 1303784126] = "AtMuzzle7";
+    WeaponComponentHash[WeaponComponentHash["AtArAfGrip2"] = 2640679034] = "AtArAfGrip2";
+    //
+    // PistolMk2
+    WeaponComponentHash[WeaponComponentHash["PistolMk2ClipNormal"] = 2499030370] = "PistolMk2ClipNormal";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2ClipExtended"] = 1591132456] = "PistolMk2ClipExtended";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2ClipFMJ"] = 1329061674] = "PistolMk2ClipFMJ";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2ClipHollowpoint"] = 2248057097] = "PistolMk2ClipHollowpoint";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2ClipIncendiary"] = 733837882] = "PistolMk2ClipIncendiary";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2ClipTracer"] = 634039983] = "PistolMk2ClipTracer";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2Scope"] = 2396306288] = "PistolMk2Scope";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2Flash"] = 1140676955] = "PistolMk2Flash";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2Compensator"] = 568543123] = "PistolMk2Compensator";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoDigital"] = 1550611612] = "PistolMk2CamoDigital";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoBrushstroke"] = 368550800] = "PistolMk2CamoBrushstroke";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoWoodland"] = 2525897947] = "PistolMk2CamoWoodland";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoSkull"] = 24902297] = "PistolMk2CamoSkull";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoSessanta"] = 4066925682] = "PistolMk2CamoSessanta";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoPerseus"] = 3710005734] = "PistolMk2CamoPerseus";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoLeopard"] = 3141791350] = "PistolMk2CamoLeopard";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoZebra"] = 1301287696] = "PistolMk2CamoZebra";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoGeometric"] = 1597093459] = "PistolMk2CamoGeometric";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoBoom"] = 1769871776] = "PistolMk2CamoBoom";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoPatriotic"] = 2467084625] = "PistolMk2CamoPatriotic";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoSlideDigital"] = 3036451504] = "PistolMk2CamoSlideDigital";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoSlideBrushstroke"] = 438243936] = "PistolMk2CamoSlideBrushstroke";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoSlideWoodland"] = 3839888240] = "PistolMk2CamoSlideWoodland";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoSlideSkull"] = 740920107] = "PistolMk2CamoSlideSkull";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoSlideSessanta"] = 3753350949] = "PistolMk2CamoSlideSessanta";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoSlidePerseus"] = 1809261196] = "PistolMk2CamoSlidePerseus";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoSlideLeopard"] = 2648428428] = "PistolMk2CamoSlideLeopard";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoSlideZebra"] = 3004802348] = "PistolMk2CamoSlideZebra";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoSlideGeometric"] = 3330502162] = "PistolMk2CamoSlideGeometric";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoSlideBoom"] = 1135718771] = "PistolMk2CamoSlideBoom";
+    WeaponComponentHash[WeaponComponentHash["PistolMk2CamoSlidePatriotic"] = 1253942266] = "PistolMk2CamoSlidePatriotic";
+    //
+    // AssaultRifleMk2
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2ClipNormal"] = 2249208895] = "AssaultRifleMk2ClipNormal";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2ClipExtended"] = 3509242479] = "AssaultRifleMk2ClipExtended";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2ClipArmorPiercing"] = 2816286296] = "AssaultRifleMk2ClipArmorPiercing";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2ClipFMJ"] = 1675665560] = "AssaultRifleMk2ClipFMJ";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2ClipIncendiary"] = 4218476627] = "AssaultRifleMk2ClipIncendiary";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2ClipTracer"] = 4012669121] = "AssaultRifleMk2ClipTracer";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2BarrelNormal"] = 1134861606] = "AssaultRifleMk2BarrelNormal";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2BarrelHeavy"] = 1447477866] = "AssaultRifleMk2BarrelHeavy";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2CamoDigital"] = 2434475183] = "AssaultRifleMk2CamoDigital";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2CamoBrushstroke"] = 937772107] = "AssaultRifleMk2CamoBrushstroke";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2CamoWoodland"] = 1401650071] = "AssaultRifleMk2CamoWoodland";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2CamoSkull"] = 628662130] = "AssaultRifleMk2CamoSkull";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2CamoSessanta"] = 3309920045] = "AssaultRifleMk2CamoSessanta";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2CamoPerseus"] = 3482022833] = "AssaultRifleMk2CamoPerseus";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2CamoLeopard"] = 2847614993] = "AssaultRifleMk2CamoLeopard";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2CamoZebra"] = 4234628436] = "AssaultRifleMk2CamoZebra";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2CamoGeometric"] = 2088750491] = "AssaultRifleMk2CamoGeometric";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2CamoBoom"] = 2781053842] = "AssaultRifleMk2CamoBoom";
+    WeaponComponentHash[WeaponComponentHash["AssaultRifleMk2CamoPatriotic"] = 3115408816] = "AssaultRifleMk2CamoPatriotic";
+    //
+    // CarbineRifleMk2
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2ClipNormal"] = 1283078430] = "CarbineRifleMk2ClipNormal";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2ClipExtended"] = 1574296533] = "CarbineRifleMk2ClipExtended";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2ClipArmorPiercing"] = 626875735] = "CarbineRifleMk2ClipArmorPiercing";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2ClipFMJ"] = 1141059345] = "CarbineRifleMk2ClipFMJ";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2ClipIncendiary"] = 1025884839] = "CarbineRifleMk2ClipIncendiary";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2ClipTracer"] = 391640422] = "CarbineRifleMk2ClipTracer";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2BarrelNormal"] = 2201368575] = "CarbineRifleMk2BarrelNormal";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2BarrelHeavy"] = 2335983627] = "CarbineRifleMk2BarrelHeavy";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2CamoDigital"] = 1272803094] = "CarbineRifleMk2CamoDigital";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2CamoBrushstroke"] = 1080719624] = "CarbineRifleMk2CamoBrushstroke";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2CamoWoodland"] = 792221348] = "CarbineRifleMk2CamoWoodland";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2CamoSkull"] = 3842785869] = "CarbineRifleMk2CamoSkull";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2CamoSessanta"] = 3548192559] = "CarbineRifleMk2CamoSessanta";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2CamoPerseus"] = 2250671235] = "CarbineRifleMk2CamoPerseus";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2CamoLeopard"] = 4095795318] = "CarbineRifleMk2CamoLeopard";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2CamoZebra"] = 2866892280] = "CarbineRifleMk2CamoZebra";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2CamoGeometric"] = 2559813981] = "CarbineRifleMk2CamoGeometric";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2CamoBoom"] = 1796459838] = "CarbineRifleMk2CamoBoom";
+    WeaponComponentHash[WeaponComponentHash["CarbineRifleMk2CamoPatriotic"] = 3663056191] = "CarbineRifleMk2CamoPatriotic";
+    //
+    // CombatMGMk2
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2ClipNormal"] = 1227564412] = "CombatMGMk2ClipNormal";
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2ClipExtended"] = 400507625] = "CombatMGMk2ClipExtended";
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2ClipArmorPiercing"] = 696788003] = "CombatMGMk2ClipArmorPiercing";
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2ClipFMJ"] = 1475288264] = "CombatMGMk2ClipFMJ";
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2ClipIncendiary"] = 3274096058] = "CombatMGMk2ClipIncendiary";
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2ClipTracer"] = 4133787461] = "CombatMGMk2ClipTracer";
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2BarrelNormal"] = 3276730932] = "CombatMGMk2BarrelNormal";
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2BarrelHeavy"] = 3051509595] = "CombatMGMk2BarrelHeavy";
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2CamoDigital"] = 1249283253] = "CombatMGMk2CamoDigital";
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2CamoBrushstroke"] = 3437259709] = "CombatMGMk2CamoBrushstroke";
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2CamoWoodland"] = 3197423398] = "CombatMGMk2CamoWoodland";
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2CamoSkull"] = 1980349969] = "CombatMGMk2CamoSkull";
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2CamoSessanta"] = 1219453777] = "CombatMGMk2CamoSessanta";
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2CamoPerseus"] = 2441508106] = "CombatMGMk2CamoPerseus";
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2CamoLeopard"] = 2220186280] = "CombatMGMk2CamoLeopard";
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2CamoZebra"] = 457967755] = "CombatMGMk2CamoZebra";
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2CamoGeometric"] = 235171324] = "CombatMGMk2CamoGeometric";
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2CamoBoom"] = 42685294] = "CombatMGMk2CamoBoom";
+    WeaponComponentHash[WeaponComponentHash["CombatMGMk2CamoPatriotic"] = 3607349581] = "CombatMGMk2CamoPatriotic";
+    //
+    // HeavySniperMk2
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2ClipNormal"] = 4196276776] = "HeavySniperMk2ClipNormal";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2ClipExtended"] = 752418717] = "HeavySniperMk2ClipExtended";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2ClipArmorPiercing"] = 4164277972] = "HeavySniperMk2ClipArmorPiercing";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2ClipExplosive"] = 2313935527] = "HeavySniperMk2ClipExplosive";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2ClipFMJ"] = 1005144310] = "HeavySniperMk2ClipFMJ";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2ClipIncendiary"] = 247526935] = "HeavySniperMk2ClipIncendiary";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2ScopeLarge"] = 2193687427] = "HeavySniperMk2ScopeLarge";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2ScopeNightvision"] = 3061846192] = "HeavySniperMk2ScopeNightvision";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2ScopeThermal"] = 776198721] = "HeavySniperMk2ScopeThermal";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2Suppressor"] = 2890063729] = "HeavySniperMk2Suppressor";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2Muzzle8"] = 1602080333] = "HeavySniperMk2Muzzle8";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2Muzzle9"] = 1764221345] = "HeavySniperMk2Muzzle9";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2BarrelNormal"] = 2425761975] = "HeavySniperMk2BarrelNormal";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2BarrelHeavy"] = 277524638] = "HeavySniperMk2BarrelHeavy";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2CamoDigital"] = 4164123906] = "HeavySniperMk2CamoDigital";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2CamoBrushstroke"] = 3317620069] = "HeavySniperMk2CamoBrushstroke";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2CamoWoodland"] = 3916506229] = "HeavySniperMk2CamoWoodland";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2CamoSkull"] = 329939175] = "HeavySniperMk2CamoSkull";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2CamoSessanta"] = 643374672] = "HeavySniperMk2CamoSessanta";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2CamoPerseus"] = 807875052] = "HeavySniperMk2CamoPerseus";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2CamoLeopard"] = 2893163128] = "HeavySniperMk2CamoLeopard";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2CamoZebra"] = 3198471901] = "HeavySniperMk2CamoZebra";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2CamoGeometric"] = 3447155842] = "HeavySniperMk2CamoGeometric";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2CamoBoom"] = 2881858759] = "HeavySniperMk2CamoBoom";
+    WeaponComponentHash[WeaponComponentHash["HeavySniperMk2CamoPatriotic"] = 1815270123] = "HeavySniperMk2CamoPatriotic";
+    //
+    // SMGMk2
+    WeaponComponentHash[WeaponComponentHash["SMGMk2ClipNormal"] = 1277460590] = "SMGMk2ClipNormal";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2ClipExtended"] = 3112393518] = "SMGMk2ClipExtended";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2ClipFMJ"] = 190476639] = "SMGMk2ClipFMJ";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2ClipHollowpoint"] = 974903034] = "SMGMk2ClipHollowpoint";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2ClipIncendiary"] = 3650233061] = "SMGMk2ClipIncendiary";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2ClipTracer"] = 2146055916] = "SMGMk2ClipTracer";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2Sights"] = 2681951826] = "SMGMk2Sights";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2ScopeMacro"] = 3842157419] = "SMGMk2ScopeMacro";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2ScopeSmall"] = 1038927834] = "SMGMk2ScopeSmall";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2BarrelNormal"] = 3641720545] = "SMGMk2BarrelNormal";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2BarrelHeavy"] = 2774849419] = "SMGMk2BarrelHeavy";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2CamoDigital"] = 3298267239] = "SMGMk2CamoDigital";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2CamoBrushstroke"] = 940943685] = "SMGMk2CamoBrushstroke";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2CamoWoodland"] = 1263226800] = "SMGMk2CamoWoodland";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2CamoSkull"] = 3966931456] = "SMGMk2CamoSkull";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2CamoSessanta"] = 1224100642] = "SMGMk2CamoSessanta";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2CamoPerseus"] = 899228776] = "SMGMk2CamoPerseus";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2CamoLeopard"] = 616006309] = "SMGMk2CamoLeopard";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2CamoZebra"] = 2733014785] = "SMGMk2CamoZebra";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2CamoGeometric"] = 572063080] = "SMGMk2CamoGeometric";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2CamoBoom"] = 1170588613] = "SMGMk2CamoBoom";
+    WeaponComponentHash[WeaponComponentHash["SMGMk2CamoPatriotic"] = 966612367] = "SMGMk2CamoPatriotic";
+    //
+})(WeaponComponentHash = exports.WeaponComponentHash || (exports.WeaponComponentHash = {}));
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentHashesByWeaponHash.js":
+/*!*****************************************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentHashesByWeaponHash.js ***!
+  \*****************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WeaponComponentHashesByWeaponHash = void 0;
+const hashes_1 = __webpack_require__(/*! ../hashes */ "../node_modules/@wdesgardin/fivem-js/lib/hashes/index.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const WeaponComponentHash_1 = __webpack_require__(/*! ./WeaponComponentHash */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentHash.js");
+/**
+ * Mapping of WeaponHash -> WeaponComponentHashes
+ * refer: https://wiki.rage.mp/index.php?title=Weapons_Components
+ *
+ */
+exports.WeaponComponentHashesByWeaponHash = new Map([
+    // Melees
+    [
+        hashes_1.WeaponHash.KnuckleDuster,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_BASE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_PIMP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_BALLAS,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_DOLLAR,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_DIAMOND,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_HATE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_LOVE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_PLAYER,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_KING,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_KNUCKLE_VARMOD_VAGOS,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.SwitchBlade,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SWITCHBLADE_VARMOD_BASE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SWITCHBLADE_VARMOD_VAR1,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SWITCHBLADE_VARMOD_VAR2,
+        ],
+    ],
+    // Pistols
+    [
+        hashes_1.WeaponHash.Pistol,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_SUPP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_VARMOD_LUXE,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.CombatPistol,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATPISTOL_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATPISTOL_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_SUPP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATPISTOL_VARMOD_LOWRIDER,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.APPistol,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_APPISTOL_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_APPISTOL_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_SUPP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_APPISTOL_VARMOD_LUXE,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.Pistol50,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL50_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL50_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL50_VARMOD_LUXE,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.Revolver,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_VARMOD_BOSS,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_VARMOD_GOON,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_CLIP_01,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.SNSPistol,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_VARMOD_LOWRIDER,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.HeavyPistol,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYPISTOL_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYPISTOL_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_SUPP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYPISTOL_VARMOD_LUXE,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.RevolverMk2,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_MK2_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_MK2_CLIP_TRACER,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_MK2_CLIP_INCENDIARY,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_MK2_CLIP_HOLLOWPOINT,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_MK2_CLIP_FMJ,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SIGHTS,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MACRO_MK2,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_COMP_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_MK2_CAMO,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_MK2_CAMO_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_MK2_CAMO_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_MK2_CAMO_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_MK2_CAMO_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_MK2_CAMO_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_MK2_CAMO_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_MK2_CAMO_08,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_MK2_CAMO_09,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_MK2_CAMO_10,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_REVOLVER_MK2_CAMO_IND_01,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.SNSPistolMk2,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CLIP_TRACER,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CLIP_INCENDIARY,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CLIP_HOLLOWPOINT,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CLIP_FMJ,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_FLSH_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_RAIL_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_SUPP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_COMP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_08,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_09,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_10,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_IND_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_02_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_03_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_04_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_05_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_06_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_07_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_08_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_09_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_10_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNSPISTOL_MK2_CAMO_IND_01_SLIDE,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.PistolMk2,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CLIP_TRACER,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CLIP_INCENDIARY,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CLIP_HOLLOWPOINT,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CLIP_FMJ,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_RAIL,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_FLSH_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_SUPP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_COMP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_08,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_09,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_10,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_IND_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_02_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_03_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_04_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_05_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_06_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_07_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_08_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_09_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_10_SLIDE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PISTOL_MK2_CAMO_IND_01_SLIDE,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.VintagePistol,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_VINTAGEPISTOL_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_VINTAGEPISTOL_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_SUPP,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.RayPistol,
+        [WeaponComponentHash_1.WeaponComponentHash.COMPONENT_RAYPISTOL_VARMOD_XMAS18],
+    ],
+    [
+        hashes_1.WeaponHash.CeramicPistol,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CERAMICPISTOL_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CERAMICPISTOL_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CERAMICPISTOL_SUPP,
+        ],
+    ],
+    // Submachine Guns
+    [
+        hashes_1.WeaponHash.MicroSMG,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MICROSMG_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MICROSMG_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MACRO,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MICROSMG_VARMOD_LUXE,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.SMG,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_CLIP_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MACRO_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_SUPP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_VARMOD_LUXE,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.AssaultSMG,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTSMG_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTSMG_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MACRO,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTSMG_VARMOD_LOWRIDER,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.MiniSMG,
+        [WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MINISMG_CLIP_01, WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MINISMG_CLIP_02],
+    ],
+    [
+        hashes_1.WeaponHash.SMGMk2,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_MK2_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_MK2_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_MK2_CLIP_TRACER,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_MK2_CLIP_INCENDIARY,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_MK2_CLIP_HOLLOWPOINT,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_MK2_CLIP_FMJ,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SIGHTS_SMG,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MACRO_02_SMG_MK2,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_SMALL_SMG_MK2,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_SUPP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SB_BARREL_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SB_BARREL_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_MK2_CAMO,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_MK2_CAMO_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_MK2_CAMO_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_MK2_CAMO_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_MK2_CAMO_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_MK2_CAMO_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_MK2_CAMO_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_MK2_CAMO_08,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_MK2_CAMO_09,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_MK2_CAMO_10,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SMG_MK2_CAMO_IND_01,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.MachinePistol,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MACHINEPISTOL_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MACHINEPISTOL_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MACHINEPISTOL_CLIP_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_PI_SUPP,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.CombatPDW,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATPDW_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATPDW_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATPDW_CLIP_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_AFGRIP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_SMALL,
+        ],
+    ],
+    // Shotguns
+    [
+        hashes_1.WeaponHash.PumpShotgun,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SR_SUPP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PUMPSHOTGUN_VARMOD_LOWRIDER,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.SawnOffShotgun,
+        [WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SAWNOFFSHOTGUN_VARMOD_LUXE],
+    ],
+    [
+        hashes_1.WeaponHash.AssaultShotgun,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTSHOTGUN_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTSHOTGUN_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_AFGRIP,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.BullpupShotgun,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_AFGRIP,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.PumpShotgunMk2,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PUMPSHOTGUN_MK2_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PUMPSHOTGUN_MK2_CLIP_INCENDIARY,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PUMPSHOTGUN_MK2_CLIP_ARMORPIERCING,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PUMPSHOTGUN_MK2_CLIP_HOLLOWPOINT,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PUMPSHOTGUN_MK2_CLIP_EXPLOSIVE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SIGHTS,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MACRO_MK2,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_SMALL_MK2,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SR_SUPP_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_08,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PUMPSHOTGUN_MK2_CAMO,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PUMPSHOTGUN_MK2_CAMO_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PUMPSHOTGUN_MK2_CAMO_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PUMPSHOTGUN_MK2_CAMO_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PUMPSHOTGUN_MK2_CAMO_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PUMPSHOTGUN_MK2_CAMO_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PUMPSHOTGUN_MK2_CAMO_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PUMPSHOTGUN_MK2_CAMO_08,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PUMPSHOTGUN_MK2_CAMO_09,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PUMPSHOTGUN_MK2_CAMO_10,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_PUMPSHOTGUN_MK2_CAMO_IND_01,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.HeavyShotgun,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSHOTGUN_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSHOTGUN_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSHOTGUN_CLIP_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_AFGRIP,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.CombatShotgun,
+        [WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH, WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP],
+    ],
+    // Rifles
+    [
+        hashes_1.WeaponHash.AssaultRifle,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_CLIP_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MACRO,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_AFGRIP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_VARMOD_LUXE,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.CarbineRifle,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_CLIP_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MEDIUM,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_AFGRIP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_VARMOD_LUXE,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.AdvancedRifle,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ADVANCEDRIFLE_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ADVANCEDRIFLE_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_SMALL,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ADVANCEDRIFLE_VARMOD_LUXE,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.SpecialCarbine,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_CLIP_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MEDIUM,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_AFGRIP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_VARMOD_LOWRIDER,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.BullpupRifle,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_SMALL,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_AFGRIP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_VARMOD_LOW,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.BullpupRifleMk2,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_MK2_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_MK2_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_MK2_CLIP_TRACER,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_MK2_CLIP_INCENDIARY,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_MK2_CLIP_ARMORPIERCING,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_MK2_CLIP_FMJ,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SIGHTS,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MACRO_02_MK2,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_SMALL_MK2,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_BP_BARREL_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_BP_BARREL_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_AFGRIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_MK2_CAMO,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_MK2_CAMO_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_MK2_CAMO_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_MK2_CAMO_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_MK2_CAMO_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_MK2_CAMO_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_MK2_CAMO_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_MK2_CAMO_08,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_MK2_CAMO_09,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_MK2_CAMO_10,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_BULLPUPRIFLE_MK2_CAMO_IND_01,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.SpecialCarbineMk2,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_MK2_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_MK2_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_MK2_CLIP_TRACER,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_MK2_CLIP_INCENDIARY,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_MK2_CLIP_ARMORPIERCING,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_MK2_CLIP_FMJ,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SIGHTS,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MACRO_MK2,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MEDIUM_MK2,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_AFGRIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SC_BARREL_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SC_BARREL_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_MK2_CAMO,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_MK2_CAMO_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_MK2_CAMO_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_MK2_CAMO_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_MK2_CAMO_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_MK2_CAMO_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_MK2_CAMO_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_MK2_CAMO_08,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_MK2_CAMO_09,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_MK2_CAMO_10,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SPECIALCARBINE_MK2_CAMO_IND_01,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.AssaultRifleMk2,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_MK2_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_MK2_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_MK2_CLIP_TRACER,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_MK2_CLIP_INCENDIARY,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_MK2_CLIP_ARMORPIERCING,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_MK2_CLIP_FMJ,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_AFGRIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SIGHTS,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MACRO_MK2,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MEDIUM_MK2,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_BARREL_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_BARREL_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_MK2_CAMO,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_MK2_CAMO_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_MK2_CAMO_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_MK2_CAMO_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_MK2_CAMO_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_MK2_CAMO_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_MK2_CAMO_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_MK2_CAMO_08,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_MK2_CAMO_09,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_MK2_CAMO_10,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_ASSAULTRIFLE_MK2_CAMO_IND_01,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.CarbineRifleMk2,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_MK2_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_MK2_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_MK2_CLIP_TRACER,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_MK2_CLIP_INCENDIARY,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_MK2_CLIP_ARMORPIERCING,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_MK2_CLIP_FMJ,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_AFGRIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SIGHTS,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MACRO_MK2,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MEDIUM_MK2,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_CR_BARREL_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_CR_BARREL_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_MK2_CAMO,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_MK2_CAMO_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_MK2_CAMO_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_MK2_CAMO_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_MK2_CAMO_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_MK2_CAMO_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_MK2_CAMO_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_MK2_CAMO_08,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_MK2_CAMO_09,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_MK2_CAMO_10,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_CARBINERIFLE_MK2_CAMO_IND_01,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.CompactRifle,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMPACTRIFLE_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMPACTRIFLE_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMPACTRIFLE_CLIP_03,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.MilitaryRifle,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MILITARYRIFLE_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MILITARYRIFLE_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MILITARYRIFLE_SIGHT_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_SMALL,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP,
+        ],
+    ],
+    // Machine Guns,
+    [
+        hashes_1.WeaponHash.MG,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MG_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MG_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_SMALL_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MG_VARMOD_LOWRIDER,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.CombatMG,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MEDIUM,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_AFGRIP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_VARMOD_LOWRIDER,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.CombatMGMk2,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_MK2_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_MK2_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_MK2_CLIP_TRACER,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_MK2_CLIP_INCENDIARY,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_MK2_CLIP_ARMORPIERCING,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_MK2_CLIP_FMJ,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_AFGRIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SIGHTS,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_SMALL_MK2,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MEDIUM_MK2,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MG_BARREL_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MG_BARREL_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_MK2_CAMO,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_MK2_CAMO_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_MK2_CAMO_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_MK2_CAMO_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_MK2_CAMO_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_MK2_CAMO_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_MK2_CAMO_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_MK2_CAMO_08,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_MK2_CAMO_09,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_MK2_CAMO_10,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_COMBATMG_MK2_CAMO_IND_01,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.Gusenberg,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_GUSENBERG_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_GUSENBERG_CLIP_02,
+        ],
+    ],
+    // Sniper Rifles
+    [
+        hashes_1.WeaponHash.SniperRifle,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNIPERRIFLE_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_LARGE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MAX,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_SNIPERRIFLE_VARMOD_LUXE,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.HeavySniper,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSNIPER_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_LARGE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MAX,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.MarksmanRifleMk2,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_MK2_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_MK2_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_MK2_CLIP_TRACER,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_MK2_CLIP_INCENDIARY,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_MK2_CLIP_ARMORPIERCING,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_MK2_CLIP_FMJ,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SIGHTS,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MEDIUM_MK2,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_LARGE_FIXED_ZOOM_MK2,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MRFL_BARREL_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MRFL_BARREL_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_AFGRIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_MK2_CAMO,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_MK2_CAMO_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_MK2_CAMO_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_MK2_CAMO_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_MK2_CAMO_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_MK2_CAMO_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_MK2_CAMO_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_MK2_CAMO_08,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_MK2_CAMO_09,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_MK2_CAMO_10,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_MK2_CAMO_IND_01,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.HeavySniperMk2,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSNIPER_MK2_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSNIPER_MK2_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSNIPER_MK2_CLIP_INCENDIARY,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSNIPER_MK2_CLIP_ARMORPIERCING,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSNIPER_MK2_CLIP_FMJ,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSNIPER_MK2_CLIP_EXPLOSIVE,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_LARGE_MK2,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_MAX,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_NV,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_THERMAL,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SR_SUPP_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_08,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_MUZZLE_09,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SR_BARREL_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SR_BARREL_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSNIPER_MK2_CAMO,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSNIPER_MK2_CAMO_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSNIPER_MK2_CAMO_03,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSNIPER_MK2_CAMO_04,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSNIPER_MK2_CAMO_05,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSNIPER_MK2_CAMO_06,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSNIPER_MK2_CAMO_07,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSNIPER_MK2_CAMO_08,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSNIPER_MK2_CAMO_09,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSNIPER_MK2_CAMO_10,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_HEAVYSNIPER_MK2_CAMO_IND_01,
+        ],
+    ],
+    [
+        hashes_1.WeaponHash.MarksmanRifle,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_CLIP_02,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_LARGE_FIXED_ZOOM,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_SUPP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_AFGRIP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_MARKSMANRIFLE_VARMOD_LUXE,
+        ],
+    ],
+    // Heavy Weapons
+    [
+        hashes_1.WeaponHash.GrenadeLauncher,
+        [
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_GRENADELAUNCHER_CLIP_01,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_FLSH,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_AR_AFGRIP,
+            WeaponComponentHash_1.WeaponComponentHash.COMPONENT_AT_SCOPE_SMALL,
+        ],
+    ],
+]);
+/**
+ * Initialize dlc data, avoid calling expansive native repeatedly
+ *
+ */
+function initializeOnce() {
+    let isInitialized = false;
+    return function () {
+        if (isInitialized) {
+            return;
+        }
+        // magic number based on struct DlcWeaponData
+        const intLength = 4;
+        const strLength = 64;
+        const weaponCount = GetNumDlcWeapons();
+        for (let i = 0; i < weaponCount; i++) {
+            const weaponBuffer = new Uint8Array(14 * intLength + 4 * strLength);
+            // https://docs.fivem.net/natives/?_0x79923CD21BECE14E
+            Citizen.invokeNative('0x79923CD21BECE14E', i, weaponBuffer, Citizen.returnResultAnyway());
+            const weaponHash = (0, utils_1.getUInt32FromUint8Array)(weaponBuffer, 2 * intLength, 3 * intLength);
+            const componentCount = GetNumDlcWeaponComponents(i);
+            const componentHashes = [];
+            for (let j = 0; j < componentCount; j++) {
+                const componentBuffer = new Uint8Array(14 * intLength + 4 * strLength);
+                // https://docs.fivem.net/natives/?_0x6CF598A2957C2BF8
+                Citizen.invokeNative('0x6CF598A2957C2BF8', i, j, componentBuffer, Citizen.returnResultAnyway());
+                const componentHash = (0, utils_1.getUInt32FromUint8Array)(componentBuffer, 6 * intLength, 7 * intLength);
+                componentHashes.push(componentHash);
+            }
+            exports.WeaponComponentHashesByWeaponHash.set(weaponHash, componentHashes);
+        }
+        isInitialized = true;
+    };
+}
+if ((0, utils_1.IsClient)())
+    initializeOnce()();
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentHudStats.js":
+/*!*******************************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentHudStats.js ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WeaponComponentHudStats = void 0;
+const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const WeaponComponentHash_1 = __webpack_require__(/*! ./WeaponComponentHash */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentHash.js");
+/**
+ * Mapping of WeaponComponentHash -> WeaponComponentHudStats
+ *
+ */
+exports.WeaponComponentHudStats = new Map();
+function initializeOnce() {
+    let isInitialized = false;
+    return function () {
+        if (isInitialized) {
+            return;
+        }
+        // magic number based on struct WeaponComponentHudStat
+        const intLength = 4;
+        for (const hash of (0, utils_1.enumValues)(WeaponComponentHash_1.WeaponComponentHash)) {
+            const buffer = new Uint8Array(0x28);
+            // https://docs.fivem.net/natives/?_0xB3CAF387AE12E9F8
+            Citizen.invokeNative('0xB3CAF387AE12E9F8', hash, buffer, Citizen.returnResultAnyway());
+            // noinspection PointlessArithmeticExpressionJS
+            const weaponComponentHudStat = {
+                hudDamage: (0, utils_1.getUInt32FromUint8Array)(buffer, 0 * intLength, 1 * intLength),
+                hudSpeed: (0, utils_1.getUInt32FromUint8Array)(buffer, 2 * intLength, 3 * intLength),
+                hudCapacity: (0, utils_1.getUInt32FromUint8Array)(buffer, 4 * intLength, 5 * intLength),
+                hudAccuracy: (0, utils_1.getUInt32FromUint8Array)(buffer, 6 * intLength, 7 * intLength),
+                hudRange: (0, utils_1.getUInt32FromUint8Array)(buffer, 8 * intLength, 9 * intLength),
+            };
+            exports.WeaponComponentHudStats.set(hash, weaponComponentHudStat);
+        }
+        isInitialized = true;
+    };
+}
+if ((0, utils_1.IsClient)())
+    initializeOnce()();
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/index.js":
+/*!*************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/index.js ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.InvalidWeaponComponent = exports.WeaponComponentHash = exports.ComponentAttachmentPoint = exports.WeaponComponentHudStats = exports.DlcWeaponComponentData = void 0;
+var DlcWeaponComponentData_1 = __webpack_require__(/*! ./DlcWeaponComponentData */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/DlcWeaponComponentData.js");
+Object.defineProperty(exports, "DlcWeaponComponentData", ({ enumerable: true, get: function () { return DlcWeaponComponentData_1.DlcWeaponComponentData; } }));
+var WeaponComponentHudStats_1 = __webpack_require__(/*! ./WeaponComponentHudStats */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentHudStats.js");
+Object.defineProperty(exports, "WeaponComponentHudStats", ({ enumerable: true, get: function () { return WeaponComponentHudStats_1.WeaponComponentHudStats; } }));
+var ComponentAttachmentPoint_1 = __webpack_require__(/*! ./ComponentAttachmentPoint */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/ComponentAttachmentPoint.js");
+Object.defineProperty(exports, "ComponentAttachmentPoint", ({ enumerable: true, get: function () { return ComponentAttachmentPoint_1.ComponentAttachmentPoint; } }));
+var WeaponComponentHash_1 = __webpack_require__(/*! ./WeaponComponentHash */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentHash.js");
+Object.defineProperty(exports, "WeaponComponentHash", ({ enumerable: true, get: function () { return WeaponComponentHash_1.WeaponComponentHash; } }));
+var InvalidWeaponComponent_1 = __webpack_require__(/*! ./InvalidWeaponComponent */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/InvalidWeaponComponent.js");
+Object.defineProperty(exports, "InvalidWeaponComponent", ({ enumerable: true, get: function () { return InvalidWeaponComponent_1.InvalidWeaponComponent; } }));
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weapon/DlcWeaponData.js":
+/*!************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weapon/DlcWeaponData.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DlcWeaponData = void 0;
+const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+/**
+ * DlcWeaponData - Mapping of WeaponHash -> DlcWeaponData
+ */
+exports.DlcWeaponData = new Map();
+/**
+ * Initialize DlcWeaponData, avoid calling expansive native repeatedly
+ *
+ */
+function initializeOnce() {
+    let isInitialized = false;
+    return function () {
+        if (isInitialized) {
+            return;
+        }
+        // magic number based on struct DlcWeaponData
+        const intLength = 4;
+        const strLength = 64;
+        const weaponCount = GetNumDlcWeapons();
+        for (let i = 0; i < weaponCount; i++) {
+            const buffer = new Uint8Array(14 * intLength + 4 * strLength);
+            // https://docs.fivem.net/natives/?_0x79923CD21BECE14E
+            Citizen.invokeNative('0x79923CD21BECE14E', i, buffer, Citizen.returnResultAnyway());
+            // noinspection PointlessArithmeticExpressionJS
+            const dlcWeaponData = {
+                validCheck: (0, utils_1.getUInt32FromUint8Array)(buffer, 0 * intLength, 1 * intLength),
+                weaponHash: (0, utils_1.getUInt32FromUint8Array)(buffer, 2 * intLength, 3 * intLength),
+                unk: (0, utils_1.getUInt32FromUint8Array)(buffer, 4 * intLength, 5 * intLength),
+                weaponCost: (0, utils_1.getUInt32FromUint8Array)(buffer, 6 * intLength, 7 * intLength),
+                ammoCost: (0, utils_1.getUInt32FromUint8Array)(buffer, 8 * intLength, 9 * intLength),
+                ammoType: (0, utils_1.getUInt32FromUint8Array)(buffer, 10 * intLength, 11 * intLength),
+                defaultClipSize: (0, utils_1.getUInt32FromUint8Array)(buffer, 12 * intLength, 13 * intLength),
+                name: (0, utils_1.getStringFromUInt8Array)(buffer, 14 * intLength, 14 * intLength + strLength),
+                desc: (0, utils_1.getStringFromUInt8Array)(buffer, 14 * intLength + strLength, 14 * intLength + 2 * strLength),
+                simpleDesc: (0, utils_1.getStringFromUInt8Array)(buffer, 14 * intLength + 2 * strLength, 14 * intLength + 3 * strLength),
+                upperCaseName: (0, utils_1.getStringFromUInt8Array)(buffer, 14 * intLength + 3 * strLength, 14 * intLength + 4 * strLength),
+            };
+            exports.DlcWeaponData.set(dlcWeaponData.weaponHash, dlcWeaponData);
+        }
+        isInitialized = true;
+    };
+}
+if ((0, utils_1.IsClient)())
+    initializeOnce()();
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weapon/Mk2WeaponHash.js":
+/*!************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weapon/Mk2WeaponHash.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Mk2WeaponHash = void 0;
+/**
+ * Mk2 weapon hash
+ *
+ */
+var Mk2WeaponHash;
+(function (Mk2WeaponHash) {
+    // handguns
+    Mk2WeaponHash[Mk2WeaponHash["PistolMk2"] = 3219281620] = "PistolMk2";
+    Mk2WeaponHash[Mk2WeaponHash["SNSPistolMk2"] = 2285322324] = "SNSPistolMk2";
+    Mk2WeaponHash[Mk2WeaponHash["RevolverMk2"] = 3415619887] = "RevolverMk2";
+    // smg
+    Mk2WeaponHash[Mk2WeaponHash["SMGMk2"] = 2024373456] = "SMGMk2";
+    // shotgun
+    Mk2WeaponHash[Mk2WeaponHash["PumpShotgunMk2"] = 1432025498] = "PumpShotgunMk2";
+    // assault_rifles
+    Mk2WeaponHash[Mk2WeaponHash["AssaultRifleMk2"] = 961495388] = "AssaultRifleMk2";
+    Mk2WeaponHash[Mk2WeaponHash["CarbineRifleMk2"] = 4208062921] = "CarbineRifleMk2";
+    Mk2WeaponHash[Mk2WeaponHash["SpecialCarbineMk2"] = 2526821735] = "SpecialCarbineMk2";
+    Mk2WeaponHash[Mk2WeaponHash["BullpupRifleMk2"] = 2228681469] = "BullpupRifleMk2";
+    // machine_guns
+    Mk2WeaponHash[Mk2WeaponHash["CombatMGMk2"] = 3686625920] = "CombatMGMk2";
+    // sniper_rifles
+    Mk2WeaponHash[Mk2WeaponHash["HeavySniperMk2"] = 177293209] = "HeavySniperMk2";
+    Mk2WeaponHash[Mk2WeaponHash["MarksmanRifleMk2"] = 1785463520] = "MarksmanRifleMk2";
+})(Mk2WeaponHash = exports.Mk2WeaponHash || (exports.Mk2WeaponHash = {}));
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weapon/Weapon.js":
+/*!*****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weapon/Weapon.js ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Weapon = void 0;
+const WeaponComponentCollection_1 = __webpack_require__(/*! ../weaponComponent/WeaponComponentCollection */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentCollection.js");
+const hashes_1 = __webpack_require__(/*! ../hashes */ "../node_modules/@wdesgardin/fivem-js/lib/hashes/index.js");
+const WeaponDisplayNameByHash_1 = __webpack_require__(/*! ./WeaponDisplayNameByHash */ "../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponDisplayNameByHash.js");
+const Game_1 = __webpack_require__(/*! ../Game */ "../node_modules/@wdesgardin/fivem-js/lib/Game.js");
+const Model_1 = __webpack_require__(/*! ../Model */ "../node_modules/@wdesgardin/fivem-js/lib/Model.js");
+const WeaponHudStats_1 = __webpack_require__(/*! ./WeaponHudStats */ "../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponHudStats.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+const Mk2WeaponHash_1 = __webpack_require__(/*! ./Mk2WeaponHash */ "../node_modules/@wdesgardin/fivem-js/lib/weapon/Mk2WeaponHash.js");
+const WeaponComponentHashesByWeaponHash_1 = __webpack_require__(/*! ../weaponComponent/WeaponComponentHashesByWeaponHash */ "../node_modules/@wdesgardin/fivem-js/lib/weaponComponent/WeaponComponentHashesByWeaponHash.js");
+/**
+ * ped weapon
+ *
+ */
+class Weapon {
+    constructor(owner, hash) {
+        this.owner = owner;
+        this.hash = hash;
+        this.components = new WeaponComponentCollection_1.WeaponComponentCollection(this.owner, this);
+    }
+    /**
+     * weapon components
+     *
+     * @constructor
+     */
+    get Components() {
+        return this.components;
+    }
+    /**
+     * weapon hash
+     *
+     * @constructor
+     */
+    get Hash() {
+        return this.hash;
+    }
+    /**
+     * check ped is unarmed or not
+     *
+     * @constructor
+     */
+    get IsUnarmed() {
+        return this.hash === hashes_1.WeaponHash.Unarmed;
+    }
+    /**
+     * Check ped owns weapon
+     *
+     * @constructor
+     */
+    get IsPresent() {
+        if (this.IsUnarmed) {
+            return true;
+        }
+        return !!HasPedGotWeapon(this.owner.Handle, this.hash, false);
+    }
+    /**
+     * get weapon display name / label
+     *
+     * @constructor
+     */
+    get DisplayName() {
+        var _a;
+        return (_a = Weapon.getDisplayNameFromHash(this.hash)) !== null && _a !== void 0 ? _a : 'WCT_INVALID';
+    }
+    /**
+     * get weapon localized name
+     *
+     * @constructor
+     */
+    get LocalizedName() {
+        return Game_1.Game.getGXTEntry(this.DisplayName);
+    }
+    /**
+     * get weapon model
+     *
+     * @constructor
+     */
+    get Model() {
+        return new Model_1.Model(GetWeapontypeModel(this.hash));
+    }
+    /**
+     * get weapon tint
+     *
+     * @constructor
+     */
+    get Tint() {
+        return GetPedWeaponTintIndex(this.owner.Handle, this.hash);
+    }
+    /**
+     * set weapon tint
+     *
+     * @param tint
+     * @constructor
+     */
+    set Tint(tint) {
+        SetPedWeaponTintIndex(this.owner.Handle, this.hash, tint);
+    }
+    /**
+     * get weapon group
+     *
+     * @constructor
+     */
+    get Group() {
+        return GetWeapontypeGroup(this.hash);
+    }
+    /**
+     * get weapon ammo type
+     *
+     * @constructor
+     */
+    get AmmoType() {
+        return GetPedAmmoTypeFromWeapon(this.owner.Handle, this.hash);
+    }
+    /**
+     * get weapon ammo count
+     *
+     * @constructor
+     */
+    get Ammo() {
+        if (this.IsUnarmed) {
+            return 1;
+        }
+        if (!this.IsPresent) {
+            return GetPedAmmoByType(this.owner.Handle, this.AmmoType);
+        }
+        return GetAmmoInPedWeapon(this.owner.Handle, this.hash);
+    }
+    /**
+     * set weapon ammo count
+     *
+     * @param count
+     * @constructor
+     */
+    set Ammo(count) {
+        if (this.IsUnarmed) {
+            return;
+        }
+        if (this.IsPresent) {
+            SetPedAmmo(this.owner.Handle, this.hash, count);
+        }
+        else {
+            GiveWeaponToPed(this.owner.Handle, this.hash, count, false, true);
+        }
+    }
+    /**
+     * get weapon max ammo
+     *
+     * @constructor
+     */
+    get MaxAmmo() {
+        if (this.IsUnarmed) {
+            return 1;
+        }
+        // GetMaxAmmo
+        // https://docs.fivem.net/natives/?_0xDC16122C7A20C933
+        // noinspection UnnecessaryLocalVariableJS
+        const amount = Citizen.invokeNative('0xDC16122C7A20C933', this.owner.Handle, this.hash, Citizen.pointerValueInt(), Citizen.resultAsInteger());
+        return amount;
+    }
+    /**
+     * get weapon max ammo in clip
+     *
+     * @constructor
+     */
+    get MaxAmmoInClip() {
+        if (this.IsUnarmed) {
+            return 1;
+        }
+        if (!this.IsPresent) {
+            return 0;
+        }
+        return GetMaxAmmoInClip(this.owner.Handle, this.hash, true);
+    }
+    /**
+     * get weapon default clip size
+     *
+     * @constructor
+     */
+    get DefaultClipSize() {
+        return GetWeaponClipSize(this.hash);
+    }
+    /**
+     * toggle weapon infinite ammo
+     *
+     * @param toggle
+     * @constructor
+     */
+    set InfiniteAmmo(toggle) {
+        if (this.IsUnarmed) {
+            return;
+        }
+        SetPedInfiniteAmmo(this.owner.Handle, toggle, this.hash);
+    }
+    /**
+     * toggle ped infinite ammo clip on all weapons
+     *
+     * @param toggle
+     * @constructor
+     */
+    set InfiniteAmmoClip(toggle) {
+        SetPedInfiniteAmmoClip(this.owner.Handle, toggle);
+    }
+    /**
+     * check weapon can use on parachute
+     *
+     * @constructor
+     */
+    get CanUseOnParachute() {
+        return !!CanUseWeaponOnParachute(this.hash);
+    }
+    /**
+     * Check weapon is Mk2 or not
+     *
+     * @constructor
+     */
+    get IsMk2() {
+        return Array.from((0, utils_1.enumValues)(Mk2WeaponHash_1.Mk2WeaponHash)).some(x => x === this.hash);
+    }
+    /**
+     * set weapon livery, only work for Mk2 weapon
+     *
+     * @param liveryId
+     * @param colorId
+     */
+    setLivery(liveryId, colorId) {
+        if (!this.IsMk2) {
+            console.log(`[ERROR]${this.setLivery.name} failed. Reason: non-Mk2 weapon`);
+            return;
+        }
+        const component = this.Components.getMk2CamoComponent(liveryId);
+        if (component.IsInvalid) {
+            console.log(`[ERROR]${this.setLivery.name} failed. Reason: invalid liveryId/Component`);
+            return;
+        }
+        component.Active = true;
+        SetPedWeaponLiveryColor(this.owner.Handle, this.hash, component.ComponentHash, colorId);
+    }
+    /**
+     * get weapon hud stats
+     *
+     * @constructor
+     */
+    get HudStats() {
+        return WeaponHudStats_1.WeaponHudStats.get(this.hash);
+    }
+    /**
+     * get weapon display name / label by hash
+     *
+     * @param hash
+     */
+    static getDisplayNameFromHash(hash) {
+        var _a;
+        if (!hash) {
+            return 'WT_INVALID';
+        }
+        return (_a = WeaponDisplayNameByHash_1.WeaponDisplayNameByHash.get(hash)) !== null && _a !== void 0 ? _a : 'WCT_INVALID';
+    }
+    /**
+     * get component hashes belongs to weapon
+     *
+     * @param hash
+     */
+    static getWeaponComponentHashes(hash) {
+        const hashes = WeaponComponentHashesByWeaponHash_1.WeaponComponentHashesByWeaponHash.get(hash);
+        if (!hashes) {
+            return [];
+        }
+        return [...hashes];
+    }
+}
+exports.Weapon = Weapon;
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponAsset.js":
+/*!**********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponAsset.js ***!
+  \**********************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WeaponAsset = void 0;
+const Weapon_1 = __webpack_require__(/*! ./Weapon */ "../node_modules/@wdesgardin/fivem-js/lib/weapon/Weapon.js");
+const Game_1 = __webpack_require__(/*! ../Game */ "../node_modules/@wdesgardin/fivem-js/lib/Game.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+/**
+ * weapon asset
+ *
+ */
+class WeaponAsset {
+    constructor(hash) {
+        this.hash = hash;
+    }
+    /**
+     * get weapon hash
+     *
+     * @constructor
+     */
+    get Hash() {
+        return this.hash;
+    }
+    /**
+     * check weapon is valid
+     *
+     * @constructor
+     */
+    get IsValid() {
+        return !!IsWeaponValid(this.hash);
+    }
+    /**
+     * check weapon assets is loaded
+     *
+     * @constructor
+     */
+    get IsLoaded() {
+        return !!HasWeaponAssetLoaded(this.hash);
+    }
+    /**
+     * request weapon asset
+     *
+     */
+    request() {
+        RequestWeaponAsset(this.hash, 31, 0);
+    }
+    /**
+     * request weapon asset async
+     *
+     * @param timeout
+     */
+    requestAsync(timeout) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.request();
+            const start = GetGameTimer();
+            while (!this.IsLoaded) {
+                yield (0, utils_1.Wait)(100);
+                const now = GetGameTimer();
+                if (now - start >= timeout) {
+                    return false;
+                }
+            }
+            return true;
+        });
+    }
+    /**
+     * unload weapon asset
+     *
+     */
+    dismiss() {
+        RemoveWeaponAsset(this.hash);
+    }
+    /**
+     * get weapon display name / label
+     *
+     * @constructor
+     */
+    get DisplayName() {
+        return Weapon_1.Weapon.getDisplayNameFromHash(this.hash);
+    }
+    /**
+     * get weapon localized name
+     *
+     * @constructor
+     */
+    get LocalizedName() {
+        return Game_1.Game.getGXTEntry(this.DisplayName);
+    }
+}
+exports.WeaponAsset = WeaponAsset;
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponCollection.js":
+/*!***************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponCollection.js ***!
+  \***************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WeaponCollection = void 0;
+const Weapon_1 = __webpack_require__(/*! ./Weapon */ "../node_modules/@wdesgardin/fivem-js/lib/weapon/Weapon.js");
+const models_1 = __webpack_require__(/*! ../models */ "../node_modules/@wdesgardin/fivem-js/lib/models/index.js");
+/**
+ * ped weapons
+ *
+ */
+class WeaponCollection {
+    constructor(owner) {
+        this.weapons = new Map();
+        this.owner = owner;
+    }
+    [Symbol.iterator]() {
+        let pointer = 0;
+        const weapons = Array.from(this.weapons.values());
+        return {
+            next() {
+                if (pointer < weapons.length) {
+                    return { done: false, value: weapons[pointer++] };
+                }
+                else {
+                    return { done: true, value: null };
+                }
+            },
+        };
+    }
+    /**
+     * get weapon by hash
+     *
+     * @param hash
+     */
+    get(hash) {
+        let weapon = this.weapons.get(hash);
+        if (!weapon) {
+            if (!this.hasWeapon(hash)) {
+                return null;
+            }
+            weapon = this.createAndAddWeapon(hash);
+        }
+        return weapon;
+    }
+    /**
+     * get ped current weapon
+     *
+     * @constructor
+     */
+    get Current() {
+        const [, hash] = GetCurrentPedWeapon(this.owner.Handle, true);
+        if (this.weapons.has(hash)) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            return this.weapons.get(hash);
+        }
+        else {
+            return this.createAndAddWeapon(hash);
+        }
+    }
+    /**
+     * get ped current weapon object
+     *
+     * @constructor
+     */
+    get CurrentWeaponObject() {
+        if (this.Current.IsUnarmed) {
+            return null;
+        }
+        return new models_1.Prop(GetCurrentPedWeaponEntityIndex(this.owner.Handle));
+    }
+    /**
+     * get ped best weapon
+     *
+     * @constructor
+     */
+    get BestWeapon() {
+        const hash = GetBestPedWeapon(this.owner.Handle, false);
+        if (this.weapons.has(hash)) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            return this.weapons.get(hash);
+        }
+        else {
+            return this.createAndAddWeapon(hash);
+        }
+    }
+    /**
+     * check ped has weapon
+     *
+     * @param hash
+     */
+    hasWeapon(hash) {
+        return !!HasPedGotWeapon(this.owner.Handle, hash, false);
+    }
+    /**
+     * check weapon is valid
+     *
+     * @param hash
+     */
+    isWeaponValid(hash) {
+        return !!IsWeaponValid(hash);
+    }
+    /**
+     * give weapon to ped
+     *
+     * @param hash
+     * @param ammoCount
+     * @param equipNow
+     * @param isAmmoLoaded
+     */
+    give(hash, ammoCount, equipNow, isAmmoLoaded) {
+        let weapon = this.weapons.get(hash);
+        if (!weapon) {
+            weapon = this.createAndAddWeapon(hash);
+        }
+        if (weapon.IsPresent) {
+            this.select(weapon);
+        }
+        else {
+            GiveWeaponToPed(this.owner.Handle, weapon.Hash, ammoCount, equipNow, isAmmoLoaded);
+        }
+        return weapon;
+    }
+    /**
+     * set ped current weapon on hand
+     *
+     * @param weapon
+     */
+    select(weapon) {
+        if (weapon instanceof Weapon_1.Weapon) {
+            if (!weapon.IsPresent) {
+                return false;
+            }
+            SetCurrentPedWeapon(this.owner.Handle, weapon.Hash, true);
+            return true;
+        }
+        else {
+            if (!this.hasWeapon(weapon)) {
+                return false;
+            }
+            SetCurrentPedWeapon(this.owner.Handle, weapon, true);
+            return true;
+        }
+    }
+    /**
+     * remove weapon from ped
+     *
+     * @param weapon
+     */
+    remove(weapon) {
+        if (weapon instanceof Weapon_1.Weapon) {
+            if (this.weapons.has(weapon.Hash)) {
+                this.weapons.delete(weapon.Hash);
+            }
+            this.remove(weapon.Hash);
+        }
+        else {
+            RemoveWeaponFromPed(this.owner.Handle, weapon);
+        }
+    }
+    /**
+     * remove all weapons from ped
+     *
+     */
+    removeAll() {
+        RemoveAllPedWeapons(this.owner.Handle, true);
+        this.weapons.clear();
+    }
+    /**
+     * Drop ped current weapon?
+     * todo: this native seems does not work as expected, need to investigate
+     * refer1: https://docs.fivem.net/natives/?_0x6B7513D9966FBEC0
+     * refer2: https://forum.cfx.re/t/release-weapondrop/49856/8
+     *
+     */
+    drop() {
+        SetPedDropsWeapon(this.owner.Handle);
+    }
+    /**
+     * create weapon object and add to collection
+     *
+     * @param hash
+     * @private
+     */
+    createAndAddWeapon(hash) {
+        const uintHash = hash >>> 0;
+        const weapon = new Weapon_1.Weapon(this.owner, uintHash);
+        this.weapons.set(uintHash, weapon);
+        return weapon;
+    }
+}
+exports.WeaponCollection = WeaponCollection;
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponDisplayNameByHash.js":
+/*!**********************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponDisplayNameByHash.js ***!
+  \**********************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WeaponDisplayNameByHash = void 0;
+const DlcWeaponData_1 = __webpack_require__(/*! ./DlcWeaponData */ "../node_modules/@wdesgardin/fivem-js/lib/weapon/DlcWeaponData.js");
+const hashes_1 = __webpack_require__(/*! ../hashes */ "../node_modules/@wdesgardin/fivem-js/lib/hashes/index.js");
+/***
+ * Mapping of WeaponHash -> DisplayName(Label)
+ *
+ */
+exports.WeaponDisplayNameByHash = new Map([
+    [hashes_1.WeaponHash.Pistol, 'WT_PIST'],
+    [hashes_1.WeaponHash.CombatPistol, 'WT_PIST_CBT'],
+    [hashes_1.WeaponHash.APPistol, 'WT_PIST_AP'],
+    [hashes_1.WeaponHash.SMG, 'WT_SMG'],
+    [hashes_1.WeaponHash.MicroSMG, 'WT_SMG_MCR'],
+    [hashes_1.WeaponHash.AssaultRifle, 'WT_RIFLE_ASL'],
+    [hashes_1.WeaponHash.CarbineRifle, 'WT_RIFLE_CBN'],
+    [hashes_1.WeaponHash.AdvancedRifle, 'WT_RIFLE_ADV'],
+    [hashes_1.WeaponHash.MG, 'WT_MG'],
+    [hashes_1.WeaponHash.CombatMG, 'WT_MG_CBT'],
+    [hashes_1.WeaponHash.PumpShotgun, 'WT_SG_PMP'],
+    [hashes_1.WeaponHash.SawnOffShotgun, 'WT_SG_SOF'],
+    [hashes_1.WeaponHash.AssaultShotgun, 'WT_SG_ASL'],
+    [hashes_1.WeaponHash.HeavySniper, 'WT_SNIP_HVY'],
+    [hashes_1.WeaponHash.SniperRifle, 'WT_SNIP_RIF'],
+    [hashes_1.WeaponHash.GrenadeLauncher, 'WT_GL'],
+    [hashes_1.WeaponHash.RPG, 'WT_RPG'],
+    [hashes_1.WeaponHash.Minigun, 'WT_MINIGUN'],
+    [hashes_1.WeaponHash.AssaultSMG, 'WT_SMG_ASL'],
+    [hashes_1.WeaponHash.BullpupShotgun, 'WT_SG_BLP'],
+    [hashes_1.WeaponHash.Pistol50, 'WT_PIST_50'],
+    [hashes_1.WeaponHash.Bottle, 'WT_BOTTLE'],
+    [hashes_1.WeaponHash.Gusenberg, 'WT_GUSENBERG'],
+    [hashes_1.WeaponHash.SNSPistol, 'WT_SNSPISTOL'],
+    [hashes_1.WeaponHash.VintagePistol, 'TT_VPISTOL'],
+    [hashes_1.WeaponHash.Dagger, 'WT_DAGGER'],
+    [hashes_1.WeaponHash.FlareGun, 'WT_FLAREGUN'],
+    [hashes_1.WeaponHash.Musket, 'WT_MUSKET'],
+    [hashes_1.WeaponHash.Firework, 'WT_FWRKLNCHR'],
+    [hashes_1.WeaponHash.MarksmanRifle, 'WT_HMKRIFLE'],
+    [hashes_1.WeaponHash.HeavyShotgun, 'WT_HVYSHOT'],
+    [hashes_1.WeaponHash.ProximityMine, 'WT_PRXMINE'],
+    [hashes_1.WeaponHash.HomingLauncher, 'WT_HOMLNCH'],
+    [hashes_1.WeaponHash.CombatPDW, 'WT_COMBATPDW'],
+    [hashes_1.WeaponHash.KnuckleDuster, 'WT_KNUCKLE'],
+    [hashes_1.WeaponHash.MarksmanPistol, 'WT_MKPISTOL'],
+    [hashes_1.WeaponHash.Machete, 'WT_MACHETE'],
+    [hashes_1.WeaponHash.MachinePistol, 'WT_MCHPIST'],
+    [hashes_1.WeaponHash.Flashlight, 'WT_FLASHLIGHT'],
+    [hashes_1.WeaponHash.DoubleBarrelShotgun, 'WT_DBSHGN'],
+    [hashes_1.WeaponHash.CompactRifle, 'WT_CMPRIFLE'],
+    [hashes_1.WeaponHash.SwitchBlade, 'WT_SWBLADE'],
+    [hashes_1.WeaponHash.Revolver, 'WT_REVOLVER'],
+    // mpgunrunning
+    [hashes_1.WeaponHash.PistolMk2, 'WT_PIST2'],
+    [hashes_1.WeaponHash.AssaultRifleMk2, 'WT_RIFLE_ASL2'],
+    [hashes_1.WeaponHash.CarbineRifleMk2, 'WT_RIFLE_CBN2'],
+    [hashes_1.WeaponHash.CombatMGMk2, 'WT_MG_CBT2'],
+    [hashes_1.WeaponHash.HeavySniperMk2, 'WT_SNIP_HVY2'],
+    [hashes_1.WeaponHash.SMGMk2, 'WT_SMG2'],
+]);
+/**
+ * Initialize with DlcWeaponData, in case of any missing dlc data
+ *
+ */
+function initializeOnce() {
+    let isInitialized = false;
+    return function () {
+        if (isInitialized) {
+            return;
+        }
+        for (const [hash, data] of DlcWeaponData_1.DlcWeaponData) {
+            exports.WeaponDisplayNameByHash.set(hash, data.name);
+        }
+        isInitialized = true;
+    };
+}
+initializeOnce()();
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponGroup.js":
+/*!**********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponGroup.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WeaponGroup = void 0;
+var WeaponGroup;
+(function (WeaponGroup) {
+    WeaponGroup[WeaponGroup["Unarmed"] = 2685387236] = "Unarmed";
+    WeaponGroup[WeaponGroup["Melee"] = 3566412244] = "Melee";
+    WeaponGroup[WeaponGroup["Pistol"] = 416676503] = "Pistol";
+    WeaponGroup[WeaponGroup["SMG"] = 3337201093] = "SMG";
+    WeaponGroup[WeaponGroup["AssaultRifle"] = 970310034] = "AssaultRifle";
+    WeaponGroup[WeaponGroup["DigiScanner"] = 3539449195] = "DigiScanner";
+    WeaponGroup[WeaponGroup["FireExtinguisher"] = 4257178988] = "FireExtinguisher";
+    WeaponGroup[WeaponGroup["MG"] = 1159398588] = "MG";
+    WeaponGroup[WeaponGroup["NightVision"] = 3493187224] = "NightVision";
+    WeaponGroup[WeaponGroup["Parachute"] = 431593103] = "Parachute";
+    WeaponGroup[WeaponGroup["Shotgun"] = 860033945] = "Shotgun";
+    WeaponGroup[WeaponGroup["Sniper"] = 3082541095] = "Sniper";
+    WeaponGroup[WeaponGroup["Stungun"] = 690389602] = "Stungun";
+    WeaponGroup[WeaponGroup["Heavy"] = 2725924767] = "Heavy";
+    WeaponGroup[WeaponGroup["Thrown"] = 1548507267] = "Thrown";
+    WeaponGroup[WeaponGroup["PetrolCan"] = 1595662460] = "PetrolCan";
+})(WeaponGroup = exports.WeaponGroup || (exports.WeaponGroup = {}));
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponHudStats.js":
+/*!*************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponHudStats.js ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WeaponHudStats = void 0;
+const hashes_1 = __webpack_require__(/*! ../hashes */ "../node_modules/@wdesgardin/fivem-js/lib/hashes/index.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "../node_modules/@wdesgardin/fivem-js/lib/utils/index.js");
+/**
+ * Mapping of WeaponHash -> WeaponHudStats
+ *
+ */
+exports.WeaponHudStats = new Map();
+/**
+ * Initialize WeaponHudStats, avoid calling expansive native repeatedly
+ *
+ */
+function initializeOnce() {
+    let isInitialized = false;
+    return function () {
+        if (isInitialized) {
+            return;
+        }
+        // magic number based on struct WeaponHudStats
+        const intLength = 4;
+        for (const hash of (0, utils_1.enumValues)(hashes_1.WeaponHash)) {
+            const buffer = new Uint8Array(0x28);
+            // https://docs.fivem.net/natives/?_0xD92C739EE34C9EBA
+            Citizen.invokeNative('0xD92C739EE34C9EBA', hash, buffer, Citizen.returnResultAnyway());
+            // noinspection PointlessArithmeticExpressionJS
+            const weaponHudStats = {
+                hudDamage: (0, utils_1.getUInt32FromUint8Array)(buffer, 0 * intLength, 1 * intLength),
+                hudSpeed: (0, utils_1.getUInt32FromUint8Array)(buffer, 2 * intLength, 3 * intLength),
+                hudCapacity: (0, utils_1.getUInt32FromUint8Array)(buffer, 4 * intLength, 5 * intLength),
+                hudAccuracy: (0, utils_1.getUInt32FromUint8Array)(buffer, 6 * intLength, 7 * intLength),
+                hudRange: (0, utils_1.getUInt32FromUint8Array)(buffer, 8 * intLength, 9 * intLength),
+            };
+            exports.WeaponHudStats.set(hash, weaponHudStats);
+        }
+        isInitialized = true;
+    };
+}
+if ((0, utils_1.IsClient)())
+    initializeOnce()();
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponLivery.js":
+/*!***********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponLivery.js ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WeaponLivery = void 0;
+var WeaponLivery;
+(function (WeaponLivery) {
+    WeaponLivery[WeaponLivery["Digital"] = 0] = "Digital";
+    WeaponLivery[WeaponLivery["Brushstroke"] = 1] = "Brushstroke";
+    WeaponLivery[WeaponLivery["Woodland"] = 2] = "Woodland";
+    WeaponLivery[WeaponLivery["Skull"] = 3] = "Skull";
+    WeaponLivery[WeaponLivery["Sessanta"] = 4] = "Sessanta";
+    WeaponLivery[WeaponLivery["Perseus"] = 5] = "Perseus";
+    WeaponLivery[WeaponLivery["Leopard"] = 6] = "Leopard";
+    WeaponLivery[WeaponLivery["Zebra"] = 7] = "Zebra";
+    WeaponLivery[WeaponLivery["Geometric"] = 8] = "Geometric";
+    WeaponLivery[WeaponLivery["Boom"] = 9] = "Boom";
+    WeaponLivery[WeaponLivery["Patriotic"] = 10] = "Patriotic";
+})(WeaponLivery = exports.WeaponLivery || (exports.WeaponLivery = {}));
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponLiveryColor.js":
+/*!****************************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponLiveryColor.js ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WeaponLiveryColor = void 0;
+var WeaponLiveryColor;
+(function (WeaponLiveryColor) {
+    WeaponLiveryColor[WeaponLiveryColor["Gray"] = 0] = "Gray";
+    WeaponLiveryColor[WeaponLiveryColor["DarkGray"] = 1] = "DarkGray";
+    WeaponLiveryColor[WeaponLiveryColor["Black"] = 2] = "Black";
+    WeaponLiveryColor[WeaponLiveryColor["White"] = 3] = "White";
+    WeaponLiveryColor[WeaponLiveryColor["Blue"] = 4] = "Blue";
+    WeaponLiveryColor[WeaponLiveryColor["Cyan"] = 5] = "Cyan";
+    WeaponLiveryColor[WeaponLiveryColor["Aqua"] = 6] = "Aqua";
+    WeaponLiveryColor[WeaponLiveryColor["CoolBlue"] = 7] = "CoolBlue";
+    WeaponLiveryColor[WeaponLiveryColor["DarkBlue"] = 8] = "DarkBlue";
+    WeaponLiveryColor[WeaponLiveryColor["RoyalBlue"] = 9] = "RoyalBlue";
+    WeaponLiveryColor[WeaponLiveryColor["Plum"] = 10] = "Plum";
+    WeaponLiveryColor[WeaponLiveryColor["DarkPurple"] = 11] = "DarkPurple";
+    WeaponLiveryColor[WeaponLiveryColor["Purple"] = 12] = "Purple";
+    WeaponLiveryColor[WeaponLiveryColor["Red"] = 13] = "Red";
+    WeaponLiveryColor[WeaponLiveryColor["WineRed"] = 14] = "WineRed";
+    WeaponLiveryColor[WeaponLiveryColor["Magenta"] = 15] = "Magenta";
+    WeaponLiveryColor[WeaponLiveryColor["Pink"] = 16] = "Pink";
+    WeaponLiveryColor[WeaponLiveryColor["Salmon"] = 17] = "Salmon";
+    WeaponLiveryColor[WeaponLiveryColor["HotPink"] = 18] = "HotPink";
+    WeaponLiveryColor[WeaponLiveryColor["RustOrange"] = 19] = "RustOrange";
+    WeaponLiveryColor[WeaponLiveryColor["Brown"] = 20] = "Brown";
+    WeaponLiveryColor[WeaponLiveryColor["Earth"] = 21] = "Earth";
+    WeaponLiveryColor[WeaponLiveryColor["Orange"] = 22] = "Orange";
+    WeaponLiveryColor[WeaponLiveryColor["LightOrange"] = 23] = "LightOrange";
+    WeaponLiveryColor[WeaponLiveryColor["DarkYellow"] = 24] = "DarkYellow";
+    WeaponLiveryColor[WeaponLiveryColor["Yellow"] = 25] = "Yellow";
+    WeaponLiveryColor[WeaponLiveryColor["LightBrown"] = 26] = "LightBrown";
+    WeaponLiveryColor[WeaponLiveryColor["LimeGreen"] = 27] = "LimeGreen";
+    WeaponLiveryColor[WeaponLiveryColor["Olive"] = 28] = "Olive";
+    WeaponLiveryColor[WeaponLiveryColor["Moss"] = 29] = "Moss";
+    WeaponLiveryColor[WeaponLiveryColor["Turquoise"] = 30] = "Turquoise";
+    WeaponLiveryColor[WeaponLiveryColor["DarkGreen"] = 31] = "DarkGreen";
+})(WeaponLiveryColor = exports.WeaponLiveryColor || (exports.WeaponLiveryColor = {}));
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponTint.js":
+/*!*********************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponTint.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WeaponTint = void 0;
+var WeaponTint;
+(function (WeaponTint) {
+    WeaponTint[WeaponTint["Mk2ClassicBlack"] = 0] = "Mk2ClassicBlack";
+    WeaponTint[WeaponTint["Mk2ClassicGray"] = 1] = "Mk2ClassicGray";
+    WeaponTint[WeaponTint["Mk2ClassicTwoTone"] = 2] = "Mk2ClassicTwoTone";
+    WeaponTint[WeaponTint["Mk2ClassicWhite"] = 3] = "Mk2ClassicWhite";
+    WeaponTint[WeaponTint["Mk2ClassicBeige"] = 4] = "Mk2ClassicBeige";
+    WeaponTint[WeaponTint["Mk2ClassicGreen"] = 5] = "Mk2ClassicGreen";
+    WeaponTint[WeaponTint["Mk2ClassicBlue"] = 6] = "Mk2ClassicBlue";
+    WeaponTint[WeaponTint["Mk2ClassicEarth"] = 7] = "Mk2ClassicEarth";
+    WeaponTint[WeaponTint["Mk2ClassicBrownAndBlack"] = 8] = "Mk2ClassicBrownAndBlack";
+    WeaponTint[WeaponTint["Mk2RedContrast"] = 9] = "Mk2RedContrast";
+    WeaponTint[WeaponTint["Mk2BlueContrast"] = 10] = "Mk2BlueContrast";
+    WeaponTint[WeaponTint["Mk2YellowContrast"] = 11] = "Mk2YellowContrast";
+    WeaponTint[WeaponTint["Mk2OrangeContrast"] = 12] = "Mk2OrangeContrast";
+    WeaponTint[WeaponTint["Mk2BoldPink"] = 13] = "Mk2BoldPink";
+    WeaponTint[WeaponTint["Mk2BoldPurpleAndYellow"] = 14] = "Mk2BoldPurpleAndYellow";
+    WeaponTint[WeaponTint["Mk2BoldOrange"] = 15] = "Mk2BoldOrange";
+    WeaponTint[WeaponTint["Mk2BoldGreenAndPurple"] = 16] = "Mk2BoldGreenAndPurple";
+    WeaponTint[WeaponTint["Mk2BoldRedFeatures"] = 17] = "Mk2BoldRedFeatures";
+    WeaponTint[WeaponTint["Mk2BoldGreenFeatures"] = 18] = "Mk2BoldGreenFeatures";
+    WeaponTint[WeaponTint["Mk2BoldCyanFeatures"] = 19] = "Mk2BoldCyanFeatures";
+    WeaponTint[WeaponTint["Mk2BoldYellowFeatures"] = 20] = "Mk2BoldYellowFeatures";
+    WeaponTint[WeaponTint["Mk2BoldRedAndWhite"] = 21] = "Mk2BoldRedAndWhite";
+    WeaponTint[WeaponTint["Mk2BoldBlueAndWhite"] = 22] = "Mk2BoldBlueAndWhite";
+    WeaponTint[WeaponTint["Mk2MetallicGold"] = 23] = "Mk2MetallicGold";
+    WeaponTint[WeaponTint["Mk2MetallicPlatinum"] = 24] = "Mk2MetallicPlatinum";
+    WeaponTint[WeaponTint["Mk2MetallicGrayAndLilac"] = 25] = "Mk2MetallicGrayAndLilac";
+    WeaponTint[WeaponTint["Mk2MetallicPurpleAndLime"] = 26] = "Mk2MetallicPurpleAndLime";
+    WeaponTint[WeaponTint["Mk2MetallicRed"] = 27] = "Mk2MetallicRed";
+    WeaponTint[WeaponTint["Mk2MetallicGreen"] = 28] = "Mk2MetallicGreen";
+    WeaponTint[WeaponTint["Mk2MetallicBlue"] = 29] = "Mk2MetallicBlue";
+    WeaponTint[WeaponTint["Mk2MetallicWhiteAndAqua"] = 30] = "Mk2MetallicWhiteAndAqua";
+    WeaponTint[WeaponTint["Mk2MetallicRedAndYellow"] = 31] = "Mk2MetallicRedAndYellow";
+    WeaponTint[WeaponTint["Normal"] = 0] = "Normal";
+    WeaponTint[WeaponTint["Green"] = 1] = "Green";
+    WeaponTint[WeaponTint["Gold"] = 2] = "Gold";
+    WeaponTint[WeaponTint["Pink"] = 3] = "Pink";
+    WeaponTint[WeaponTint["Army"] = 4] = "Army";
+    WeaponTint[WeaponTint["LSPD"] = 5] = "LSPD";
+    WeaponTint[WeaponTint["Orange"] = 6] = "Orange";
+    WeaponTint[WeaponTint["Platinum"] = 7] = "Platinum";
+})(WeaponTint = exports.WeaponTint || (exports.WeaponTint = {}));
+
+
+/***/ }),
+
+/***/ "../node_modules/@wdesgardin/fivem-js/lib/weapon/index.js":
+/*!****************************************************************!*\
+  !*** ../node_modules/@wdesgardin/fivem-js/lib/weapon/index.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WeaponAsset = exports.Weapon = exports.WeaponLiveryColor = exports.WeaponLivery = exports.WeaponGroup = exports.WeaponTint = exports.WeaponHudStats = exports.DlcWeaponData = void 0;
+var DlcWeaponData_1 = __webpack_require__(/*! ./DlcWeaponData */ "../node_modules/@wdesgardin/fivem-js/lib/weapon/DlcWeaponData.js");
+Object.defineProperty(exports, "DlcWeaponData", ({ enumerable: true, get: function () { return DlcWeaponData_1.DlcWeaponData; } }));
+var WeaponHudStats_1 = __webpack_require__(/*! ./WeaponHudStats */ "../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponHudStats.js");
+Object.defineProperty(exports, "WeaponHudStats", ({ enumerable: true, get: function () { return WeaponHudStats_1.WeaponHudStats; } }));
+var WeaponTint_1 = __webpack_require__(/*! ./WeaponTint */ "../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponTint.js");
+Object.defineProperty(exports, "WeaponTint", ({ enumerable: true, get: function () { return WeaponTint_1.WeaponTint; } }));
+var WeaponGroup_1 = __webpack_require__(/*! ./WeaponGroup */ "../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponGroup.js");
+Object.defineProperty(exports, "WeaponGroup", ({ enumerable: true, get: function () { return WeaponGroup_1.WeaponGroup; } }));
+var WeaponLivery_1 = __webpack_require__(/*! ./WeaponLivery */ "../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponLivery.js");
+Object.defineProperty(exports, "WeaponLivery", ({ enumerable: true, get: function () { return WeaponLivery_1.WeaponLivery; } }));
+var WeaponLiveryColor_1 = __webpack_require__(/*! ./WeaponLiveryColor */ "../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponLiveryColor.js");
+Object.defineProperty(exports, "WeaponLiveryColor", ({ enumerable: true, get: function () { return WeaponLiveryColor_1.WeaponLiveryColor; } }));
+var Weapon_1 = __webpack_require__(/*! ./Weapon */ "../node_modules/@wdesgardin/fivem-js/lib/weapon/Weapon.js");
+Object.defineProperty(exports, "Weapon", ({ enumerable: true, get: function () { return Weapon_1.Weapon; } }));
+var WeaponAsset_1 = __webpack_require__(/*! ./WeaponAsset */ "../node_modules/@wdesgardin/fivem-js/lib/weapon/WeaponAsset.js");
+Object.defineProperty(exports, "WeaponAsset", ({ enumerable: true, get: function () { return WeaponAsset_1.WeaponAsset; } }));
 
 
 /***/ }),
@@ -13844,6 +19193,68 @@ const Controllers = __importStar(__webpack_require__(/*! ./controllers/index */ 
 
 /***/ }),
 
+/***/ "./src/client/controllers/animations.ts":
+/*!**********************************************!*\
+  !*** ./src/client/controllers/animations.ts ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.animations = void 0;
+exports.animations = {
+    "cellphone@": {
+        "out": {
+            "text": "cellphone_text_in",
+            "call": "cellphone_call_listen_base",
+        },
+        "text": {
+            "out": "cellphone_text_out",
+            "text": "cellphone_text_in",
+            "call": "cellphone_text_to_call",
+        },
+        "call": {
+            "out": "cellphone_call_out",
+            "text": "cellphone_call_to_text",
+            "call": "cellphone_text_to_call",
+        }
+    },
+    "anim@cellphone@in_car@ps": {
+        "out": {
+            "text": "cellphone_text_in",
+            "call": "cellphone_call_in",
+        },
+        "text": {
+            "out": "cellphone_text_out",
+            "text": "cellphone_text_in",
+            "call": "cellphone_text_to_call",
+        },
+        "call": {
+            "out": "cellphone_horizontal_exit",
+            "text": "cellphone_call_to_text",
+            "call": "cellphone_text_to_call",
+        }
+    },
+};
+
+
+/***/ }),
+
+/***/ "./src/client/controllers/esx.ts":
+/*!***************************************!*\
+  !*** ./src/client/controllers/esx.ts ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+var ESX = null;
+TriggerEvent('esx:getSharedObject', (obj) => (ESX = obj));
+exports["default"] = ESX;
+
+
+/***/ }),
+
 /***/ "./src/client/controllers/index.ts":
 /*!*****************************************!*\
   !*** ./src/client/controllers/index.ts ***!
@@ -13874,56 +19285,306 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Init = void 0;
 const Init = async () => { };
 exports.Init = Init;
-const utils_1 = __webpack_require__(/*! client/utils */ "./src/client/utils.ts");
-const Cfx = __importStar(__webpack_require__(/*! fivem-js */ "../node_modules/fivem-js/lib/index.js"));
-function toggleNuiFrame(shouldShow) {
-    SetNuiFocus(shouldShow, shouldShow);
-    (0, utils_1.SendReactMessage)('setVisible', shouldShow);
+const utils_1 = __webpack_require__(/*! client/utils/utils */ "./src/client/utils/utils.ts");
+const Cfx = __importStar(__webpack_require__(/*! @wdesgardin/fivem-js */ "../node_modules/@wdesgardin/fivem-js/lib/index.js"));
+const esx_1 = __importDefault(__webpack_require__(/*! ./esx */ "./src/client/controllers/esx.ts"));
+const phone_1 = __webpack_require__(/*! ./phone */ "./src/client/controllers/phone.ts");
+const phone = new phone_1.Phone();
+function loadPhone() {
+    (async () => {
+        esx_1.default.TriggerServerEvent('voltic_phone:server:getPhoneData', function (phoneData) {
+            phoneData.playerData = esx_1.default.GetPlayerData();
+            phoneData.metaData = {};
+            phoneData.playerData.characterInfo = phoneData.characterInfo != null ? phoneData.characterInfo : {};
+            phoneData.playerData.identifier = phoneData.identifier != null ? phoneData.identifier : "";
+        });
+    })();
 }
-RegisterCommand("show-nui", () => {
-    toggleNuiFrame(true);
-    (0, utils_1.debugPrint)('Show NUI frame');
+function togglePhone(shouldShow) {
+    SetNuiFocus(shouldShow, shouldShow);
+    SetNuiFocusKeepInput(shouldShow);
+    (0, utils_1.SendReactMessage)("setPhoneVisible", shouldShow);
+}
+RegisterCommand("show-phone", () => {
+    openPhone();
+    togglePhone(true);
+    (0, utils_1.debugPrint)("Show phone frame");
 }, false);
 RegisterNuiCallbackType("hideFrame");
 on("__cfx_nui:hideFrame", (_, cb) => {
-    toggleNuiFrame(false);
-    (0, utils_1.debugPrint)('Hide NUI frame');
+    togglePhone(false);
+    closePhone();
+    (0, utils_1.debugPrint)("Hide phone frame");
     cb({});
 });
-RegisterNuiCallbackType("getClientData");
-on("__cfx_nui:getClientData", (data, cb) => {
-    (0, utils_1.debugPrint)('Data send by React', JSON.stringify(data));
-    let curCoords = Cfx.Game.PlayerPed.Position;
-    let retData = { x: curCoords.x, y: curCoords.y, z: curCoords.z };
+RegisterNuiCallbackType("getClientName");
+on("__cfx_nui:getClientName", (data, cb) => {
+    (0, utils_1.debugPrint)("Data send by React", JSON.stringify(data));
+    (0, utils_1.debugPrint)("Player name", Cfx.Game.Player.Name);
+    let retData = { name: Cfx.Game.Player.Name };
     cb(retData);
 });
-RegisterCommand("fullammo", () => {
-    const ped = PlayerPedId();
-    const weaponHash = GetSelectedPedWeapon(ped);
-    if (weaponHash !== 0) {
-        const maxAmmo = GetMaxAmmoInClip(ped, weaponHash, true);
-        SetAmmoInClip(ped, weaponHash, maxAmmo);
-    }
-}, false);
-RegisterCommand("clearammo", () => {
-    const ped = PlayerPedId();
-    const weaponHash = GetSelectedPedWeapon(ped);
-    if (weaponHash !== 0) {
-        SetAmmoInClip(ped, weaponHash, 0);
-    }
-}, false);
+function openPhone() {
+    phone.doPhoneAnimation("f_cellphone_text_in");
+    setTimeout(() => {
+        phone.createPhoneProperties();
+    }, 250);
+}
+function closePhone() {
+    phone.doPhoneAnimation("f_cellphone_text_out");
+    setTimeout(() => {
+        StopAnimTask(Cfx.Game.PlayerPed.Handle, phone_1.phoneData.animationData.library, phone_1.phoneData.animationData.animation, 2.5);
+        phone.deletePhone();
+        phone_1.phoneData.animationData.library = null;
+        phone_1.phoneData.animationData.animation = null;
+    }, 400);
+    setTimeout(() => {
+        phone_1.phoneData.isOpen = false;
+    }, 1000);
+}
 
 
 /***/ }),
 
-/***/ "./src/client/utils.ts":
-/*!*****************************!*\
-  !*** ./src/client/utils.ts ***!
-  \*****************************/
+/***/ "./src/client/controllers/phone.ts":
+/*!*****************************************!*\
+  !*** ./src/client/controllers/phone.ts ***!
+  \*****************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.phoneData = exports.Phone = void 0;
+const Cfx = __importStar(__webpack_require__(/*! @wdesgardin/fivem-js */ "../node_modules/@wdesgardin/fivem-js/lib/index.js"));
+const animations_1 = __webpack_require__(/*! ./animations */ "./src/client/controllers/animations.ts");
+let phoneData = {
+    metaData: {},
+    playerData: {},
+    id: 1,
+    isOpen: false,
+    animationData: {
+        library: null,
+        animation: null,
+    },
+};
+exports.phoneData = phoneData;
+class Phone {
+    Phone() {
+        this.phoneOpened = false;
+        this.phoneProp = 0;
+        this.phoneModel = "prop_cs_phone_01";
+        this.currentStatus = "out";
+        this.lastDictionary = null;
+        this.lastAnimation = null;
+        this.lastIsFreeze = false;
+    }
+    createPhoneProperties() {
+        this.deletePhone();
+        RequestModel(this.phoneModel);
+        let pedHandle = Cfx.Game.PlayerPed.Handle;
+        while (!HasModelLoaded(this.phoneModel)) {
+            Cfx.Wait(1);
+        }
+        this.phoneProp = CreateObject(this.phoneModel, 1.0, 1.0, 1.0, true, true, false);
+        let bone = GetPedBoneIndex(pedHandle, 28422);
+        if (this.phoneModel == "prop_cs_phone_01") {
+            AttachEntityToEntity(this.phoneProp, pedHandle, bone, 0.0, 0.0, 0.0, 50.0, 320.0, 50.0, true, true, false, false, 2, true);
+        }
+        else {
+            AttachEntityToEntity(this.phoneProp, pedHandle, bone, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, true, true, false, false, 2, true);
+        }
+    }
+    deletePhone() {
+        if (DoesEntityExist(this.phoneProp)) {
+            DetachEntity(this.phoneProp, true, true);
+            Citizen.invokeNative("0xAE3CBE5BF394C9C9", this.phoneProp, true, true);
+            SetEntityAsNoLongerNeeded(this.phoneProp);
+            DeleteEntity(this.phoneProp);
+            this.phoneProp = null;
+        }
+    }
+    loadAnimation(dictionary) {
+        RequestAnimDict(dictionary);
+        while (!HasAnimDictLoaded(dictionary)) {
+            Cfx.Wait(1);
+        }
+    }
+    cancelPhoneAnimation() {
+        var player = Cfx.Game.PlayerPed;
+        var animationLibrary = "cellphone@";
+        var animationStatus = "cellphone_call_listen_base";
+        if (IsPedInAnyVehicle(player.Handle, false)) {
+            animationLibrary = "anim@cellphone@in_car@ps";
+        }
+        if (phoneData.isOpen) {
+            animationStatus = "cellphone_call_to_text";
+        }
+        this.loadAnimation(animationLibrary);
+        TaskPlayAnim(player.Handle, animationLibrary, animationStatus, 3.0, 1.0, -1, 50, 0, false, false, false);
+        if (!this.phoneOpened) {
+            this.deletePhone();
+        }
+    }
+    checkAnimationLoop() {
+        (async () => {
+            while (phoneData.animationData.library != null &&
+                phoneData.animationData.animation != null) {
+                let ped = Cfx.Game.PlayerPed;
+                if (!IsEntityPlayingAnim(ped.Handle, phoneData.animationData.library, phoneData.animationData.animation, 3)) {
+                    this.loadAnimation(phoneData.animationData.library);
+                    TaskPlayAnim(ped.Handle, phoneData.animationData.library, phoneData.animationData.animation, 3.0, 3.0, -1, 50, 0, false, false, false);
+                }
+                Cfx.Wait(500);
+            }
+        })();
+    }
+    doPhoneAnimation(animation) {
+        var ped = Cfx.Game.PlayerPed;
+        var animationLibrary = "cellphone@";
+        var animationStatus = animation;
+        if (IsPedInAnyVehicle(ped.Handle, false)) {
+            animationLibrary = "anim@cellphone@in_car@ps";
+        }
+        this.loadAnimation(animationLibrary);
+        TaskPlayAnim(ped.Handle, animationLibrary, animationStatus, 3.0, 1.0, -1, 50, 0, false, false, false);
+        phoneData.animationData.library = animationLibrary;
+        phoneData.animationData.animation = animationStatus;
+        this.checkAnimationLoop();
+    }
+    phonePlayAnimation(status, freeze, force) {
+        if (this.currentStatus == status && !force) {
+            return;
+        }
+        let pedId = Cfx.Game.PlayerPed.Handle;
+        freeze = freeze || false;
+        let dictionary = "cellphone@";
+        if (IsPedInAnyVehicle(pedId, false)) {
+            dictionary = "anim@cellphone@in_car@ps";
+        }
+        this.loadAnimationDictionary(dictionary);
+        let animation = animations_1.animations[dictionary][this.currentStatus][status];
+        if (this.currentStatus != "out") {
+            StopAnimTask(pedId, dictionary, animation, 1.0);
+        }
+        let flag = 50;
+        if (freeze) {
+            flag = 14;
+        }
+        TaskPlayAnim(pedId, dictionary, animation, 3.0, -1, -1, flag, 0, false, false, false);
+        if (status != "out" && this.currentStatus == "out") {
+            Cfx.Wait(300);
+            this.createPhoneProperties();
+        }
+        this.lastDictionary = dictionary;
+        this.lastAnimation = animation;
+        this.lastIsFreeze = freeze;
+        this.currentStatus = status;
+        if (status == "out") {
+            Cfx.Wait(180);
+            this.deletePhone();
+            StopAnimTask(pedId, this.lastDictionary, this.lastAnimation, 1.0);
+        }
+    }
+    loadAnimationDictionary(animation) {
+        RequestAnimDict(animation);
+        while (!HasAnimDictLoaded(animation)) {
+            Cfx.Wait(1);
+        }
+    }
+    phonePlayOut() {
+        this.phonePlayAnimation("out");
+    }
+    phonePlayText() {
+        this.phonePlayAnimation("text");
+    }
+    phonePlayIn() {
+        if (this.currentStatus == "out") {
+            this.phonePlayText();
+        }
+    }
+}
+exports.Phone = Phone;
+/*public phonePlayAnimation(status: string, freeze?: boolean) {
+  let player: Cfx.Ped = Cfx.Game.PlayerPed;
+
+  let dictionary = "cellphone@";
+  let animation = "f_cellphone_text_in";
+
+  if (
+    IsEntityPlayingAnim(player.Handle, "cellphone@", "f_cellphone_text_in", 3)
+  ) {
+    player.Task.clearAllImmediately();
+    return;
+  }
+
+  RequestAnimDict("cellphone@");
+  while (HasAnimDictLoaded("cellphone@") == false) {
+    Cfx.Wait(1);
+  }
+
+  if (HasAnimDictLoaded("cellphone@")) {
+    debugPrint("Animation loaded");
+    TaskPlayAnim(
+      player.Handle,
+      "cellphone@",
+      "cellphone_text_read_base",
+      2.0,
+      1.0,
+      -1,
+      49,
+      0,
+      false,
+      false,
+      false
+    );
+    this.createPhoneProperties();
+  }
+
+  RemoveAnimDict("cellphone@");
+
+  this.lastDictionary = dictionary;
+  this.lastAnimation = animation;
+  this.lastIsFreeze = freeze;
+  this.currentStatus = status;
+}*/
+
+
+/***/ }),
+
+/***/ "./src/client/utils/utils.ts":
+/*!***********************************!*\
+  !*** ./src/client/utils/utils.ts ***!
+  \***********************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13951,7 +19612,7 @@ function debugPrint(...args) {
 exports.debugPrint = debugPrint;
 /* eslint-disable */ ;
 function oo_cm() { try {
-    return (0, eval)("globalThis._console_ninja") || (0, eval)("/* https://github.com/wallabyjs/console-ninja#how-does-it-work */'use strict';var _0x39dd8e=_0x5b6f;(function(_0x5edf1a,_0x25e3a5){var _0x514f9d=_0x5b6f,_0x2f982a=_0x5edf1a();while(!![]){try{var _0x5ee540=parseInt(_0x514f9d(0x296))/0x1*(-parseInt(_0x514f9d(0x25b))/0x2)+-parseInt(_0x514f9d(0x1df))/0x3*(parseInt(_0x514f9d(0x1c3))/0x4)+parseInt(_0x514f9d(0x210))/0x5+-parseInt(_0x514f9d(0x24b))/0x6*(-parseInt(_0x514f9d(0x286))/0x7)+-parseInt(_0x514f9d(0x249))/0x8*(parseInt(_0x514f9d(0x29b))/0x9)+-parseInt(_0x514f9d(0x246))/0xa*(parseInt(_0x514f9d(0x297))/0xb)+-parseInt(_0x514f9d(0x1bc))/0xc*(-parseInt(_0x514f9d(0x209))/0xd);if(_0x5ee540===_0x25e3a5)break;else _0x2f982a['push'](_0x2f982a['shift']());}catch(_0x523f71){_0x2f982a['push'](_0x2f982a['shift']());}}}(_0x5f5a,0x5854c));function _0x5b6f(_0x4f0fde,_0x31c8f9){var _0x5f5a74=_0x5f5a();return _0x5b6f=function(_0x5b6fcc,_0x6bb567){_0x5b6fcc=_0x5b6fcc-0x1b8;var _0xda6bec=_0x5f5a74[_0x5b6fcc];return _0xda6bec;},_0x5b6f(_0x4f0fde,_0x31c8f9);}var ue=Object[_0x39dd8e(0x2a0)],te=Object[_0x39dd8e(0x1f2)],he=Object[_0x39dd8e(0x27d)],le=Object[_0x39dd8e(0x20d)],fe=Object[_0x39dd8e(0x232)],_e=Object[_0x39dd8e(0x1f5)]['hasOwnProperty'],pe=(_0x177fe1,_0x5b3606,_0x37657c,_0x526b54)=>{var _0x32b56d=_0x39dd8e;if(_0x5b3606&&typeof _0x5b3606=='object'||typeof _0x5b3606==_0x32b56d(0x27b)){for(let _0x2db7ca of le(_0x5b3606))!_e[_0x32b56d(0x214)](_0x177fe1,_0x2db7ca)&&_0x2db7ca!==_0x37657c&&te(_0x177fe1,_0x2db7ca,{'get':()=>_0x5b3606[_0x2db7ca],'enumerable':!(_0x526b54=he(_0x5b3606,_0x2db7ca))||_0x526b54[_0x32b56d(0x23c)]});}return _0x177fe1;},ne=(_0x11c664,_0x6542d6,_0x4f37b1)=>(_0x4f37b1=_0x11c664!=null?ue(fe(_0x11c664)):{},pe(_0x6542d6||!_0x11c664||!_0x11c664['__es'+'Module']?te(_0x4f37b1,_0x39dd8e(0x205),{'value':_0x11c664,'enumerable':!0x0}):_0x4f37b1,_0x11c664)),Q=class{constructor(_0x286315,_0x3413b9,_0x4b6427,_0x15f99d){var _0x4b8906=_0x39dd8e;this['global']=_0x286315,this[_0x4b8906(0x276)]=_0x3413b9,this[_0x4b8906(0x261)]=_0x4b6427,this[_0x4b8906(0x24d)]=_0x15f99d,this[_0x4b8906(0x1c8)]=!0x0,this[_0x4b8906(0x1ee)]=!0x0,this['_connected']=!0x1,this[_0x4b8906(0x222)]=!0x1,this[_0x4b8906(0x22c)]=!!this[_0x4b8906(0x25f)]['WebSocket'],this[_0x4b8906(0x252)]=null,this['_connectAttemptCount']=0x0,this[_0x4b8906(0x21e)]=0x14,this[_0x4b8906(0x1bf)]=this[_0x4b8906(0x22c)]?'Console\\x20Ninja\\x20failed\\x20to\\x20send\\x20logs,\\x20refreshing\\x20the\\x20page\\x20may\\x20help':_0x4b8906(0x219);}async[_0x39dd8e(0x1e5)](){var _0x16da8c=_0x39dd8e;if(this[_0x16da8c(0x252)])return this[_0x16da8c(0x252)];let _0x5d103e;if(this['_inBrowser'])_0x5d103e=this[_0x16da8c(0x25f)][_0x16da8c(0x241)];else{if(this[_0x16da8c(0x25f)][_0x16da8c(0x26b)]?.[_0x16da8c(0x299)])_0x5d103e=this[_0x16da8c(0x25f)]['process']?.['_WebSocket'];else try{let _0x44e2da=await import(_0x16da8c(0x280));_0x5d103e=(await import((await import(_0x16da8c(0x1d7)))[_0x16da8c(0x215)](_0x44e2da[_0x16da8c(0x1be)](this[_0x16da8c(0x24d)],_0x16da8c(0x275)))[_0x16da8c(0x1d8)]()))[_0x16da8c(0x205)];}catch{try{_0x5d103e=require(require(_0x16da8c(0x280))[_0x16da8c(0x1be)](this[_0x16da8c(0x24d)],'ws'));}catch{throw new Error('failed\\x20to\\x20find\\x20and\\x20load\\x20WebSocket');}}}return this[_0x16da8c(0x252)]=_0x5d103e,_0x5d103e;}[_0x39dd8e(0x270)](){var _0x5c6dee=_0x39dd8e;this['_connecting']||this[_0x5c6dee(0x1d2)]||this[_0x5c6dee(0x283)]>=this['_maxConnectAttemptCount']||(this[_0x5c6dee(0x1ee)]=!0x1,this[_0x5c6dee(0x222)]=!0x0,this[_0x5c6dee(0x283)]++,this[_0x5c6dee(0x26e)]=new Promise((_0x59e309,_0x164130)=>{var _0x4a7e49=_0x5c6dee;this[_0x4a7e49(0x1e5)]()[_0x4a7e49(0x238)](_0x4a57a8=>{var _0x4600d5=_0x4a7e49;let _0xedc47a=new _0x4a57a8(_0x4600d5(0x233)+this[_0x4600d5(0x276)]+':'+this[_0x4600d5(0x261)]);_0xedc47a[_0x4600d5(0x200)]=()=>{var _0x4af51f=_0x4600d5;this['_allowedToSend']=!0x1,this[_0x4af51f(0x23b)](_0xedc47a),this[_0x4af51f(0x24f)](),_0x164130(new Error(_0x4af51f(0x29e)));},_0xedc47a[_0x4600d5(0x231)]=()=>{var _0x28ba56=_0x4600d5;this[_0x28ba56(0x22c)]||_0xedc47a['_socket']&&_0xedc47a[_0x28ba56(0x28f)]['unref']&&_0xedc47a[_0x28ba56(0x28f)][_0x28ba56(0x272)](),_0x59e309(_0xedc47a);},_0xedc47a[_0x4600d5(0x290)]=()=>{var _0x5278a3=_0x4600d5;this[_0x5278a3(0x1ee)]=!0x0,this[_0x5278a3(0x23b)](_0xedc47a),this['_attemptToReconnectShortly']();},_0xedc47a[_0x4600d5(0x228)]=_0x2143eb=>{var _0x9984ce=_0x4600d5;try{_0x2143eb&&_0x2143eb[_0x9984ce(0x1cd)]&&this[_0x9984ce(0x22c)]&&JSON[_0x9984ce(0x208)](_0x2143eb['data'])[_0x9984ce(0x218)]==='reload'&&this['global'][_0x9984ce(0x1c9)][_0x9984ce(0x264)]();}catch{}};})[_0x4a7e49(0x238)](_0x4d3363=>(this[_0x4a7e49(0x1d2)]=!0x0,this[_0x4a7e49(0x222)]=!0x1,this['_allowedToConnectOnSend']=!0x1,this[_0x4a7e49(0x1c8)]=!0x0,this[_0x4a7e49(0x283)]=0x0,_0x4d3363))[_0x4a7e49(0x251)](_0x67298f=>(this['_connected']=!0x1,this['_connecting']=!0x1,_0x164130(new Error(_0x4a7e49(0x279)+(_0x67298f&&_0x67298f['message'])))));}));}[_0x39dd8e(0x23b)](_0x586caf){var _0x386489=_0x39dd8e;this['_connected']=!0x1,this['_connecting']=!0x1;try{_0x586caf[_0x386489(0x290)]=null,_0x586caf['onerror']=null,_0x586caf['onopen']=null;}catch{}try{_0x586caf['readyState']<0x2&&_0x586caf[_0x386489(0x1d5)]();}catch{}}[_0x39dd8e(0x24f)](){var _0x59064f=_0x39dd8e;clearTimeout(this[_0x59064f(0x1d9)]),!(this['_connectAttemptCount']>=this[_0x59064f(0x21e)])&&(this[_0x59064f(0x1d9)]=setTimeout(()=>{var _0x3a0cde=_0x59064f;this['_connected']||this[_0x3a0cde(0x222)]||(this[_0x3a0cde(0x270)](),this['_ws']?.[_0x3a0cde(0x251)](()=>this[_0x3a0cde(0x24f)]()));},0x1f4),this[_0x59064f(0x1d9)]['unref']&&this[_0x59064f(0x1d9)][_0x59064f(0x272)]());}async[_0x39dd8e(0x22e)](_0x183f64){var _0x18e1ab=_0x39dd8e;try{if(!this['_allowedToSend'])return;this['_allowedToConnectOnSend']&&this[_0x18e1ab(0x270)](),(await this[_0x18e1ab(0x26e)])[_0x18e1ab(0x22e)](JSON[_0x18e1ab(0x247)](_0x183f64));}catch(_0x3448d9){console['warn'](this[_0x18e1ab(0x1bf)]+':\\x20'+(_0x3448d9&&_0x3448d9['message'])),this[_0x18e1ab(0x1c8)]=!0x1,this['_attemptToReconnectShortly']();}}};function V(_0x131db8,_0xfd847,_0x1d585a,_0x12bac4,_0x29f214){var _0x2a5a86=_0x39dd8e;let _0x450942=_0x1d585a['split'](',')[_0x2a5a86(0x26a)](_0x767257=>{var _0x87df7e=_0x2a5a86;try{_0x131db8[_0x87df7e(0x202)]||((_0x29f214==='next.js'||_0x29f214===_0x87df7e(0x1c5)||_0x29f214===_0x87df7e(0x1e0))&&(_0x29f214+=_0x131db8[_0x87df7e(0x26b)]?.[_0x87df7e(0x1c6)]?.[_0x87df7e(0x292)]?_0x87df7e(0x25d):_0x87df7e(0x230)),_0x131db8['_console_ninja_session']={'id':+new Date(),'tool':_0x29f214});let _0xd25764=new Q(_0x131db8,_0xfd847,_0x767257,_0x12bac4);return _0xd25764[_0x87df7e(0x22e)][_0x87df7e(0x27c)](_0xd25764);}catch(_0xf14cc3){return console[_0x87df7e(0x259)]('logger\\x20failed\\x20to\\x20connect\\x20to\\x20host',_0xf14cc3&&_0xf14cc3['message']),()=>{};}});return _0x3fe761=>_0x450942[_0x2a5a86(0x1de)](_0x38c61d=>_0x38c61d(_0x3fe761));}function _0x5f5a(){var _0x5dc2c2=['741nZLExX','2412542simSgp','substr','_WebSocket','disabledLog','3132666ztFrze','_isArray','_HTMLAllCollection','logger\\x20websocket\\x20error','_setNodeId','create','cappedProps','depth','webpack','_dateToString','1623612KipTvX','_isPrimitiveType','join','_sendErrorMessage','type','_treeNodePropertiesBeforeFullValue','undefined','321716wxcoVU','hrtime','remix','versions','value','_allowedToSend','location','_isNegativeZero','_setNodeExpressionPath','','data','stack','_processTreeNodeResult','_additionalMetadata','level','_connected','_addFunctionsNode','RegExp','close','time','url','toString','_reconnectTimeout','_console_ninja','NEGATIVE_INFINITY','get','performance','forEach','15ingCAC','astro','getter','expressionsToEvaluate','parent','_isSet','getWebSocketClass','count','date','strLength','argumentResolutionError','pop','concat','55451','_Symbol','_allowedToConnectOnSend','_keyStrRegExp','unshift','_capIfString','defineProperty','valueOf','stackTraceLimit','prototype','timeEnd','_p_length','_type','_getOwnPropertyDescriptor','_addObjectProperty','replace','slice','sortProps','_setNodePermissions','_cleanNode','onerror','hits','_console_ninja_session','includes','_numberRegExp','default','allStrLength','root_exp','parse','169iTvCXF','_addLoadNode','log','message','getOwnPropertyNames','[object\\x20Map]','symbol','1137500MnfUGf',':logPointId:','bigint','_setNodeLabel','call','pathToFileURL','name','1.0.0','method','Console\\x20Ninja\\x20failed\\x20to\\x20send\\x20logs,\\x20restarting\\x20the\\x20process\\x20may\\x20help','disabledTrace','_propertyName','elements','sort','_maxConnectAttemptCount','Error','props','root_exp_id','_connecting','array','negativeInfinity','autoExpandPreviousObjects','unknown','constructor','onmessage','totalStrLength','string','toLowerCase','_inBrowser','Symbol','send','perf_hooks','\\x20browser','onopen','getPrototypeOf','ws://','POSITIVE_INFINITY','setter','Number','set','then','resolveGetters','index','_disposeWebsocket','enumerable','_consoleNinjaAllowedToStart','push','Set','_p_name','WebSocket','_treeNodePropertiesAfterFullValue','current','_isUndefined','nan','10QkLPZy','stringify',[\"localhost\",\"127.0.0.1\",\"example.cypress.io\",\"DESKTOP-0M264Q6\",\"192.168.1.128\"],'8lOKjpl','_regExpToString','18wOopyx','_property','nodeModules','positiveInfinity','_attemptToReconnectShortly','_sortProps','catch','_WebSocketClass','now','number','[object\\x20Array]','_isMap','_hasSymbolPropertyOnItsPath','_propertyAccessor','warn','serialize','1798AzqWHO','capped','\\x20server','console','global','trace','port','_undefined','match','reload','autoExpandLimit','cappedElements','HTMLAllCollection','expId','_hasSetOnItsPath','map','process','String','_setNodeExpandableState','_ws','isExpressionToEvaluate','_connectToHostNow','_p_','unref','length','_blacklistedProperty','ws/index.js','host','error','_objectToString','failed\\x20to\\x20connect\\x20to\\x20host:\\x20','autoExpandMaxDepth','function','bind','getOwnPropertyDescriptor','_quotedRegExp','autoExpand','path','object','negativeZero','_connectAttemptCount','noFunctions','autoExpandPropertyCount','25879UAuchz','isArray','funcName','_setNodeQueryPath','indexOf','[object\\x20BigInt]','reduceLimits','1687290923611','getOwnPropertySymbols','_socket','onclose','_addProperty','node','[object\\x20Date]','null','test'];_0x5f5a=function(){return _0x5dc2c2;};return _0x5f5a();}function H(_0x2fb4b7){var _0x33c6ca=_0x39dd8e;let _0x41751a=function(_0x7c3475,_0x10bcdb){return _0x10bcdb-_0x7c3475;},_0x2cd2df;if(_0x2fb4b7[_0x33c6ca(0x1dd)])_0x2cd2df=function(){var _0x30b970=_0x33c6ca;return _0x2fb4b7[_0x30b970(0x1dd)][_0x30b970(0x253)]();};else{if(_0x2fb4b7[_0x33c6ca(0x26b)]&&_0x2fb4b7[_0x33c6ca(0x26b)]['hrtime'])_0x2cd2df=function(){var _0xde84a5=_0x33c6ca;return _0x2fb4b7[_0xde84a5(0x26b)][_0xde84a5(0x1c4)]();},_0x41751a=function(_0x1ee09d,_0x2dbf6d){return 0x3e8*(_0x2dbf6d[0x0]-_0x1ee09d[0x0])+(_0x2dbf6d[0x1]-_0x1ee09d[0x1])/0xf4240;};else try{let {performance:_0x4fd42d}=require(_0x33c6ca(0x22f));_0x2cd2df=function(){var _0x5de02b=_0x33c6ca;return _0x4fd42d[_0x5de02b(0x253)]();};}catch{_0x2cd2df=function(){return+new Date();};}}return{'elapsed':_0x41751a,'timeStamp':_0x2cd2df,'now':()=>Date[_0x33c6ca(0x253)]()};}function X(_0x310c95,_0x91316d,_0x33f6c9){var _0xbca846=_0x39dd8e;if(_0x310c95[_0xbca846(0x23d)]!==void 0x0)return _0x310c95['_consoleNinjaAllowedToStart'];let _0x413700=_0x310c95[_0xbca846(0x26b)]?.['versions']?.[_0xbca846(0x292)];return _0x413700&&_0x33f6c9==='nuxt'?_0x310c95[_0xbca846(0x23d)]=!0x1:_0x310c95['_consoleNinjaAllowedToStart']=_0x413700||!_0x91316d||_0x310c95['location']?.['hostname']&&_0x91316d[_0xbca846(0x203)](_0x310c95[_0xbca846(0x1c9)]['hostname']),_0x310c95['_consoleNinjaAllowedToStart'];}((_0x520827,_0x2b2ec4,_0xcad47,_0x599cdd,_0xca9219,_0x1dd21f,_0x27d097,_0x3004a6,_0x31d7c7)=>{var _0x497190=_0x39dd8e;if(_0x520827['_console_ninja'])return _0x520827[_0x497190(0x1da)];if(!X(_0x520827,_0x3004a6,_0xca9219))return _0x520827['_console_ninja']={'consoleLog':()=>{},'consoleTrace':()=>{},'consoleTime':()=>{},'consoleTimeEnd':()=>{},'autoLog':()=>{},'autoTrace':()=>{},'autoTime':()=>{},'autoTimeEnd':()=>{}},_0x520827[_0x497190(0x1da)];let _0x173575={'props':0x64,'elements':0x64,'strLength':0x400*0x32,'totalStrLength':0x400*0x32,'autoExpandLimit':0x1388,'autoExpandMaxDepth':0xa},_0x1d4687={'props':0x5,'elements':0x5,'strLength':0x100,'totalStrLength':0x100*0x3,'autoExpandLimit':0x1e,'autoExpandMaxDepth':0x2},_0x58b5a6=H(_0x520827),_0x5345db=_0x58b5a6['elapsed'],_0x2bcb99=_0x58b5a6['timeStamp'],_0x47c18d=_0x58b5a6[_0x497190(0x253)],_0x3b6e55={'hits':{},'ts':{}},_0x4e6886=_0x270caf=>{_0x3b6e55['ts'][_0x270caf]=_0x2bcb99();},_0x18d381=(_0x527e40,_0x5ef0af)=>{var _0x1e61b4=_0x497190;let _0x9b0e7e=_0x3b6e55['ts'][_0x5ef0af];if(delete _0x3b6e55['ts'][_0x5ef0af],_0x9b0e7e){let _0x422897=_0x5345db(_0x9b0e7e,_0x2bcb99());_0x204e08(_0x5888ef(_0x1e61b4(0x1d6),_0x527e40,_0x47c18d(),_0x59817f,[_0x422897],_0x5ef0af));}},_0x4c9470=_0x2fe0e7=>_0x53164c=>{var _0x45a6ae=_0x497190;try{_0x4e6886(_0x53164c),_0x2fe0e7(_0x53164c);}finally{_0x520827[_0x45a6ae(0x25e)]['time']=_0x2fe0e7;}},_0x11270f=_0x22247e=>_0x532a86=>{var _0x19ffa7=_0x497190;try{let [_0x404b89,_0x186837]=_0x532a86['split'](_0x19ffa7(0x211));_0x18d381(_0x186837,_0x404b89),_0x22247e(_0x404b89);}finally{_0x520827[_0x19ffa7(0x25e)][_0x19ffa7(0x1f6)]=_0x22247e;}};_0x520827[_0x497190(0x1da)]={'consoleLog':(_0x13409e,_0x3f7952)=>{var _0x3955dd=_0x497190;_0x520827[_0x3955dd(0x25e)][_0x3955dd(0x20b)][_0x3955dd(0x216)]!==_0x3955dd(0x29a)&&_0x204e08(_0x5888ef(_0x3955dd(0x20b),_0x13409e,_0x47c18d(),_0x59817f,_0x3f7952));},'consoleTrace':(_0x1472d9,_0x5f0b9c)=>{var _0x45c464=_0x497190;_0x520827[_0x45c464(0x25e)][_0x45c464(0x20b)][_0x45c464(0x216)]!==_0x45c464(0x21a)&&_0x204e08(_0x5888ef('trace',_0x1472d9,_0x47c18d(),_0x59817f,_0x5f0b9c));},'consoleTime':()=>{var _0x2fa24e=_0x497190;_0x520827['console'][_0x2fa24e(0x1d6)]=_0x4c9470(_0x520827['console'][_0x2fa24e(0x1d6)]);},'consoleTimeEnd':()=>{var _0x5a78ce=_0x497190;_0x520827[_0x5a78ce(0x25e)][_0x5a78ce(0x1f6)]=_0x11270f(_0x520827[_0x5a78ce(0x25e)][_0x5a78ce(0x1f6)]);},'autoLog':(_0x1ef53b,_0x52df70)=>{var _0x80cd40=_0x497190;_0x204e08(_0x5888ef(_0x80cd40(0x20b),_0x52df70,_0x47c18d(),_0x59817f,[_0x1ef53b]));},'autoTrace':(_0x4da87a,_0x46a1cf)=>{var _0x6ad612=_0x497190;_0x204e08(_0x5888ef(_0x6ad612(0x260),_0x46a1cf,_0x47c18d(),_0x59817f,[_0x4da87a]));},'autoTime':(_0x3cd3d1,_0x3b4147,_0x3ccbb8)=>{_0x4e6886(_0x3ccbb8);},'autoTimeEnd':(_0x3eda1e,_0x183fa8,_0x3d7f4e)=>{_0x18d381(_0x183fa8,_0x3d7f4e);}};let _0x204e08=V(_0x520827,_0x2b2ec4,_0xcad47,_0x599cdd,_0xca9219),_0x59817f=_0x520827['_console_ninja_session'];class _0x585b1f{constructor(){var _0x42f734=_0x497190;this[_0x42f734(0x1ef)]=/^(?!(?:do|if|in|for|let|new|try|var|case|else|enum|eval|false|null|this|true|void|with|break|catch|class|const|super|throw|while|yield|delete|export|import|public|return|static|switch|typeof|default|extends|finally|package|private|continue|debugger|function|arguments|interface|protected|implements|instanceof)$)[_$a-zA-Z\\xA0-\\uFFFF][_$a-zA-Z0-9\\xA0-\\uFFFF]*$/,this['_numberRegExp']=/^(0|[1-9][0-9]*)$/,this[_0x42f734(0x27e)]=/'([^\\\\']|\\\\')*'/,this[_0x42f734(0x262)]=_0x520827[_0x42f734(0x1c2)],this[_0x42f734(0x29d)]=_0x520827[_0x42f734(0x267)],this['_getOwnPropertyDescriptor']=Object[_0x42f734(0x27d)],this['_getOwnPropertyNames']=Object[_0x42f734(0x20d)],this[_0x42f734(0x1ed)]=_0x520827[_0x42f734(0x22d)],this[_0x42f734(0x24a)]=RegExp['prototype'][_0x42f734(0x1d8)],this[_0x42f734(0x1bb)]=Date[_0x42f734(0x1f5)][_0x42f734(0x1d8)];}[_0x497190(0x25a)](_0x2718df,_0xbb1bc2,_0x5c49a3,_0x2f1066){var _0x3278e9=_0x497190,_0x7bbf08=this,_0x116db9=_0x5c49a3['autoExpand'];function _0x4ea2f9(_0x3c8b28,_0x2ffb9b,_0x4a6656){var _0x417e59=_0x5b6f;_0x2ffb9b[_0x417e59(0x1c0)]=_0x417e59(0x226),_0x2ffb9b[_0x417e59(0x277)]=_0x3c8b28[_0x417e59(0x20c)],_0x5dec97=_0x4a6656[_0x417e59(0x292)][_0x417e59(0x243)],_0x4a6656[_0x417e59(0x292)][_0x417e59(0x243)]=_0x2ffb9b,_0x7bbf08[_0x417e59(0x1c1)](_0x2ffb9b,_0x4a6656);}if(_0xbb1bc2&&_0xbb1bc2[_0x3278e9(0x1e9)])_0x4ea2f9(_0xbb1bc2,_0x2718df,_0x5c49a3);else try{_0x5c49a3[_0x3278e9(0x1d1)]++,_0x5c49a3[_0x3278e9(0x27f)]&&_0x5c49a3[_0x3278e9(0x225)][_0x3278e9(0x23e)](_0xbb1bc2);var _0x235420,_0x8021e0,_0x2a64cd,_0x23a193,_0x301d2b=[],_0x68caeb=[],_0x176b53,_0x854c53=this[_0x3278e9(0x1f8)](_0xbb1bc2),_0x4897d7=_0x854c53===_0x3278e9(0x223),_0x3ad847=!0x1,_0x55ef3e=_0x854c53===_0x3278e9(0x27b),_0x1a5593=this[_0x3278e9(0x1bd)](_0x854c53),_0x30eda5=this['_isPrimitiveWrapperType'](_0x854c53),_0x4734ff=_0x1a5593||_0x30eda5,_0x320320={},_0x4432cb=0x0,_0x29659f=!0x1,_0x5dec97,_0x331585=/^(([1-9]{1}[0-9]*)|0)$/;if(_0x5c49a3[_0x3278e9(0x1b9)]){if(_0x4897d7){if(_0x8021e0=_0xbb1bc2[_0x3278e9(0x273)],_0x8021e0>_0x5c49a3[_0x3278e9(0x21c)]){for(_0x2a64cd=0x0,_0x23a193=_0x5c49a3['elements'],_0x235420=_0x2a64cd;_0x235420<_0x23a193;_0x235420++)_0x68caeb[_0x3278e9(0x23e)](_0x7bbf08[_0x3278e9(0x291)](_0x301d2b,_0xbb1bc2,_0x854c53,_0x235420,_0x5c49a3));_0x2718df[_0x3278e9(0x266)]=!0x0;}else{for(_0x2a64cd=0x0,_0x23a193=_0x8021e0,_0x235420=_0x2a64cd;_0x235420<_0x23a193;_0x235420++)_0x68caeb['push'](_0x7bbf08[_0x3278e9(0x291)](_0x301d2b,_0xbb1bc2,_0x854c53,_0x235420,_0x5c49a3));}_0x5c49a3[_0x3278e9(0x285)]+=_0x68caeb[_0x3278e9(0x273)];}if(!(_0x854c53===_0x3278e9(0x294)||_0x854c53==='undefined')&&!_0x1a5593&&_0x854c53!==_0x3278e9(0x26c)&&_0x854c53!=='Buffer'&&_0x854c53!=='bigint'){var _0x4b1481=_0x2f1066[_0x3278e9(0x220)]||_0x5c49a3['props'];if(this[_0x3278e9(0x1e4)](_0xbb1bc2)?(_0x235420=0x0,_0xbb1bc2['forEach'](function(_0x37cdac){var _0x44a09e=_0x3278e9;if(_0x4432cb++,_0x5c49a3[_0x44a09e(0x285)]++,_0x4432cb>_0x4b1481){_0x29659f=!0x0;return;}if(!_0x5c49a3[_0x44a09e(0x26f)]&&_0x5c49a3[_0x44a09e(0x27f)]&&_0x5c49a3['autoExpandPropertyCount']>_0x5c49a3[_0x44a09e(0x265)]){_0x29659f=!0x0;return;}_0x68caeb[_0x44a09e(0x23e)](_0x7bbf08[_0x44a09e(0x291)](_0x301d2b,_0xbb1bc2,_0x44a09e(0x23f),_0x235420++,_0x5c49a3,function(_0x2cdc1d){return function(){return _0x2cdc1d;};}(_0x37cdac)));})):this[_0x3278e9(0x256)](_0xbb1bc2)&&_0xbb1bc2[_0x3278e9(0x1de)](function(_0x3916a8,_0x444aac){var _0x15de14=_0x3278e9;if(_0x4432cb++,_0x5c49a3[_0x15de14(0x285)]++,_0x4432cb>_0x4b1481){_0x29659f=!0x0;return;}if(!_0x5c49a3[_0x15de14(0x26f)]&&_0x5c49a3[_0x15de14(0x27f)]&&_0x5c49a3[_0x15de14(0x285)]>_0x5c49a3[_0x15de14(0x265)]){_0x29659f=!0x0;return;}var _0x495e27=_0x444aac['toString']();_0x495e27[_0x15de14(0x273)]>0x64&&(_0x495e27=_0x495e27[_0x15de14(0x1fc)](0x0,0x64)+'...'),_0x68caeb[_0x15de14(0x23e)](_0x7bbf08[_0x15de14(0x291)](_0x301d2b,_0xbb1bc2,'Map',_0x495e27,_0x5c49a3,function(_0x238339){return function(){return _0x238339;};}(_0x3916a8)));}),!_0x3ad847){try{for(_0x176b53 in _0xbb1bc2)if(!(_0x4897d7&&_0x331585['test'](_0x176b53))&&!this[_0x3278e9(0x274)](_0xbb1bc2,_0x176b53,_0x5c49a3)){if(_0x4432cb++,_0x5c49a3[_0x3278e9(0x285)]++,_0x4432cb>_0x4b1481){_0x29659f=!0x0;break;}if(!_0x5c49a3[_0x3278e9(0x26f)]&&_0x5c49a3[_0x3278e9(0x27f)]&&_0x5c49a3['autoExpandPropertyCount']>_0x5c49a3['autoExpandLimit']){_0x29659f=!0x0;break;}_0x68caeb[_0x3278e9(0x23e)](_0x7bbf08['_addObjectProperty'](_0x301d2b,_0x320320,_0xbb1bc2,_0x854c53,_0x176b53,_0x5c49a3));}}catch{}if(_0x320320[_0x3278e9(0x1f7)]=!0x0,_0x55ef3e&&(_0x320320[_0x3278e9(0x240)]=!0x0),!_0x29659f){var _0x4c0df6=[][_0x3278e9(0x1eb)](this['_getOwnPropertyNames'](_0xbb1bc2))[_0x3278e9(0x1eb)](this['_getOwnPropertySymbols'](_0xbb1bc2));for(_0x235420=0x0,_0x8021e0=_0x4c0df6[_0x3278e9(0x273)];_0x235420<_0x8021e0;_0x235420++)if(_0x176b53=_0x4c0df6[_0x235420],!(_0x4897d7&&_0x331585[_0x3278e9(0x295)](_0x176b53[_0x3278e9(0x1d8)]()))&&!this[_0x3278e9(0x274)](_0xbb1bc2,_0x176b53,_0x5c49a3)&&!_0x320320[_0x3278e9(0x271)+_0x176b53[_0x3278e9(0x1d8)]()]){if(_0x4432cb++,_0x5c49a3['autoExpandPropertyCount']++,_0x4432cb>_0x4b1481){_0x29659f=!0x0;break;}if(!_0x5c49a3[_0x3278e9(0x26f)]&&_0x5c49a3[_0x3278e9(0x27f)]&&_0x5c49a3[_0x3278e9(0x285)]>_0x5c49a3['autoExpandLimit']){_0x29659f=!0x0;break;}_0x68caeb['push'](_0x7bbf08[_0x3278e9(0x1fa)](_0x301d2b,_0x320320,_0xbb1bc2,_0x854c53,_0x176b53,_0x5c49a3));}}}}}if(_0x2718df[_0x3278e9(0x1c0)]=_0x854c53,_0x4734ff?(_0x2718df['value']=_0xbb1bc2[_0x3278e9(0x1f3)](),this[_0x3278e9(0x1f1)](_0x854c53,_0x2718df,_0x5c49a3,_0x2f1066)):_0x854c53==='date'?_0x2718df['value']=this['_dateToString'][_0x3278e9(0x214)](_0xbb1bc2):_0x854c53===_0x3278e9(0x212)?_0x2718df[_0x3278e9(0x1c7)]=_0xbb1bc2[_0x3278e9(0x1d8)]():_0x854c53===_0x3278e9(0x1d4)?_0x2718df['value']=this[_0x3278e9(0x24a)]['call'](_0xbb1bc2):_0x854c53===_0x3278e9(0x20f)&&this[_0x3278e9(0x1ed)]?_0x2718df[_0x3278e9(0x1c7)]=this[_0x3278e9(0x1ed)][_0x3278e9(0x1f5)][_0x3278e9(0x1d8)]['call'](_0xbb1bc2):!_0x5c49a3[_0x3278e9(0x1b9)]&&!(_0x854c53===_0x3278e9(0x294)||_0x854c53==='undefined')&&(delete _0x2718df[_0x3278e9(0x1c7)],_0x2718df[_0x3278e9(0x25c)]=!0x0),_0x29659f&&(_0x2718df[_0x3278e9(0x1b8)]=!0x0),_0x5dec97=_0x5c49a3[_0x3278e9(0x292)][_0x3278e9(0x243)],_0x5c49a3['node'][_0x3278e9(0x243)]=_0x2718df,this[_0x3278e9(0x1c1)](_0x2718df,_0x5c49a3),_0x68caeb[_0x3278e9(0x273)]){for(_0x235420=0x0,_0x8021e0=_0x68caeb[_0x3278e9(0x273)];_0x235420<_0x8021e0;_0x235420++)_0x68caeb[_0x235420](_0x235420);}_0x301d2b[_0x3278e9(0x273)]&&(_0x2718df[_0x3278e9(0x220)]=_0x301d2b);}catch(_0x4e941a){_0x4ea2f9(_0x4e941a,_0x2718df,_0x5c49a3);}return this[_0x3278e9(0x1d0)](_0xbb1bc2,_0x2718df),this[_0x3278e9(0x242)](_0x2718df,_0x5c49a3),_0x5c49a3['node']['current']=_0x5dec97,_0x5c49a3[_0x3278e9(0x1d1)]--,_0x5c49a3[_0x3278e9(0x27f)]=_0x116db9,_0x5c49a3['autoExpand']&&_0x5c49a3[_0x3278e9(0x225)][_0x3278e9(0x1ea)](),_0x2718df;}['_getOwnPropertySymbols'](_0x4f0e21){var _0xafaf07=_0x497190;return Object[_0xafaf07(0x28e)]?Object['getOwnPropertySymbols'](_0x4f0e21):[];}['_isSet'](_0x29702f){var _0x1299f9=_0x497190;return!!(_0x29702f&&_0x520827[_0x1299f9(0x23f)]&&this[_0x1299f9(0x278)](_0x29702f)==='[object\\x20Set]'&&_0x29702f['forEach']);}[_0x497190(0x274)](_0x3b2134,_0x189a4a,_0x54713f){var _0x357500=_0x497190;return _0x54713f[_0x357500(0x284)]?typeof _0x3b2134[_0x189a4a]==_0x357500(0x27b):!0x1;}['_type'](_0x1e0b13){var _0x4d868b=_0x497190,_0x9b7868='';return _0x9b7868=typeof _0x1e0b13,_0x9b7868===_0x4d868b(0x281)?this[_0x4d868b(0x278)](_0x1e0b13)===_0x4d868b(0x255)?_0x9b7868=_0x4d868b(0x223):this[_0x4d868b(0x278)](_0x1e0b13)===_0x4d868b(0x293)?_0x9b7868=_0x4d868b(0x1e7):this[_0x4d868b(0x278)](_0x1e0b13)===_0x4d868b(0x28b)?_0x9b7868=_0x4d868b(0x212):_0x1e0b13===null?_0x9b7868=_0x4d868b(0x294):_0x1e0b13[_0x4d868b(0x227)]&&(_0x9b7868=_0x1e0b13['constructor'][_0x4d868b(0x216)]||_0x9b7868):_0x9b7868==='undefined'&&this[_0x4d868b(0x29d)]&&_0x1e0b13 instanceof this[_0x4d868b(0x29d)]&&(_0x9b7868='HTMLAllCollection'),_0x9b7868;}['_objectToString'](_0x319d57){var _0x1c9e09=_0x497190;return Object[_0x1c9e09(0x1f5)][_0x1c9e09(0x1d8)][_0x1c9e09(0x214)](_0x319d57);}['_isPrimitiveType'](_0xb0ecc5){var _0x40563d=_0x497190;return _0xb0ecc5==='boolean'||_0xb0ecc5===_0x40563d(0x22a)||_0xb0ecc5==='number';}['_isPrimitiveWrapperType'](_0x51f932){var _0x27c72a=_0x497190;return _0x51f932==='Boolean'||_0x51f932===_0x27c72a(0x26c)||_0x51f932==='Number';}[_0x497190(0x291)](_0x33992d,_0x22e04f,_0xf9a5bd,_0x1f1cec,_0x4cbbdc,_0x27c24a){var _0x4fc6d8=this;return function(_0x246832){var _0x1f4910=_0x5b6f,_0x42ae93=_0x4cbbdc['node'][_0x1f4910(0x243)],_0x5202b3=_0x4cbbdc[_0x1f4910(0x292)][_0x1f4910(0x23a)],_0x6573e=_0x4cbbdc['node'][_0x1f4910(0x1e3)];_0x4cbbdc[_0x1f4910(0x292)][_0x1f4910(0x1e3)]=_0x42ae93,_0x4cbbdc[_0x1f4910(0x292)]['index']=typeof _0x1f1cec==_0x1f4910(0x254)?_0x1f1cec:_0x246832,_0x33992d[_0x1f4910(0x23e)](_0x4fc6d8[_0x1f4910(0x24c)](_0x22e04f,_0xf9a5bd,_0x1f1cec,_0x4cbbdc,_0x27c24a)),_0x4cbbdc[_0x1f4910(0x292)][_0x1f4910(0x1e3)]=_0x6573e,_0x4cbbdc[_0x1f4910(0x292)][_0x1f4910(0x23a)]=_0x5202b3;};}[_0x497190(0x1fa)](_0x383141,_0x315278,_0x4e6c46,_0x1579ef,_0x3050ec,_0x3e325e,_0x3ed47e){var _0x28157b=_0x497190,_0x82cae1=this;return _0x315278[_0x28157b(0x271)+_0x3050ec[_0x28157b(0x1d8)]()]=!0x0,function(_0x5e05fc){var _0x93a4f7=_0x28157b,_0x4d4626=_0x3e325e[_0x93a4f7(0x292)]['current'],_0x2e8c83=_0x3e325e['node'][_0x93a4f7(0x23a)],_0x4fd549=_0x3e325e[_0x93a4f7(0x292)][_0x93a4f7(0x1e3)];_0x3e325e[_0x93a4f7(0x292)]['parent']=_0x4d4626,_0x3e325e[_0x93a4f7(0x292)]['index']=_0x5e05fc,_0x383141[_0x93a4f7(0x23e)](_0x82cae1[_0x93a4f7(0x24c)](_0x4e6c46,_0x1579ef,_0x3050ec,_0x3e325e,_0x3ed47e)),_0x3e325e[_0x93a4f7(0x292)]['parent']=_0x4fd549,_0x3e325e[_0x93a4f7(0x292)]['index']=_0x2e8c83;};}[_0x497190(0x24c)](_0x5603b,_0x36129e,_0x378483,_0x35701e,_0x2d97c3){var _0x578825=_0x497190,_0x5703a5=this;_0x2d97c3||(_0x2d97c3=function(_0x14c878,_0x2727ad){return _0x14c878[_0x2727ad];});var _0x40331c=_0x378483[_0x578825(0x1d8)](),_0x3f0099=_0x35701e[_0x578825(0x1e2)]||{},_0x20f313=_0x35701e[_0x578825(0x1b9)],_0x8a4894=_0x35701e[_0x578825(0x26f)];try{var _0x1faa59=this[_0x578825(0x256)](_0x5603b),_0x324f3f=_0x40331c;_0x1faa59&&_0x324f3f[0x0]==='\\x27'&&(_0x324f3f=_0x324f3f[_0x578825(0x298)](0x1,_0x324f3f[_0x578825(0x273)]-0x2));var _0x56669b=_0x35701e[_0x578825(0x1e2)]=_0x3f0099[_0x578825(0x271)+_0x324f3f];_0x56669b&&(_0x35701e[_0x578825(0x1b9)]=_0x35701e[_0x578825(0x1b9)]+0x1),_0x35701e[_0x578825(0x26f)]=!!_0x56669b;var _0x2b0e0f=typeof _0x378483==_0x578825(0x20f),_0x4160d4={'name':_0x2b0e0f||_0x1faa59?_0x40331c:this['_propertyName'](_0x40331c)};if(_0x2b0e0f&&(_0x4160d4[_0x578825(0x20f)]=!0x0),!(_0x36129e===_0x578825(0x223)||_0x36129e===_0x578825(0x21f))){var _0x14829a=this[_0x578825(0x1f9)](_0x5603b,_0x378483);if(_0x14829a&&(_0x14829a[_0x578825(0x237)]&&(_0x4160d4[_0x578825(0x235)]=!0x0),_0x14829a[_0x578825(0x1dc)]&&!_0x56669b&&!_0x35701e[_0x578825(0x239)]))return _0x4160d4[_0x578825(0x1e1)]=!0x0,this[_0x578825(0x1cf)](_0x4160d4,_0x35701e),_0x4160d4;}var _0x421568;try{_0x421568=_0x2d97c3(_0x5603b,_0x378483);}catch(_0x38e589){return _0x4160d4={'name':_0x40331c,'type':'unknown','error':_0x38e589[_0x578825(0x20c)]},this[_0x578825(0x1cf)](_0x4160d4,_0x35701e),_0x4160d4;}var _0x6cb4a2=this['_type'](_0x421568),_0x5eb72a=this[_0x578825(0x1bd)](_0x6cb4a2);if(_0x4160d4['type']=_0x6cb4a2,_0x5eb72a)this[_0x578825(0x1cf)](_0x4160d4,_0x35701e,_0x421568,function(){var _0xbb1a1c=_0x578825;_0x4160d4['value']=_0x421568['valueOf'](),!_0x56669b&&_0x5703a5[_0xbb1a1c(0x1f1)](_0x6cb4a2,_0x4160d4,_0x35701e,{});});else{var _0x207753=_0x35701e[_0x578825(0x27f)]&&_0x35701e[_0x578825(0x1d1)]<_0x35701e['autoExpandMaxDepth']&&_0x35701e[_0x578825(0x225)][_0x578825(0x28a)](_0x421568)<0x0&&_0x6cb4a2!=='function'&&_0x35701e[_0x578825(0x285)]<_0x35701e[_0x578825(0x265)];_0x207753||_0x35701e['level']<_0x20f313||_0x56669b?(this[_0x578825(0x25a)](_0x4160d4,_0x421568,_0x35701e,_0x56669b||{}),this[_0x578825(0x1d0)](_0x421568,_0x4160d4)):this[_0x578825(0x1cf)](_0x4160d4,_0x35701e,_0x421568,function(){var _0x25a69f=_0x578825;_0x6cb4a2===_0x25a69f(0x294)||_0x6cb4a2==='undefined'||(delete _0x4160d4[_0x25a69f(0x1c7)],_0x4160d4[_0x25a69f(0x25c)]=!0x0);});}return _0x4160d4;}finally{_0x35701e[_0x578825(0x1e2)]=_0x3f0099,_0x35701e[_0x578825(0x1b9)]=_0x20f313,_0x35701e['isExpressionToEvaluate']=_0x8a4894;}}[_0x497190(0x1f1)](_0x383034,_0x2bac95,_0x3c4b47,_0x391693){var _0x3d9c81=_0x497190,_0xf6a594=_0x391693[_0x3d9c81(0x1e8)]||_0x3c4b47['strLength'];if((_0x383034===_0x3d9c81(0x22a)||_0x383034===_0x3d9c81(0x26c))&&_0x2bac95[_0x3d9c81(0x1c7)]){let _0x3f4c2c=_0x2bac95[_0x3d9c81(0x1c7)][_0x3d9c81(0x273)];_0x3c4b47[_0x3d9c81(0x206)]+=_0x3f4c2c,_0x3c4b47[_0x3d9c81(0x206)]>_0x3c4b47['totalStrLength']?(_0x2bac95['capped']='',delete _0x2bac95['value']):_0x3f4c2c>_0xf6a594&&(_0x2bac95['capped']=_0x2bac95[_0x3d9c81(0x1c7)]['substr'](0x0,_0xf6a594),delete _0x2bac95['value']);}}[_0x497190(0x256)](_0x4ed1a1){var _0x20f122=_0x497190;return!!(_0x4ed1a1&&_0x520827['Map']&&this[_0x20f122(0x278)](_0x4ed1a1)===_0x20f122(0x20e)&&_0x4ed1a1[_0x20f122(0x1de)]);}[_0x497190(0x21b)](_0x2e3654){var _0x5d16f2=_0x497190;if(_0x2e3654[_0x5d16f2(0x263)](/^\\d+$/))return _0x2e3654;var _0x2332bb;try{_0x2332bb=JSON[_0x5d16f2(0x247)](''+_0x2e3654);}catch{_0x2332bb='\\x22'+this[_0x5d16f2(0x278)](_0x2e3654)+'\\x22';}return _0x2332bb[_0x5d16f2(0x263)](/^\"([a-zA-Z_][a-zA-Z_0-9]*)\"$/)?_0x2332bb=_0x2332bb[_0x5d16f2(0x298)](0x1,_0x2332bb[_0x5d16f2(0x273)]-0x2):_0x2332bb=_0x2332bb[_0x5d16f2(0x1fb)](/'/g,'\\x5c\\x27')[_0x5d16f2(0x1fb)](/\\\\\"/g,'\\x22')[_0x5d16f2(0x1fb)](/(^\"|\"$)/g,'\\x27'),_0x2332bb;}[_0x497190(0x1cf)](_0x4f849b,_0x18ff33,_0x5c9f5d,_0x3570e5){var _0x345494=_0x497190;this['_treeNodePropertiesBeforeFullValue'](_0x4f849b,_0x18ff33),_0x3570e5&&_0x3570e5(),this[_0x345494(0x1d0)](_0x5c9f5d,_0x4f849b),this[_0x345494(0x242)](_0x4f849b,_0x18ff33);}[_0x497190(0x1c1)](_0xe00747,_0x4a4d16){var _0x1b870a=_0x497190;this[_0x1b870a(0x29f)](_0xe00747,_0x4a4d16),this[_0x1b870a(0x289)](_0xe00747,_0x4a4d16),this[_0x1b870a(0x1cb)](_0xe00747,_0x4a4d16),this[_0x1b870a(0x1fe)](_0xe00747,_0x4a4d16);}['_setNodeId'](_0x50e02d,_0x568fd4){}[_0x497190(0x289)](_0x11a0bd,_0x222723){}[_0x497190(0x213)](_0x25fe69,_0x2373fa){}[_0x497190(0x244)](_0x282753){var _0x29cd20=_0x497190;return _0x282753===this[_0x29cd20(0x262)];}[_0x497190(0x242)](_0xa8bfff,_0x32f524){var _0x2b738f=_0x497190;this[_0x2b738f(0x213)](_0xa8bfff,_0x32f524),this[_0x2b738f(0x26d)](_0xa8bfff),_0x32f524['sortProps']&&this[_0x2b738f(0x250)](_0xa8bfff),this['_addFunctionsNode'](_0xa8bfff,_0x32f524),this[_0x2b738f(0x20a)](_0xa8bfff,_0x32f524),this[_0x2b738f(0x1ff)](_0xa8bfff);}['_additionalMetadata'](_0x1658cc,_0x33137b){var _0xa34bad=_0x497190;try{_0x1658cc&&typeof _0x1658cc[_0xa34bad(0x273)]==_0xa34bad(0x254)&&(_0x33137b['length']=_0x1658cc[_0xa34bad(0x273)]);}catch{}if(_0x33137b[_0xa34bad(0x1c0)]===_0xa34bad(0x254)||_0x33137b[_0xa34bad(0x1c0)]===_0xa34bad(0x236)){if(isNaN(_0x33137b[_0xa34bad(0x1c7)]))_0x33137b[_0xa34bad(0x245)]=!0x0,delete _0x33137b['value'];else switch(_0x33137b[_0xa34bad(0x1c7)]){case Number[_0xa34bad(0x234)]:_0x33137b[_0xa34bad(0x24e)]=!0x0,delete _0x33137b['value'];break;case Number[_0xa34bad(0x1db)]:_0x33137b[_0xa34bad(0x224)]=!0x0,delete _0x33137b[_0xa34bad(0x1c7)];break;case 0x0:this['_isNegativeZero'](_0x33137b['value'])&&(_0x33137b[_0xa34bad(0x282)]=!0x0);break;}}else _0x33137b['type']===_0xa34bad(0x27b)&&typeof _0x1658cc[_0xa34bad(0x216)]==_0xa34bad(0x22a)&&_0x1658cc[_0xa34bad(0x216)]&&_0x33137b['name']&&_0x1658cc[_0xa34bad(0x216)]!==_0x33137b[_0xa34bad(0x216)]&&(_0x33137b[_0xa34bad(0x288)]=_0x1658cc[_0xa34bad(0x216)]);}[_0x497190(0x1ca)](_0x5b8c1d){var _0x1440ea=_0x497190;return 0x1/_0x5b8c1d===Number[_0x1440ea(0x1db)];}['_sortProps'](_0x42f6a2){var _0x5a9795=_0x497190;!_0x42f6a2[_0x5a9795(0x220)]||!_0x42f6a2[_0x5a9795(0x220)][_0x5a9795(0x273)]||_0x42f6a2[_0x5a9795(0x1c0)]==='array'||_0x42f6a2[_0x5a9795(0x1c0)]==='Map'||_0x42f6a2[_0x5a9795(0x1c0)]==='Set'||_0x42f6a2[_0x5a9795(0x220)][_0x5a9795(0x21d)](function(_0x1dfdb6,_0x5539f8){var _0x58c729=_0x5a9795,_0x162fca=_0x1dfdb6[_0x58c729(0x216)]['toLowerCase'](),_0x284cb5=_0x5539f8[_0x58c729(0x216)][_0x58c729(0x22b)]();return _0x162fca<_0x284cb5?-0x1:_0x162fca>_0x284cb5?0x1:0x0;});}[_0x497190(0x1d3)](_0x247f12,_0x161ecd){var _0x20b6e3=_0x497190;if(!(_0x161ecd[_0x20b6e3(0x284)]||!_0x247f12['props']||!_0x247f12[_0x20b6e3(0x220)][_0x20b6e3(0x273)])){for(var _0x19142c=[],_0x5ae314=[],_0x35a97b=0x0,_0x34cb3b=_0x247f12[_0x20b6e3(0x220)][_0x20b6e3(0x273)];_0x35a97b<_0x34cb3b;_0x35a97b++){var _0x407a29=_0x247f12[_0x20b6e3(0x220)][_0x35a97b];_0x407a29[_0x20b6e3(0x1c0)]===_0x20b6e3(0x27b)?_0x19142c[_0x20b6e3(0x23e)](_0x407a29):_0x5ae314[_0x20b6e3(0x23e)](_0x407a29);}if(!(!_0x5ae314[_0x20b6e3(0x273)]||_0x19142c[_0x20b6e3(0x273)]<=0x1)){_0x247f12[_0x20b6e3(0x220)]=_0x5ae314;var _0x5db8da={'functionsNode':!0x0,'props':_0x19142c};this['_setNodeId'](_0x5db8da,_0x161ecd),this[_0x20b6e3(0x213)](_0x5db8da,_0x161ecd),this['_setNodeExpandableState'](_0x5db8da),this[_0x20b6e3(0x1fe)](_0x5db8da,_0x161ecd),_0x5db8da['id']+='\\x20f',_0x247f12['props'][_0x20b6e3(0x1f0)](_0x5db8da);}}}[_0x497190(0x20a)](_0x382ef0,_0x1d8840){}[_0x497190(0x26d)](_0x54b14a){}[_0x497190(0x29c)](_0x47bc00){var _0x40ebc0=_0x497190;return Array[_0x40ebc0(0x287)](_0x47bc00)||typeof _0x47bc00=='object'&&this[_0x40ebc0(0x278)](_0x47bc00)==='[object\\x20Array]';}['_setNodePermissions'](_0x564807,_0x5c6386){}[_0x497190(0x1ff)](_0x83f79d){var _0x128e4d=_0x497190;delete _0x83f79d[_0x128e4d(0x257)],delete _0x83f79d[_0x128e4d(0x269)],delete _0x83f79d['_hasMapOnItsPath'];}[_0x497190(0x1cb)](_0x3b73cf,_0x441d89){}[_0x497190(0x258)](_0x2ec3c5){var _0x3981ea=_0x497190;return _0x2ec3c5?_0x2ec3c5['match'](this[_0x3981ea(0x204)])?'['+_0x2ec3c5+']':_0x2ec3c5[_0x3981ea(0x263)](this[_0x3981ea(0x1ef)])?'.'+_0x2ec3c5:_0x2ec3c5[_0x3981ea(0x263)](this[_0x3981ea(0x27e)])?'['+_0x2ec3c5+']':'[\\x27'+_0x2ec3c5+'\\x27]':'';}}let _0x7e30a3=new _0x585b1f();function _0x5888ef(_0x3c2c8a,_0x164f59,_0x2da2cb,_0x4bb1dd,_0x965ae1,_0x303ae2){var _0x198a80=_0x497190;let _0x5a1db8,_0x49227f;try{_0x49227f=_0x2bcb99(),_0x5a1db8=_0x3b6e55[_0x164f59],!_0x5a1db8||_0x49227f-_0x5a1db8['ts']>0x1f4&&_0x5a1db8[_0x198a80(0x1e6)]&&_0x5a1db8['time']/_0x5a1db8['count']<0x64?(_0x3b6e55[_0x164f59]=_0x5a1db8={'count':0x0,'time':0x0,'ts':_0x49227f},_0x3b6e55['hits']={}):_0x49227f-_0x3b6e55[_0x198a80(0x201)]['ts']>0x32&&_0x3b6e55[_0x198a80(0x201)][_0x198a80(0x1e6)]&&_0x3b6e55[_0x198a80(0x201)][_0x198a80(0x1d6)]/_0x3b6e55[_0x198a80(0x201)][_0x198a80(0x1e6)]<0x64&&(_0x3b6e55[_0x198a80(0x201)]={});let _0x1003e9=[],_0x2ddcfc=_0x5a1db8[_0x198a80(0x28c)]||_0x3b6e55[_0x198a80(0x201)][_0x198a80(0x28c)]?_0x1d4687:_0x173575,_0x3bd483=_0x192caf=>{var _0x55f45b=_0x198a80;let _0x43b0a0={};return _0x43b0a0[_0x55f45b(0x220)]=_0x192caf[_0x55f45b(0x220)],_0x43b0a0['elements']=_0x192caf[_0x55f45b(0x21c)],_0x43b0a0[_0x55f45b(0x1e8)]=_0x192caf[_0x55f45b(0x1e8)],_0x43b0a0[_0x55f45b(0x229)]=_0x192caf[_0x55f45b(0x229)],_0x43b0a0['autoExpandLimit']=_0x192caf[_0x55f45b(0x265)],_0x43b0a0[_0x55f45b(0x27a)]=_0x192caf[_0x55f45b(0x27a)],_0x43b0a0[_0x55f45b(0x1fd)]=!0x1,_0x43b0a0[_0x55f45b(0x284)]=!_0x31d7c7,_0x43b0a0[_0x55f45b(0x1b9)]=0x1,_0x43b0a0['level']=0x0,_0x43b0a0[_0x55f45b(0x268)]=_0x55f45b(0x221),_0x43b0a0['rootExpression']=_0x55f45b(0x207),_0x43b0a0[_0x55f45b(0x27f)]=!0x0,_0x43b0a0[_0x55f45b(0x225)]=[],_0x43b0a0[_0x55f45b(0x285)]=0x0,_0x43b0a0[_0x55f45b(0x239)]=!0x0,_0x43b0a0[_0x55f45b(0x206)]=0x0,_0x43b0a0[_0x55f45b(0x292)]={'current':void 0x0,'parent':void 0x0,'index':0x0},_0x43b0a0;};for(var _0x579544=0x0;_0x579544<_0x965ae1[_0x198a80(0x273)];_0x579544++)_0x1003e9[_0x198a80(0x23e)](_0x7e30a3[_0x198a80(0x25a)]({'timeNode':_0x3c2c8a==='time'||void 0x0},_0x965ae1[_0x579544],_0x3bd483(_0x2ddcfc),{}));if(_0x3c2c8a===_0x198a80(0x260)){let _0x2f2551=Error[_0x198a80(0x1f4)];try{Error[_0x198a80(0x1f4)]=0x1/0x0,_0x1003e9[_0x198a80(0x23e)](_0x7e30a3[_0x198a80(0x25a)]({'stackNode':!0x0},new Error()[_0x198a80(0x1ce)],_0x3bd483(_0x2ddcfc),{'strLength':0x1/0x0}));}finally{Error[_0x198a80(0x1f4)]=_0x2f2551;}}return{'method':_0x198a80(0x20b),'version':_0x1dd21f,'args':[{'ts':_0x2da2cb,'session':_0x4bb1dd,'args':_0x1003e9,'id':_0x164f59,'context':_0x303ae2}]};}catch(_0x245a88){return{'method':_0x198a80(0x20b),'version':_0x1dd21f,'args':[{'ts':_0x2da2cb,'session':_0x4bb1dd,'args':[{'type':_0x198a80(0x226),'error':_0x245a88&&_0x245a88[_0x198a80(0x20c)]}],'id':_0x164f59,'context':_0x303ae2}]};}finally{try{if(_0x5a1db8&&_0x49227f){let _0x690d71=_0x2bcb99();_0x5a1db8[_0x198a80(0x1e6)]++,_0x5a1db8['time']+=_0x5345db(_0x49227f,_0x690d71),_0x5a1db8['ts']=_0x690d71,_0x3b6e55[_0x198a80(0x201)][_0x198a80(0x1e6)]++,_0x3b6e55['hits'][_0x198a80(0x1d6)]+=_0x5345db(_0x49227f,_0x690d71),_0x3b6e55[_0x198a80(0x201)]['ts']=_0x690d71,(_0x5a1db8[_0x198a80(0x1e6)]>0x32||_0x5a1db8[_0x198a80(0x1d6)]>0x64)&&(_0x5a1db8[_0x198a80(0x28c)]=!0x0),(_0x3b6e55[_0x198a80(0x201)][_0x198a80(0x1e6)]>0x3e8||_0x3b6e55[_0x198a80(0x201)][_0x198a80(0x1d6)]>0x12c)&&(_0x3b6e55[_0x198a80(0x201)]['reduceLimits']=!0x0);}}catch{}}}return _0x520827[_0x497190(0x1da)];})(globalThis,'127.0.0.1',_0x39dd8e(0x1ec),\"c:\\\\Users\\\\jordi\\\\.vscode-insiders\\\\extensions\\\\wallabyjs.console-ninja-0.0.156\\\\node_modules\",_0x39dd8e(0x1ba),_0x39dd8e(0x217),_0x39dd8e(0x28d),_0x39dd8e(0x248),_0x39dd8e(0x1cc));");
+    return (0, eval)("globalThis._console_ninja") || (0, eval)("/* https://github.com/wallabyjs/console-ninja#how-does-it-work */'use strict';var _0x28d665=_0x1372;(function(_0x3c9086,_0x1118f6){var _0x1f7b39=_0x1372,_0x541c27=_0x3c9086();while(!![]){try{var _0xe8486a=parseInt(_0x1f7b39(0x12f))/0x1+-parseInt(_0x1f7b39(0x145))/0x2*(parseInt(_0x1f7b39(0x129))/0x3)+-parseInt(_0x1f7b39(0x15e))/0x4+parseInt(_0x1f7b39(0x1e9))/0x5+parseInt(_0x1f7b39(0x151))/0x6+-parseInt(_0x1f7b39(0x1cf))/0x7+parseInt(_0x1f7b39(0x13a))/0x8*(parseInt(_0x1f7b39(0x1e6))/0x9);if(_0xe8486a===_0x1118f6)break;else _0x541c27['push'](_0x541c27['shift']());}catch(_0x259916){_0x541c27['push'](_0x541c27['shift']());}}}(_0x36d9,0x317a6));var ue=Object[_0x28d665(0x161)],te=Object[_0x28d665(0x17c)],he=Object[_0x28d665(0x1d8)],le=Object[_0x28d665(0x1a4)],fe=Object[_0x28d665(0x1e7)],_e=Object[_0x28d665(0x182)][_0x28d665(0x1b0)],pe=(_0x531761,_0x52d30f,_0x3fae6e,_0x518c6c)=>{var _0x242048=_0x28d665;if(_0x52d30f&&typeof _0x52d30f=='object'||typeof _0x52d30f==_0x242048(0x1c9)){for(let _0xeeb547 of le(_0x52d30f))!_e['call'](_0x531761,_0xeeb547)&&_0xeeb547!==_0x3fae6e&&te(_0x531761,_0xeeb547,{'get':()=>_0x52d30f[_0xeeb547],'enumerable':!(_0x518c6c=he(_0x52d30f,_0xeeb547))||_0x518c6c[_0x242048(0x1a7)]});}return _0x531761;},ne=(_0x15b72b,_0x1735d9,_0x45133b)=>(_0x45133b=_0x15b72b!=null?ue(fe(_0x15b72b)):{},pe(_0x1735d9||!_0x15b72b||!_0x15b72b[_0x28d665(0x1ae)]?te(_0x45133b,_0x28d665(0x1ca),{'value':_0x15b72b,'enumerable':!0x0}):_0x45133b,_0x15b72b)),Q=class{constructor(_0x33e78a,_0x569466,_0x1e8494,_0x1c34cf){var _0x5869eb=_0x28d665;this[_0x5869eb(0x14d)]=_0x33e78a,this[_0x5869eb(0x163)]=_0x569466,this['port']=_0x1e8494,this[_0x5869eb(0x1d5)]=_0x1c34cf,this['_allowedToSend']=!0x0,this[_0x5869eb(0x1a6)]=!0x0,this[_0x5869eb(0x132)]=!0x1,this[_0x5869eb(0x1b4)]=!0x1,this['_inBrowser']=!!this[_0x5869eb(0x14d)]['WebSocket'],this[_0x5869eb(0x18c)]=null,this['_connectAttemptCount']=0x0,this[_0x5869eb(0x1a3)]=0x14,this[_0x5869eb(0x10a)]=this[_0x5869eb(0x14b)]?_0x5869eb(0x14e):_0x5869eb(0x1e5);}async['getWebSocketClass'](){var _0x489c4b=_0x28d665;if(this['_WebSocketClass'])return this[_0x489c4b(0x18c)];let _0x2a96bb;if(this[_0x489c4b(0x14b)])_0x2a96bb=this['global']['WebSocket'];else{if(this[_0x489c4b(0x14d)][_0x489c4b(0x1c0)]?.['_WebSocket'])_0x2a96bb=this[_0x489c4b(0x14d)][_0x489c4b(0x1c0)]?.[_0x489c4b(0x131)];else try{let _0x304bd0=await import(_0x489c4b(0x1cc));_0x2a96bb=(await import((await import(_0x489c4b(0x18d)))[_0x489c4b(0x12e)](_0x304bd0['join'](this[_0x489c4b(0x1d5)],_0x489c4b(0x188)))[_0x489c4b(0x1a1)]()))[_0x489c4b(0x1ca)];}catch{try{_0x2a96bb=require(require('path')[_0x489c4b(0x141)](this[_0x489c4b(0x1d5)],'ws'));}catch{throw new Error(_0x489c4b(0x179));}}}return this[_0x489c4b(0x18c)]=_0x2a96bb,_0x2a96bb;}['_connectToHostNow'](){var _0x49eacc=_0x28d665;this[_0x49eacc(0x1b4)]||this[_0x49eacc(0x132)]||this[_0x49eacc(0x1be)]>=this[_0x49eacc(0x1a3)]||(this[_0x49eacc(0x1a6)]=!0x1,this[_0x49eacc(0x1b4)]=!0x0,this[_0x49eacc(0x1be)]++,this[_0x49eacc(0x17f)]=new Promise((_0x53a530,_0x19e390)=>{var _0x411abe=_0x49eacc;this[_0x411abe(0x1bb)]()[_0x411abe(0x1d1)](_0x30ac68=>{var _0x32226f=_0x411abe;let _0x472cdd=new _0x30ac68('ws://'+this[_0x32226f(0x163)]+':'+this['port']);_0x472cdd[_0x32226f(0x1c6)]=()=>{var _0x4d0585=_0x32226f;this[_0x4d0585(0x11b)]=!0x1,this[_0x4d0585(0x1de)](_0x472cdd),this['_attemptToReconnectShortly'](),_0x19e390(new Error(_0x4d0585(0x146)));},_0x472cdd[_0x32226f(0x130)]=()=>{var _0x325d3f=_0x32226f;this['_inBrowser']||_0x472cdd[_0x325d3f(0x19c)]&&_0x472cdd['_socket'][_0x325d3f(0x138)]&&_0x472cdd[_0x325d3f(0x19c)][_0x325d3f(0x138)](),_0x53a530(_0x472cdd);},_0x472cdd[_0x32226f(0x17d)]=()=>{var _0x3f54ca=_0x32226f;this[_0x3f54ca(0x1a6)]=!0x0,this[_0x3f54ca(0x1de)](_0x472cdd),this[_0x3f54ca(0x16b)]();},_0x472cdd[_0x32226f(0x15c)]=_0x5cbbdf=>{var _0x300149=_0x32226f;try{_0x5cbbdf&&_0x5cbbdf[_0x300149(0x13d)]&&this[_0x300149(0x14b)]&&JSON[_0x300149(0x15b)](_0x5cbbdf['data'])['method']===_0x300149(0x1c7)&&this[_0x300149(0x14d)][_0x300149(0x12d)][_0x300149(0x1c7)]();}catch{}};})[_0x411abe(0x1d1)](_0x4d3512=>(this[_0x411abe(0x132)]=!0x0,this[_0x411abe(0x1b4)]=!0x1,this['_allowedToConnectOnSend']=!0x1,this['_allowedToSend']=!0x0,this[_0x411abe(0x1be)]=0x0,_0x4d3512))[_0x411abe(0x149)](_0x40d9b2=>(this[_0x411abe(0x132)]=!0x1,this[_0x411abe(0x1b4)]=!0x1,_0x19e390(new Error(_0x411abe(0x160)+(_0x40d9b2&&_0x40d9b2[_0x411abe(0x189)])))));}));}[_0x28d665(0x1de)](_0x48287e){var _0x4f9037=_0x28d665;this['_connected']=!0x1,this[_0x4f9037(0x1b4)]=!0x1;try{_0x48287e[_0x4f9037(0x17d)]=null,_0x48287e['onerror']=null,_0x48287e[_0x4f9037(0x130)]=null;}catch{}try{_0x48287e[_0x4f9037(0x168)]<0x2&&_0x48287e[_0x4f9037(0x1da)]();}catch{}}[_0x28d665(0x16b)](){var _0x3e241e=_0x28d665;clearTimeout(this[_0x3e241e(0x1c1)]),!(this['_connectAttemptCount']>=this['_maxConnectAttemptCount'])&&(this['_reconnectTimeout']=setTimeout(()=>{var _0x4ce9c4=_0x3e241e;this[_0x4ce9c4(0x132)]||this[_0x4ce9c4(0x1b4)]||(this['_connectToHostNow'](),this[_0x4ce9c4(0x17f)]?.['catch'](()=>this[_0x4ce9c4(0x16b)]()));},0x1f4),this['_reconnectTimeout'][_0x3e241e(0x138)]&&this[_0x3e241e(0x1c1)][_0x3e241e(0x138)]());}async[_0x28d665(0x1d9)](_0x4e050b){var _0x59b97e=_0x28d665;try{if(!this['_allowedToSend'])return;this[_0x59b97e(0x1a6)]&&this[_0x59b97e(0x1b2)](),(await this[_0x59b97e(0x17f)])[_0x59b97e(0x1d9)](JSON[_0x59b97e(0x195)](_0x4e050b));}catch(_0x192a5f){console[_0x59b97e(0x111)](this[_0x59b97e(0x10a)]+':\\x20'+(_0x192a5f&&_0x192a5f[_0x59b97e(0x189)])),this[_0x59b97e(0x11b)]=!0x1,this[_0x59b97e(0x16b)]();}}};function V(_0x5bd388,_0x3cb156,_0x35c229,_0x317208,_0x3a0117){var _0x5e4df5=_0x28d665;let _0x1e9410=_0x35c229[_0x5e4df5(0x1ac)](',')[_0x5e4df5(0x16d)](_0x21c5c0=>{var _0x16e92c=_0x5e4df5;try{_0x5bd388[_0x16e92c(0x180)]||((_0x3a0117==='next.js'||_0x3a0117===_0x16e92c(0x19a)||_0x3a0117===_0x16e92c(0x158))&&(_0x3a0117+=_0x5bd388[_0x16e92c(0x1c0)]?.[_0x16e92c(0x144)]?.['node']?'\\x20server':'\\x20browser'),_0x5bd388[_0x16e92c(0x180)]={'id':+new Date(),'tool':_0x3a0117});let _0x35906d=new Q(_0x5bd388,_0x3cb156,_0x21c5c0,_0x317208);return _0x35906d['send'][_0x16e92c(0x110)](_0x35906d);}catch(_0x491628){return console['warn'](_0x16e92c(0x16e),_0x491628&&_0x491628[_0x16e92c(0x189)]),()=>{};}});return _0xf82166=>_0x1e9410[_0x5e4df5(0x12c)](_0x564f25=>_0x564f25(_0xf82166));}function _0x1372(_0x1a5123,_0x29ad2a){var _0x36d972=_0x36d9();return _0x1372=function(_0x137258,_0x2286a6){_0x137258=_0x137258-0x109;var _0x33c7b5=_0x36d972[_0x137258];return _0x33c7b5;},_0x1372(_0x1a5123,_0x29ad2a);}function H(_0x1fa728){var _0x2bc666=_0x28d665;let _0x477973=function(_0x111080,_0x520ba4){return _0x520ba4-_0x111080;},_0x3cbffc;if(_0x1fa728['performance'])_0x3cbffc=function(){var _0x3d4d5c=_0x1372;return _0x1fa728[_0x3d4d5c(0x169)][_0x3d4d5c(0x178)]();};else{if(_0x1fa728[_0x2bc666(0x1c0)]&&_0x1fa728['process'][_0x2bc666(0x114)])_0x3cbffc=function(){var _0x2e261c=_0x2bc666;return _0x1fa728[_0x2e261c(0x1c0)][_0x2e261c(0x114)]();},_0x477973=function(_0x4ff10f,_0x14d58a){return 0x3e8*(_0x14d58a[0x0]-_0x4ff10f[0x0])+(_0x14d58a[0x1]-_0x4ff10f[0x1])/0xf4240;};else try{let {performance:_0x2082c8}=require(_0x2bc666(0x154));_0x3cbffc=function(){var _0x2d7873=_0x2bc666;return _0x2082c8[_0x2d7873(0x178)]();};}catch{_0x3cbffc=function(){return+new Date();};}}return{'elapsed':_0x477973,'timeStamp':_0x3cbffc,'now':()=>Date[_0x2bc666(0x178)]()};}function _0x36d9(){var _0x3d0dae=['onclose','negativeInfinity','_ws','_console_ninja_session','[object\\x20Array]','prototype','match','_type','_addProperty','trace','webpack','ws/index.js','message','depth','_getOwnPropertyDescriptor','_WebSocketClass','url','console','test','totalStrLength','object','RegExp','_dateToString','_Symbol','stringify','Symbol','indexOf','timeEnd','autoExpandMaxDepth','remix','_isPrimitiveType','_socket','strLength','count','_treeNodePropertiesBeforeFullValue','props','toString','value','_maxConnectAttemptCount','getOwnPropertyNames','node','_allowedToConnectOnSend','enumerable','_hasSetOnItsPath',\"c:\\\\Users\\\\jordi\\\\.vscode-insiders\\\\extensions\\\\wallabyjs.console-ninja-0.0.157\\\\node_modules\",'NEGATIVE_INFINITY','_p_name','split','_isUndefined','__es'+'Module','_p_','hasOwnProperty','cappedElements','_connectToHostNow','log','_connecting','autoExpandPreviousObjects','_propertyAccessor','nuxt',[\"localhost\",\"127.0.0.1\",\"example.cypress.io\",\"DESKTOP-0M264Q6\",\"192.168.1.138\"],'_capIfString','POSITIVE_INFINITY','getWebSocketClass','includes','parent','_connectAttemptCount','replace','process','_reconnectTimeout','valueOf','hostname','date',':logPointId:','onerror','reload','[object\\x20Date]','function','default','53285','path','_hasSymbolPropertyOnItsPath','_p_length','1581790BBKfyd','elapsed','then','HTMLAllCollection','Error','name','nodeModules','pop','string','getOwnPropertyDescriptor','send','close','_treeNodePropertiesAfterFullValue','_isMap','_additionalMetadata','_disposeWebsocket','Set','_sortProps','positiveInfinity','Number','_getOwnPropertySymbols','push','Console\\x20Ninja\\x20failed\\x20to\\x20send\\x20logs,\\x20restarting\\x20the\\x20process\\x20may\\x20help','9zzpQTP','getPrototypeOf','unknown','1941715tcmoqw','level','_consoleNinjaAllowedToStart','expressionsToEvaluate','_sendErrorMessage','capped','stackTraceLimit','[object\\x20BigInt]','_setNodeLabel','1.0.0','bind','warn','_cleanNode','_hasMapOnItsPath','hrtime','_undefined','_keyStrRegExp','_blacklistedProperty','constructor','elements','_setNodePermissions','_allowedToSend','getOwnPropertySymbols','substr','_addLoadNode','current','_objectToString','concat','bigint','getter','unshift','Map','_processTreeNodeResult','isExpressionToEvaluate','rootExpression','79620sqzSFH','number','_setNodeQueryPath','forEach','location','pathToFileURL','345418NpzyNR','onopen','_WebSocket','_connected','_property','noFunctions','serialize','autoExpandPropertyCount','autoExpandLimit','unref','time','1430600bDDewB','1687447482077','_isArray','data','_setNodeExpandableState','_setNodeExpressionPath','toLowerCase','join','_console_ninja','boolean','versions','20QXWuBM','logger\\x20websocket\\x20error','127.0.0.1','_HTMLAllCollection','catch','type','_inBrowser','...','global','Console\\x20Ninja\\x20failed\\x20to\\x20send\\x20logs,\\x20refreshing\\x20the\\x20page\\x20may\\x20help','allStrLength','root_exp','434202eUhpnA','_propertyName','autoExpand','perf_hooks','_regExpToString','[object\\x20Set]','call','astro','length','_addObjectProperty','parse','onmessage','null','1163684UxIkgE','undefined','failed\\x20to\\x20connect\\x20to\\x20host:\\x20','create','array','host','symbol','sort','setter','argumentResolutionError','readyState','performance','funcName','_attemptToReconnectShortly','_isSet','map','logger\\x20failed\\x20to\\x20connect\\x20to\\x20host','_setNodeId','reduceLimits','_isNegativeZero','[object\\x20Map]','_quotedRegExp','_isPrimitiveWrapperType','hits','index','sortProps','now','failed\\x20to\\x20find\\x20and\\x20load\\x20WebSocket','set','resolveGetters','defineProperty'];_0x36d9=function(){return _0x3d0dae;};return _0x36d9();}function X(_0x5bda66,_0x212b2f,_0x4ddad6){var _0x56e7ca=_0x28d665;if(_0x5bda66['_consoleNinjaAllowedToStart']!==void 0x0)return _0x5bda66['_consoleNinjaAllowedToStart'];let _0x522467=_0x5bda66[_0x56e7ca(0x1c0)]?.['versions']?.[_0x56e7ca(0x1a5)];return _0x522467&&_0x4ddad6===_0x56e7ca(0x1b7)?_0x5bda66[_0x56e7ca(0x1eb)]=!0x1:_0x5bda66[_0x56e7ca(0x1eb)]=_0x522467||!_0x212b2f||_0x5bda66['location']?.['hostname']&&_0x212b2f[_0x56e7ca(0x1bc)](_0x5bda66[_0x56e7ca(0x12d)][_0x56e7ca(0x1c3)]),_0x5bda66[_0x56e7ca(0x1eb)];}((_0x57b463,_0x1917d0,_0x600444,_0x5562b3,_0xcfc893,_0x1b0c1c,_0x460c9e,_0x52e7ff,_0x1bd975)=>{var _0x2ecb73=_0x28d665;if(_0x57b463[_0x2ecb73(0x142)])return _0x57b463['_console_ninja'];if(!X(_0x57b463,_0x52e7ff,_0xcfc893))return _0x57b463[_0x2ecb73(0x142)]={'consoleLog':()=>{},'consoleTrace':()=>{},'consoleTime':()=>{},'consoleTimeEnd':()=>{},'autoLog':()=>{},'autoTrace':()=>{},'autoTime':()=>{},'autoTimeEnd':()=>{}},_0x57b463[_0x2ecb73(0x142)];let _0x5f4287={'props':0x64,'elements':0x64,'strLength':0x400*0x32,'totalStrLength':0x400*0x32,'autoExpandLimit':0x1388,'autoExpandMaxDepth':0xa},_0x367c80={'props':0x5,'elements':0x5,'strLength':0x100,'totalStrLength':0x100*0x3,'autoExpandLimit':0x1e,'autoExpandMaxDepth':0x2},_0x5cff86=H(_0x57b463),_0x5787cd=_0x5cff86[_0x2ecb73(0x1d0)],_0x4ac767=_0x5cff86['timeStamp'],_0xd532a1=_0x5cff86['now'],_0x177fd1={'hits':{},'ts':{}},_0x2b7d26=_0x3d5cf2=>{_0x177fd1['ts'][_0x3d5cf2]=_0x4ac767();},_0x23b455=(_0xcdf618,_0x14a49)=>{let _0x57b8d3=_0x177fd1['ts'][_0x14a49];if(delete _0x177fd1['ts'][_0x14a49],_0x57b8d3){let _0x12bbbf=_0x5787cd(_0x57b8d3,_0x4ac767());_0x3fd757(_0x41f7fb('time',_0xcdf618,_0xd532a1(),_0x3a3646,[_0x12bbbf],_0x14a49));}},_0x36971e=_0x291965=>_0x43493d=>{var _0x24db6f=_0x2ecb73;try{_0x2b7d26(_0x43493d),_0x291965(_0x43493d);}finally{_0x57b463[_0x24db6f(0x18e)][_0x24db6f(0x139)]=_0x291965;}},_0x63f5c3=_0x21342e=>_0x447465=>{var _0x4dea94=_0x2ecb73;try{let [_0x280237,_0x51513a]=_0x447465['split'](_0x4dea94(0x1c5));_0x23b455(_0x51513a,_0x280237),_0x21342e(_0x280237);}finally{_0x57b463[_0x4dea94(0x18e)][_0x4dea94(0x198)]=_0x21342e;}};_0x57b463['_console_ninja']={'consoleLog':(_0x17984f,_0x3cc5e6)=>{var _0x207513=_0x2ecb73;_0x57b463[_0x207513(0x18e)]['log'][_0x207513(0x1d4)]!=='disabledLog'&&_0x3fd757(_0x41f7fb(_0x207513(0x1b3),_0x17984f,_0xd532a1(),_0x3a3646,_0x3cc5e6));},'consoleTrace':(_0x38bf9c,_0x4d2ad1)=>{var _0x4bb8a3=_0x2ecb73;_0x57b463['console']['log'][_0x4bb8a3(0x1d4)]!=='disabledTrace'&&_0x3fd757(_0x41f7fb('trace',_0x38bf9c,_0xd532a1(),_0x3a3646,_0x4d2ad1));},'consoleTime':()=>{var _0x21dddc=_0x2ecb73;_0x57b463[_0x21dddc(0x18e)][_0x21dddc(0x139)]=_0x36971e(_0x57b463[_0x21dddc(0x18e)][_0x21dddc(0x139)]);},'consoleTimeEnd':()=>{var _0x1d62de=_0x2ecb73;_0x57b463[_0x1d62de(0x18e)][_0x1d62de(0x198)]=_0x63f5c3(_0x57b463[_0x1d62de(0x18e)][_0x1d62de(0x198)]);},'autoLog':(_0x4fb323,_0x5d812c)=>{var _0x217ae1=_0x2ecb73;_0x3fd757(_0x41f7fb(_0x217ae1(0x1b3),_0x5d812c,_0xd532a1(),_0x3a3646,[_0x4fb323]));},'autoTrace':(_0x498a3c,_0x480471)=>{var _0x392af5=_0x2ecb73;_0x3fd757(_0x41f7fb(_0x392af5(0x186),_0x480471,_0xd532a1(),_0x3a3646,[_0x498a3c]));},'autoTime':(_0x5e958f,_0x3ee7cd,_0x57e9aa)=>{_0x2b7d26(_0x57e9aa);},'autoTimeEnd':(_0x25b33d,_0x38d839,_0x230dcc)=>{_0x23b455(_0x38d839,_0x230dcc);}};let _0x3fd757=V(_0x57b463,_0x1917d0,_0x600444,_0x5562b3,_0xcfc893),_0x3a3646=_0x57b463[_0x2ecb73(0x180)];class _0xd96d69{constructor(){var _0x18392d=_0x2ecb73;this['_keyStrRegExp']=/^(?!(?:do|if|in|for|let|new|try|var|case|else|enum|eval|false|null|this|true|void|with|break|catch|class|const|super|throw|while|yield|delete|export|import|public|return|static|switch|typeof|default|extends|finally|package|private|continue|debugger|function|arguments|interface|protected|implements|instanceof)$)[_$a-zA-Z\\xA0-\\uFFFF][_$a-zA-Z0-9\\xA0-\\uFFFF]*$/,this['_numberRegExp']=/^(0|[1-9][0-9]*)$/,this[_0x18392d(0x173)]=/'([^\\\\']|\\\\')*'/,this[_0x18392d(0x115)]=_0x57b463[_0x18392d(0x15f)],this[_0x18392d(0x148)]=_0x57b463[_0x18392d(0x1d2)],this[_0x18392d(0x18b)]=Object[_0x18392d(0x1d8)],this['_getOwnPropertyNames']=Object[_0x18392d(0x1a4)],this[_0x18392d(0x194)]=_0x57b463[_0x18392d(0x196)],this['_regExpToString']=RegExp['prototype'][_0x18392d(0x1a1)],this[_0x18392d(0x193)]=Date[_0x18392d(0x182)]['toString'];}[_0x2ecb73(0x135)](_0x548a88,_0x8d6451,_0x3cb08a,_0x78548d){var _0x2f68c5=_0x2ecb73,_0x12bb4e=this,_0x4bf921=_0x3cb08a[_0x2f68c5(0x153)];function _0x49236a(_0x8e8d5d,_0x195656,_0x4ce0e2){var _0x548255=_0x2f68c5;_0x195656[_0x548255(0x14a)]=_0x548255(0x1e8),_0x195656['error']=_0x8e8d5d[_0x548255(0x189)],_0x511ca1=_0x4ce0e2['node'][_0x548255(0x11f)],_0x4ce0e2[_0x548255(0x1a5)][_0x548255(0x11f)]=_0x195656,_0x12bb4e[_0x548255(0x19f)](_0x195656,_0x4ce0e2);}if(_0x8d6451&&_0x8d6451[_0x2f68c5(0x167)])_0x49236a(_0x8d6451,_0x548a88,_0x3cb08a);else try{_0x3cb08a[_0x2f68c5(0x1ea)]++,_0x3cb08a[_0x2f68c5(0x153)]&&_0x3cb08a[_0x2f68c5(0x1b5)][_0x2f68c5(0x1e4)](_0x8d6451);var _0x30810b,_0x3eeda0,_0x21487a,_0x432931,_0x191b65=[],_0x19b22d=[],_0x5c9821,_0x21e0f1=this[_0x2f68c5(0x184)](_0x8d6451),_0x3177bd=_0x21e0f1===_0x2f68c5(0x162),_0x16eaa8=!0x1,_0x487746=_0x21e0f1===_0x2f68c5(0x1c9),_0x111a84=this[_0x2f68c5(0x19b)](_0x21e0f1),_0x3e7bbb=this[_0x2f68c5(0x174)](_0x21e0f1),_0x3e95c4=_0x111a84||_0x3e7bbb,_0x1cf34a={},_0x515256=0x0,_0x1d4bd0=!0x1,_0x511ca1,_0x168078=/^(([1-9]{1}[0-9]*)|0)$/;if(_0x3cb08a[_0x2f68c5(0x18a)]){if(_0x3177bd){if(_0x3eeda0=_0x8d6451[_0x2f68c5(0x159)],_0x3eeda0>_0x3cb08a[_0x2f68c5(0x119)]){for(_0x21487a=0x0,_0x432931=_0x3cb08a['elements'],_0x30810b=_0x21487a;_0x30810b<_0x432931;_0x30810b++)_0x19b22d[_0x2f68c5(0x1e4)](_0x12bb4e['_addProperty'](_0x191b65,_0x8d6451,_0x21e0f1,_0x30810b,_0x3cb08a));_0x548a88[_0x2f68c5(0x1b1)]=!0x0;}else{for(_0x21487a=0x0,_0x432931=_0x3eeda0,_0x30810b=_0x21487a;_0x30810b<_0x432931;_0x30810b++)_0x19b22d[_0x2f68c5(0x1e4)](_0x12bb4e[_0x2f68c5(0x185)](_0x191b65,_0x8d6451,_0x21e0f1,_0x30810b,_0x3cb08a));}_0x3cb08a[_0x2f68c5(0x136)]+=_0x19b22d[_0x2f68c5(0x159)];}if(!(_0x21e0f1===_0x2f68c5(0x15d)||_0x21e0f1==='undefined')&&!_0x111a84&&_0x21e0f1!=='String'&&_0x21e0f1!=='Buffer'&&_0x21e0f1!==_0x2f68c5(0x122)){var _0x1eed69=_0x78548d['props']||_0x3cb08a[_0x2f68c5(0x1a0)];if(this[_0x2f68c5(0x16c)](_0x8d6451)?(_0x30810b=0x0,_0x8d6451[_0x2f68c5(0x12c)](function(_0xd9ff4b){var _0x248c32=_0x2f68c5;if(_0x515256++,_0x3cb08a[_0x248c32(0x136)]++,_0x515256>_0x1eed69){_0x1d4bd0=!0x0;return;}if(!_0x3cb08a[_0x248c32(0x127)]&&_0x3cb08a[_0x248c32(0x153)]&&_0x3cb08a[_0x248c32(0x136)]>_0x3cb08a[_0x248c32(0x137)]){_0x1d4bd0=!0x0;return;}_0x19b22d[_0x248c32(0x1e4)](_0x12bb4e[_0x248c32(0x185)](_0x191b65,_0x8d6451,_0x248c32(0x1df),_0x30810b++,_0x3cb08a,function(_0x59853c){return function(){return _0x59853c;};}(_0xd9ff4b)));})):this[_0x2f68c5(0x1dc)](_0x8d6451)&&_0x8d6451['forEach'](function(_0x788a8c,_0x598291){var _0x5eda00=_0x2f68c5;if(_0x515256++,_0x3cb08a[_0x5eda00(0x136)]++,_0x515256>_0x1eed69){_0x1d4bd0=!0x0;return;}if(!_0x3cb08a[_0x5eda00(0x127)]&&_0x3cb08a[_0x5eda00(0x153)]&&_0x3cb08a['autoExpandPropertyCount']>_0x3cb08a[_0x5eda00(0x137)]){_0x1d4bd0=!0x0;return;}var _0x394bf5=_0x598291[_0x5eda00(0x1a1)]();_0x394bf5[_0x5eda00(0x159)]>0x64&&(_0x394bf5=_0x394bf5['slice'](0x0,0x64)+_0x5eda00(0x14c)),_0x19b22d[_0x5eda00(0x1e4)](_0x12bb4e[_0x5eda00(0x185)](_0x191b65,_0x8d6451,_0x5eda00(0x125),_0x394bf5,_0x3cb08a,function(_0x51057e){return function(){return _0x51057e;};}(_0x788a8c)));}),!_0x16eaa8){try{for(_0x5c9821 in _0x8d6451)if(!(_0x3177bd&&_0x168078[_0x2f68c5(0x18f)](_0x5c9821))&&!this[_0x2f68c5(0x117)](_0x8d6451,_0x5c9821,_0x3cb08a)){if(_0x515256++,_0x3cb08a[_0x2f68c5(0x136)]++,_0x515256>_0x1eed69){_0x1d4bd0=!0x0;break;}if(!_0x3cb08a[_0x2f68c5(0x127)]&&_0x3cb08a['autoExpand']&&_0x3cb08a[_0x2f68c5(0x136)]>_0x3cb08a[_0x2f68c5(0x137)]){_0x1d4bd0=!0x0;break;}_0x19b22d[_0x2f68c5(0x1e4)](_0x12bb4e['_addObjectProperty'](_0x191b65,_0x1cf34a,_0x8d6451,_0x21e0f1,_0x5c9821,_0x3cb08a));}}catch{}if(_0x1cf34a[_0x2f68c5(0x1ce)]=!0x0,_0x487746&&(_0x1cf34a[_0x2f68c5(0x1ab)]=!0x0),!_0x1d4bd0){var _0x59912e=[][_0x2f68c5(0x121)](this['_getOwnPropertyNames'](_0x8d6451))[_0x2f68c5(0x121)](this[_0x2f68c5(0x1e3)](_0x8d6451));for(_0x30810b=0x0,_0x3eeda0=_0x59912e[_0x2f68c5(0x159)];_0x30810b<_0x3eeda0;_0x30810b++)if(_0x5c9821=_0x59912e[_0x30810b],!(_0x3177bd&&_0x168078[_0x2f68c5(0x18f)](_0x5c9821[_0x2f68c5(0x1a1)]()))&&!this[_0x2f68c5(0x117)](_0x8d6451,_0x5c9821,_0x3cb08a)&&!_0x1cf34a['_p_'+_0x5c9821[_0x2f68c5(0x1a1)]()]){if(_0x515256++,_0x3cb08a[_0x2f68c5(0x136)]++,_0x515256>_0x1eed69){_0x1d4bd0=!0x0;break;}if(!_0x3cb08a[_0x2f68c5(0x127)]&&_0x3cb08a[_0x2f68c5(0x153)]&&_0x3cb08a[_0x2f68c5(0x136)]>_0x3cb08a['autoExpandLimit']){_0x1d4bd0=!0x0;break;}_0x19b22d[_0x2f68c5(0x1e4)](_0x12bb4e[_0x2f68c5(0x15a)](_0x191b65,_0x1cf34a,_0x8d6451,_0x21e0f1,_0x5c9821,_0x3cb08a));}}}}}if(_0x548a88[_0x2f68c5(0x14a)]=_0x21e0f1,_0x3e95c4?(_0x548a88[_0x2f68c5(0x1a2)]=_0x8d6451[_0x2f68c5(0x1c2)](),this[_0x2f68c5(0x1b9)](_0x21e0f1,_0x548a88,_0x3cb08a,_0x78548d)):_0x21e0f1==='date'?_0x548a88['value']=this[_0x2f68c5(0x193)]['call'](_0x8d6451):_0x21e0f1==='bigint'?_0x548a88[_0x2f68c5(0x1a2)]=_0x8d6451['toString']():_0x21e0f1===_0x2f68c5(0x192)?_0x548a88[_0x2f68c5(0x1a2)]=this[_0x2f68c5(0x155)][_0x2f68c5(0x157)](_0x8d6451):_0x21e0f1===_0x2f68c5(0x164)&&this[_0x2f68c5(0x194)]?_0x548a88['value']=this[_0x2f68c5(0x194)][_0x2f68c5(0x182)][_0x2f68c5(0x1a1)][_0x2f68c5(0x157)](_0x8d6451):!_0x3cb08a[_0x2f68c5(0x18a)]&&!(_0x21e0f1===_0x2f68c5(0x15d)||_0x21e0f1===_0x2f68c5(0x15f))&&(delete _0x548a88['value'],_0x548a88['capped']=!0x0),_0x1d4bd0&&(_0x548a88['cappedProps']=!0x0),_0x511ca1=_0x3cb08a[_0x2f68c5(0x1a5)]['current'],_0x3cb08a[_0x2f68c5(0x1a5)][_0x2f68c5(0x11f)]=_0x548a88,this['_treeNodePropertiesBeforeFullValue'](_0x548a88,_0x3cb08a),_0x19b22d[_0x2f68c5(0x159)]){for(_0x30810b=0x0,_0x3eeda0=_0x19b22d[_0x2f68c5(0x159)];_0x30810b<_0x3eeda0;_0x30810b++)_0x19b22d[_0x30810b](_0x30810b);}_0x191b65[_0x2f68c5(0x159)]&&(_0x548a88['props']=_0x191b65);}catch(_0x1d51a5){_0x49236a(_0x1d51a5,_0x548a88,_0x3cb08a);}return this[_0x2f68c5(0x1dd)](_0x8d6451,_0x548a88),this[_0x2f68c5(0x1db)](_0x548a88,_0x3cb08a),_0x3cb08a[_0x2f68c5(0x1a5)][_0x2f68c5(0x11f)]=_0x511ca1,_0x3cb08a[_0x2f68c5(0x1ea)]--,_0x3cb08a['autoExpand']=_0x4bf921,_0x3cb08a[_0x2f68c5(0x153)]&&_0x3cb08a[_0x2f68c5(0x1b5)][_0x2f68c5(0x1d6)](),_0x548a88;}['_getOwnPropertySymbols'](_0x3eb928){var _0x85e18d=_0x2ecb73;return Object[_0x85e18d(0x11c)]?Object[_0x85e18d(0x11c)](_0x3eb928):[];}[_0x2ecb73(0x16c)](_0xfe0498){var _0x4b0abf=_0x2ecb73;return!!(_0xfe0498&&_0x57b463[_0x4b0abf(0x1df)]&&this[_0x4b0abf(0x120)](_0xfe0498)===_0x4b0abf(0x156)&&_0xfe0498[_0x4b0abf(0x12c)]);}['_blacklistedProperty'](_0x33a01c,_0x22597d,_0x9fb5f1){var _0x19ce6d=_0x2ecb73;return _0x9fb5f1[_0x19ce6d(0x134)]?typeof _0x33a01c[_0x22597d]==_0x19ce6d(0x1c9):!0x1;}[_0x2ecb73(0x184)](_0x40d87e){var _0x4fe261=_0x2ecb73,_0x3f3d64='';return _0x3f3d64=typeof _0x40d87e,_0x3f3d64===_0x4fe261(0x191)?this[_0x4fe261(0x120)](_0x40d87e)===_0x4fe261(0x181)?_0x3f3d64='array':this[_0x4fe261(0x120)](_0x40d87e)===_0x4fe261(0x1c8)?_0x3f3d64=_0x4fe261(0x1c4):this[_0x4fe261(0x120)](_0x40d87e)===_0x4fe261(0x10d)?_0x3f3d64=_0x4fe261(0x122):_0x40d87e===null?_0x3f3d64=_0x4fe261(0x15d):_0x40d87e[_0x4fe261(0x118)]&&(_0x3f3d64=_0x40d87e[_0x4fe261(0x118)][_0x4fe261(0x1d4)]||_0x3f3d64):_0x3f3d64===_0x4fe261(0x15f)&&this[_0x4fe261(0x148)]&&_0x40d87e instanceof this[_0x4fe261(0x148)]&&(_0x3f3d64='HTMLAllCollection'),_0x3f3d64;}[_0x2ecb73(0x120)](_0x58a96b){var _0x42a609=_0x2ecb73;return Object[_0x42a609(0x182)]['toString']['call'](_0x58a96b);}['_isPrimitiveType'](_0x93f477){var _0x512bf9=_0x2ecb73;return _0x93f477===_0x512bf9(0x143)||_0x93f477===_0x512bf9(0x1d7)||_0x93f477===_0x512bf9(0x12a);}[_0x2ecb73(0x174)](_0x5a0db3){var _0x5a8eac=_0x2ecb73;return _0x5a0db3==='Boolean'||_0x5a0db3==='String'||_0x5a0db3===_0x5a8eac(0x1e2);}[_0x2ecb73(0x185)](_0x4bcd5b,_0x5eaa8d,_0x18734e,_0x459c7d,_0x2cbad5,_0x427efd){var _0x27b094=this;return function(_0x1d7b42){var _0x186572=_0x1372,_0x490d30=_0x2cbad5[_0x186572(0x1a5)][_0x186572(0x11f)],_0x3a101d=_0x2cbad5[_0x186572(0x1a5)][_0x186572(0x176)],_0x2758d2=_0x2cbad5['node'][_0x186572(0x1bd)];_0x2cbad5[_0x186572(0x1a5)][_0x186572(0x1bd)]=_0x490d30,_0x2cbad5[_0x186572(0x1a5)][_0x186572(0x176)]=typeof _0x459c7d=='number'?_0x459c7d:_0x1d7b42,_0x4bcd5b[_0x186572(0x1e4)](_0x27b094['_property'](_0x5eaa8d,_0x18734e,_0x459c7d,_0x2cbad5,_0x427efd)),_0x2cbad5[_0x186572(0x1a5)][_0x186572(0x1bd)]=_0x2758d2,_0x2cbad5[_0x186572(0x1a5)][_0x186572(0x176)]=_0x3a101d;};}[_0x2ecb73(0x15a)](_0x36ae66,_0x1f86c6,_0x482227,_0x4bab52,_0x12a2e9,_0x42e55a,_0x4ba436){var _0x259117=_0x2ecb73,_0x6f9975=this;return _0x1f86c6[_0x259117(0x1af)+_0x12a2e9[_0x259117(0x1a1)]()]=!0x0,function(_0x120310){var _0x1f5f7d=_0x259117,_0x44d378=_0x42e55a[_0x1f5f7d(0x1a5)]['current'],_0x3ffedb=_0x42e55a[_0x1f5f7d(0x1a5)][_0x1f5f7d(0x176)],_0x145e6d=_0x42e55a['node'][_0x1f5f7d(0x1bd)];_0x42e55a['node'][_0x1f5f7d(0x1bd)]=_0x44d378,_0x42e55a[_0x1f5f7d(0x1a5)][_0x1f5f7d(0x176)]=_0x120310,_0x36ae66['push'](_0x6f9975[_0x1f5f7d(0x133)](_0x482227,_0x4bab52,_0x12a2e9,_0x42e55a,_0x4ba436)),_0x42e55a[_0x1f5f7d(0x1a5)][_0x1f5f7d(0x1bd)]=_0x145e6d,_0x42e55a[_0x1f5f7d(0x1a5)][_0x1f5f7d(0x176)]=_0x3ffedb;};}[_0x2ecb73(0x133)](_0x1ad1d3,_0x5cafe2,_0x377ec8,_0x44630d,_0x5c7863){var _0x30e597=_0x2ecb73,_0x84b149=this;_0x5c7863||(_0x5c7863=function(_0x34c13d,_0x518192){return _0x34c13d[_0x518192];});var _0x37de1b=_0x377ec8[_0x30e597(0x1a1)](),_0x58c9f3=_0x44630d[_0x30e597(0x109)]||{},_0x209eb8=_0x44630d[_0x30e597(0x18a)],_0x2686f7=_0x44630d[_0x30e597(0x127)];try{var _0x40552f=this[_0x30e597(0x1dc)](_0x1ad1d3),_0x148ae4=_0x37de1b;_0x40552f&&_0x148ae4[0x0]==='\\x27'&&(_0x148ae4=_0x148ae4['substr'](0x1,_0x148ae4['length']-0x2));var _0x181ddc=_0x44630d[_0x30e597(0x109)]=_0x58c9f3['_p_'+_0x148ae4];_0x181ddc&&(_0x44630d[_0x30e597(0x18a)]=_0x44630d[_0x30e597(0x18a)]+0x1),_0x44630d[_0x30e597(0x127)]=!!_0x181ddc;var _0x440aef=typeof _0x377ec8=='symbol',_0xaac80f={'name':_0x440aef||_0x40552f?_0x37de1b:this['_propertyName'](_0x37de1b)};if(_0x440aef&&(_0xaac80f[_0x30e597(0x164)]=!0x0),!(_0x5cafe2===_0x30e597(0x162)||_0x5cafe2===_0x30e597(0x1d3))){var _0x5035c5=this[_0x30e597(0x18b)](_0x1ad1d3,_0x377ec8);if(_0x5035c5&&(_0x5035c5[_0x30e597(0x17a)]&&(_0xaac80f[_0x30e597(0x166)]=!0x0),_0x5035c5['get']&&!_0x181ddc&&!_0x44630d[_0x30e597(0x17b)]))return _0xaac80f[_0x30e597(0x123)]=!0x0,this[_0x30e597(0x126)](_0xaac80f,_0x44630d),_0xaac80f;}var _0x49f851;try{_0x49f851=_0x5c7863(_0x1ad1d3,_0x377ec8);}catch(_0x4da7cf){return _0xaac80f={'name':_0x37de1b,'type':_0x30e597(0x1e8),'error':_0x4da7cf[_0x30e597(0x189)]},this[_0x30e597(0x126)](_0xaac80f,_0x44630d),_0xaac80f;}var _0x29810f=this[_0x30e597(0x184)](_0x49f851),_0x48b733=this[_0x30e597(0x19b)](_0x29810f);if(_0xaac80f[_0x30e597(0x14a)]=_0x29810f,_0x48b733)this['_processTreeNodeResult'](_0xaac80f,_0x44630d,_0x49f851,function(){var _0x3a955f=_0x30e597;_0xaac80f[_0x3a955f(0x1a2)]=_0x49f851[_0x3a955f(0x1c2)](),!_0x181ddc&&_0x84b149[_0x3a955f(0x1b9)](_0x29810f,_0xaac80f,_0x44630d,{});});else{var _0x491f01=_0x44630d['autoExpand']&&_0x44630d['level']<_0x44630d[_0x30e597(0x199)]&&_0x44630d['autoExpandPreviousObjects'][_0x30e597(0x197)](_0x49f851)<0x0&&_0x29810f!==_0x30e597(0x1c9)&&_0x44630d[_0x30e597(0x136)]<_0x44630d[_0x30e597(0x137)];_0x491f01||_0x44630d[_0x30e597(0x1ea)]<_0x209eb8||_0x181ddc?(this[_0x30e597(0x135)](_0xaac80f,_0x49f851,_0x44630d,_0x181ddc||{}),this[_0x30e597(0x1dd)](_0x49f851,_0xaac80f)):this[_0x30e597(0x126)](_0xaac80f,_0x44630d,_0x49f851,function(){var _0x50e972=_0x30e597;_0x29810f===_0x50e972(0x15d)||_0x29810f===_0x50e972(0x15f)||(delete _0xaac80f['value'],_0xaac80f[_0x50e972(0x10b)]=!0x0);});}return _0xaac80f;}finally{_0x44630d[_0x30e597(0x109)]=_0x58c9f3,_0x44630d[_0x30e597(0x18a)]=_0x209eb8,_0x44630d['isExpressionToEvaluate']=_0x2686f7;}}['_capIfString'](_0x2a3708,_0x1dc3fa,_0x281b87,_0x3ad8a4){var _0x5b6930=_0x2ecb73,_0x109d4b=_0x3ad8a4[_0x5b6930(0x19d)]||_0x281b87[_0x5b6930(0x19d)];if((_0x2a3708==='string'||_0x2a3708==='String')&&_0x1dc3fa['value']){let _0x4d5e61=_0x1dc3fa[_0x5b6930(0x1a2)][_0x5b6930(0x159)];_0x281b87[_0x5b6930(0x14f)]+=_0x4d5e61,_0x281b87['allStrLength']>_0x281b87[_0x5b6930(0x190)]?(_0x1dc3fa[_0x5b6930(0x10b)]='',delete _0x1dc3fa['value']):_0x4d5e61>_0x109d4b&&(_0x1dc3fa[_0x5b6930(0x10b)]=_0x1dc3fa[_0x5b6930(0x1a2)][_0x5b6930(0x11d)](0x0,_0x109d4b),delete _0x1dc3fa['value']);}}[_0x2ecb73(0x1dc)](_0x1d75c3){var _0x29cd03=_0x2ecb73;return!!(_0x1d75c3&&_0x57b463[_0x29cd03(0x125)]&&this[_0x29cd03(0x120)](_0x1d75c3)===_0x29cd03(0x172)&&_0x1d75c3['forEach']);}[_0x2ecb73(0x152)](_0x31f44){var _0x37f9b3=_0x2ecb73;if(_0x31f44[_0x37f9b3(0x183)](/^\\d+$/))return _0x31f44;var _0x31529f;try{_0x31529f=JSON['stringify'](''+_0x31f44);}catch{_0x31529f='\\x22'+this['_objectToString'](_0x31f44)+'\\x22';}return _0x31529f['match'](/^\"([a-zA-Z_][a-zA-Z_0-9]*)\"$/)?_0x31529f=_0x31529f['substr'](0x1,_0x31529f[_0x37f9b3(0x159)]-0x2):_0x31529f=_0x31529f['replace'](/'/g,'\\x5c\\x27')[_0x37f9b3(0x1bf)](/\\\\\"/g,'\\x22')[_0x37f9b3(0x1bf)](/(^\"|\"$)/g,'\\x27'),_0x31529f;}[_0x2ecb73(0x126)](_0x138c0c,_0x125c51,_0x362df7,_0x4590c4){var _0x112cd8=_0x2ecb73;this[_0x112cd8(0x19f)](_0x138c0c,_0x125c51),_0x4590c4&&_0x4590c4(),this[_0x112cd8(0x1dd)](_0x362df7,_0x138c0c),this[_0x112cd8(0x1db)](_0x138c0c,_0x125c51);}[_0x2ecb73(0x19f)](_0x150e43,_0x32a654){var _0x448b7c=_0x2ecb73;this['_setNodeId'](_0x150e43,_0x32a654),this[_0x448b7c(0x12b)](_0x150e43,_0x32a654),this['_setNodeExpressionPath'](_0x150e43,_0x32a654),this[_0x448b7c(0x11a)](_0x150e43,_0x32a654);}[_0x2ecb73(0x16f)](_0x47d55e,_0x7fae53){}['_setNodeQueryPath'](_0x2e03ef,_0x5329da){}[_0x2ecb73(0x10e)](_0x26b1c9,_0x32a5df){}[_0x2ecb73(0x1ad)](_0x51b500){var _0x2ee72a=_0x2ecb73;return _0x51b500===this[_0x2ee72a(0x115)];}[_0x2ecb73(0x1db)](_0x48dd29,_0x29fd17){var _0x2b45d4=_0x2ecb73;this[_0x2b45d4(0x10e)](_0x48dd29,_0x29fd17),this[_0x2b45d4(0x13e)](_0x48dd29),_0x29fd17['sortProps']&&this[_0x2b45d4(0x1e0)](_0x48dd29),this['_addFunctionsNode'](_0x48dd29,_0x29fd17),this['_addLoadNode'](_0x48dd29,_0x29fd17),this[_0x2b45d4(0x112)](_0x48dd29);}['_additionalMetadata'](_0x10419f,_0x15c5b5){var _0x20112c=_0x2ecb73;try{_0x10419f&&typeof _0x10419f[_0x20112c(0x159)]==_0x20112c(0x12a)&&(_0x15c5b5[_0x20112c(0x159)]=_0x10419f[_0x20112c(0x159)]);}catch{}if(_0x15c5b5[_0x20112c(0x14a)]===_0x20112c(0x12a)||_0x15c5b5['type']==='Number'){if(isNaN(_0x15c5b5[_0x20112c(0x1a2)]))_0x15c5b5['nan']=!0x0,delete _0x15c5b5[_0x20112c(0x1a2)];else switch(_0x15c5b5[_0x20112c(0x1a2)]){case Number[_0x20112c(0x1ba)]:_0x15c5b5[_0x20112c(0x1e1)]=!0x0,delete _0x15c5b5[_0x20112c(0x1a2)];break;case Number[_0x20112c(0x1aa)]:_0x15c5b5[_0x20112c(0x17e)]=!0x0,delete _0x15c5b5[_0x20112c(0x1a2)];break;case 0x0:this[_0x20112c(0x171)](_0x15c5b5['value'])&&(_0x15c5b5['negativeZero']=!0x0);break;}}else _0x15c5b5[_0x20112c(0x14a)]===_0x20112c(0x1c9)&&typeof _0x10419f[_0x20112c(0x1d4)]==_0x20112c(0x1d7)&&_0x10419f[_0x20112c(0x1d4)]&&_0x15c5b5[_0x20112c(0x1d4)]&&_0x10419f[_0x20112c(0x1d4)]!==_0x15c5b5['name']&&(_0x15c5b5[_0x20112c(0x16a)]=_0x10419f[_0x20112c(0x1d4)]);}[_0x2ecb73(0x171)](_0x4f0ce2){var _0x4d5ca8=_0x2ecb73;return 0x1/_0x4f0ce2===Number[_0x4d5ca8(0x1aa)];}[_0x2ecb73(0x1e0)](_0x38bf8f){var _0x509f0c=_0x2ecb73;!_0x38bf8f[_0x509f0c(0x1a0)]||!_0x38bf8f[_0x509f0c(0x1a0)][_0x509f0c(0x159)]||_0x38bf8f[_0x509f0c(0x14a)]===_0x509f0c(0x162)||_0x38bf8f['type']===_0x509f0c(0x125)||_0x38bf8f[_0x509f0c(0x14a)]===_0x509f0c(0x1df)||_0x38bf8f['props'][_0x509f0c(0x165)](function(_0x35e1e1,_0xe72bfd){var _0x48014d=_0x509f0c,_0x478efd=_0x35e1e1['name'][_0x48014d(0x140)](),_0x581090=_0xe72bfd[_0x48014d(0x1d4)][_0x48014d(0x140)]();return _0x478efd<_0x581090?-0x1:_0x478efd>_0x581090?0x1:0x0;});}['_addFunctionsNode'](_0xe488fc,_0x394da3){var _0x5ca5a8=_0x2ecb73;if(!(_0x394da3[_0x5ca5a8(0x134)]||!_0xe488fc[_0x5ca5a8(0x1a0)]||!_0xe488fc['props']['length'])){for(var _0x5bd98e=[],_0x156c06=[],_0x3d408c=0x0,_0x501fb0=_0xe488fc[_0x5ca5a8(0x1a0)][_0x5ca5a8(0x159)];_0x3d408c<_0x501fb0;_0x3d408c++){var _0x36ab05=_0xe488fc[_0x5ca5a8(0x1a0)][_0x3d408c];_0x36ab05[_0x5ca5a8(0x14a)]===_0x5ca5a8(0x1c9)?_0x5bd98e[_0x5ca5a8(0x1e4)](_0x36ab05):_0x156c06[_0x5ca5a8(0x1e4)](_0x36ab05);}if(!(!_0x156c06[_0x5ca5a8(0x159)]||_0x5bd98e['length']<=0x1)){_0xe488fc[_0x5ca5a8(0x1a0)]=_0x156c06;var _0x3aadeb={'functionsNode':!0x0,'props':_0x5bd98e};this['_setNodeId'](_0x3aadeb,_0x394da3),this['_setNodeLabel'](_0x3aadeb,_0x394da3),this[_0x5ca5a8(0x13e)](_0x3aadeb),this[_0x5ca5a8(0x11a)](_0x3aadeb,_0x394da3),_0x3aadeb['id']+='\\x20f',_0xe488fc[_0x5ca5a8(0x1a0)][_0x5ca5a8(0x124)](_0x3aadeb);}}}[_0x2ecb73(0x11e)](_0x190ba0,_0x2160aa){}['_setNodeExpandableState'](_0x4188f0){}[_0x2ecb73(0x13c)](_0x3bcf36){var _0x6d7592=_0x2ecb73;return Array['isArray'](_0x3bcf36)||typeof _0x3bcf36=='object'&&this[_0x6d7592(0x120)](_0x3bcf36)===_0x6d7592(0x181);}[_0x2ecb73(0x11a)](_0x127158,_0x2b8dc7){}[_0x2ecb73(0x112)](_0x30ab13){var _0x1b999a=_0x2ecb73;delete _0x30ab13[_0x1b999a(0x1cd)],delete _0x30ab13[_0x1b999a(0x1a8)],delete _0x30ab13[_0x1b999a(0x113)];}[_0x2ecb73(0x13f)](_0x5bd26d,_0x145ba4){}[_0x2ecb73(0x1b6)](_0x295baa){var _0x5aab45=_0x2ecb73;return _0x295baa?_0x295baa['match'](this['_numberRegExp'])?'['+_0x295baa+']':_0x295baa[_0x5aab45(0x183)](this[_0x5aab45(0x116)])?'.'+_0x295baa:_0x295baa[_0x5aab45(0x183)](this[_0x5aab45(0x173)])?'['+_0x295baa+']':'[\\x27'+_0x295baa+'\\x27]':'';}}let _0x4dc1dc=new _0xd96d69();function _0x41f7fb(_0x1a58ac,_0x3cd904,_0x5a362b,_0x3d6ebd,_0x5be385,_0x2a6f1e){var _0x46dc4c=_0x2ecb73;let _0x1e3a72,_0x2916fa;try{_0x2916fa=_0x4ac767(),_0x1e3a72=_0x177fd1[_0x3cd904],!_0x1e3a72||_0x2916fa-_0x1e3a72['ts']>0x1f4&&_0x1e3a72[_0x46dc4c(0x19e)]&&_0x1e3a72[_0x46dc4c(0x139)]/_0x1e3a72['count']<0x64?(_0x177fd1[_0x3cd904]=_0x1e3a72={'count':0x0,'time':0x0,'ts':_0x2916fa},_0x177fd1[_0x46dc4c(0x175)]={}):_0x2916fa-_0x177fd1[_0x46dc4c(0x175)]['ts']>0x32&&_0x177fd1['hits'][_0x46dc4c(0x19e)]&&_0x177fd1[_0x46dc4c(0x175)][_0x46dc4c(0x139)]/_0x177fd1[_0x46dc4c(0x175)][_0x46dc4c(0x19e)]<0x64&&(_0x177fd1[_0x46dc4c(0x175)]={});let _0xdc2613=[],_0x1d4959=_0x1e3a72['reduceLimits']||_0x177fd1[_0x46dc4c(0x175)]['reduceLimits']?_0x367c80:_0x5f4287,_0x24f430=_0x459d7c=>{var _0x486e73=_0x46dc4c;let _0x4cdd77={};return _0x4cdd77[_0x486e73(0x1a0)]=_0x459d7c[_0x486e73(0x1a0)],_0x4cdd77['elements']=_0x459d7c['elements'],_0x4cdd77['strLength']=_0x459d7c[_0x486e73(0x19d)],_0x4cdd77[_0x486e73(0x190)]=_0x459d7c[_0x486e73(0x190)],_0x4cdd77[_0x486e73(0x137)]=_0x459d7c[_0x486e73(0x137)],_0x4cdd77['autoExpandMaxDepth']=_0x459d7c[_0x486e73(0x199)],_0x4cdd77[_0x486e73(0x177)]=!0x1,_0x4cdd77[_0x486e73(0x134)]=!_0x1bd975,_0x4cdd77['depth']=0x1,_0x4cdd77['level']=0x0,_0x4cdd77['expId']='root_exp_id',_0x4cdd77[_0x486e73(0x128)]=_0x486e73(0x150),_0x4cdd77['autoExpand']=!0x0,_0x4cdd77[_0x486e73(0x1b5)]=[],_0x4cdd77[_0x486e73(0x136)]=0x0,_0x4cdd77[_0x486e73(0x17b)]=!0x0,_0x4cdd77[_0x486e73(0x14f)]=0x0,_0x4cdd77[_0x486e73(0x1a5)]={'current':void 0x0,'parent':void 0x0,'index':0x0},_0x4cdd77;};for(var _0x28be9d=0x0;_0x28be9d<_0x5be385[_0x46dc4c(0x159)];_0x28be9d++)_0xdc2613[_0x46dc4c(0x1e4)](_0x4dc1dc[_0x46dc4c(0x135)]({'timeNode':_0x1a58ac===_0x46dc4c(0x139)||void 0x0},_0x5be385[_0x28be9d],_0x24f430(_0x1d4959),{}));if(_0x1a58ac===_0x46dc4c(0x186)){let _0x5f1c0c=Error[_0x46dc4c(0x10c)];try{Error[_0x46dc4c(0x10c)]=0x1/0x0,_0xdc2613[_0x46dc4c(0x1e4)](_0x4dc1dc[_0x46dc4c(0x135)]({'stackNode':!0x0},new Error()['stack'],_0x24f430(_0x1d4959),{'strLength':0x1/0x0}));}finally{Error[_0x46dc4c(0x10c)]=_0x5f1c0c;}}return{'method':_0x46dc4c(0x1b3),'version':_0x1b0c1c,'args':[{'ts':_0x5a362b,'session':_0x3d6ebd,'args':_0xdc2613,'id':_0x3cd904,'context':_0x2a6f1e}]};}catch(_0x254a6d){return{'method':_0x46dc4c(0x1b3),'version':_0x1b0c1c,'args':[{'ts':_0x5a362b,'session':_0x3d6ebd,'args':[{'type':'unknown','error':_0x254a6d&&_0x254a6d[_0x46dc4c(0x189)]}],'id':_0x3cd904,'context':_0x2a6f1e}]};}finally{try{if(_0x1e3a72&&_0x2916fa){let _0x5af89b=_0x4ac767();_0x1e3a72[_0x46dc4c(0x19e)]++,_0x1e3a72[_0x46dc4c(0x139)]+=_0x5787cd(_0x2916fa,_0x5af89b),_0x1e3a72['ts']=_0x5af89b,_0x177fd1[_0x46dc4c(0x175)][_0x46dc4c(0x19e)]++,_0x177fd1[_0x46dc4c(0x175)][_0x46dc4c(0x139)]+=_0x5787cd(_0x2916fa,_0x5af89b),_0x177fd1[_0x46dc4c(0x175)]['ts']=_0x5af89b,(_0x1e3a72[_0x46dc4c(0x19e)]>0x32||_0x1e3a72['time']>0x64)&&(_0x1e3a72[_0x46dc4c(0x170)]=!0x0),(_0x177fd1[_0x46dc4c(0x175)]['count']>0x3e8||_0x177fd1['hits'][_0x46dc4c(0x139)]>0x12c)&&(_0x177fd1[_0x46dc4c(0x175)][_0x46dc4c(0x170)]=!0x0);}}catch{}}}return _0x57b463['_console_ninja'];})(globalThis,_0x28d665(0x147),_0x28d665(0x1cb),_0x28d665(0x1a9),_0x28d665(0x187),_0x28d665(0x10f),_0x28d665(0x13b),_0x28d665(0x1b8),'');");
 }
 catch (e) { } }
 ;

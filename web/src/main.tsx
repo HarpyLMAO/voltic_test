@@ -1,17 +1,13 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { VisibilityProvider } from './providers/VisibilityProvider';
-import App from './components/App';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import Phone from "./components/phone/Phone";
+import "./index.css";
+import { VisibilityPhoneProvider } from "./providers/VisibilityPhoneProvider";
 
-const root = document.getElementById('root');
-if (root) {
-  const app = (
-    <React.StrictMode>
-      <VisibilityProvider>
-        <App />
-      </VisibilityProvider>
-    </React.StrictMode>
-  );
-  createRoot(root).render(app);
-}
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <VisibilityPhoneProvider>
+      <Phone />
+    </VisibilityPhoneProvider>
+  </React.StrictMode>,
+);
